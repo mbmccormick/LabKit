@@ -18,4 +18,5 @@ export const labcorpPdf: Template = {
   collectedTz: 'local',
   skip: [...COMMON_SKIP, /^labcorp/i, /^©/],
   maxConfidence: 'high',
+  labCodes: true,
 };

@@ -29,6 +29,12 @@ export type Template = {
    * the same results (date only, no time) and must not become a second draw.
    */
   pageFilter?: (pageText: string) => boolean;
+  /**
+   * Test names end with a performing-lab code ("Calcium, Urine 01") keyed to a
+   * "Performing Labs" legend ("01: LITPP - Labcorp Itasca, ..."). Only codes the
+   * report's own legend lists are stripped, so a name that really ends in a number is kept.
+   */
+  labCodes?: boolean;
 };
 
 export const COMMON_SKIP: RegExp[] = [

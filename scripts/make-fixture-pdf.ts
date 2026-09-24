@@ -26,6 +26,8 @@ type Fixture = {
   sections: Section[];
   patient: Record<string, unknown>;
   draws: { collected: Collected; loincs: string[] }[];
+  /** Lines printed after the results (e.g. Labcorp's Performing Labs legend). */
+  trailer?: string[];
 };
 
 const OUT = `${ROOT}fixtures/synthetic`;
@@ -149,6 +151,7 @@ async function makePdf(f: Fixture, cols: Col[], render: (w: PdfWriter, r: Row) =
       for (const c of r.comment ?? []) w.line([[cols[0]!.x + 12, c]]);
     }
   }
+  for (const t of f.trailer ?? []) w.line([[cols[0]!.x, t]]);
   w.finish();
   if (f.vendor === 'quest') {
     const font = await doc.embedFont(StandardFonts.Helvetica);
@@ -288,6 +291,8 @@ const labcorpSections: Section[] = [
       { name: 'Lymphs', val: '30', unit: '%', range: 'Not Estab.', expect: { loinc: '736-9', value: 30, ucum: '%', confidence: 'high', issues: ['no_range'] } },
       { name: 'Vitamin B12', val: '612', unit: 'pg/mL', range: '232-1245', expect: 'unmatched' },
       { name: 'Cholesterol, Total', val: '5.2', unit: 'mmol/L', range: '2.6-5.2', expect: null },
+      // Spot urine: same printed name as the 24-hour test, which is scoped to 24-hour urine panels.
+      { name: 'Creatinine, Urine', val: '85', unit: 'mg/dL', range: '20-300', expect: 'unmatched' },
     ],
   },
 ];
@@ -298,26 +303,25 @@ const labcorp: Fixture = {
   sections: labcorpSections,
   patient: { family: 'Sample', given: ['Morgan'], birthDate: '1982-11-22', gender: 'male' },
   draws: [{ collected: { local: '2025-10-17T09:05' }, loincs: loincsOf(labcorpSections) }],
+  trailer: ['Performing Labs', '01: BN - Labcorp Burlington, 1447 York Court, Burlington, NC 27215-3361'],
 };
-await makePdf(
-  labcorp,
-  [
-    { x: 36, label: 'Test' },
-    { x: 200, label: 'Current Result and Flag' },
-    { x: 310, label: 'Previous Result and Date' },
-    { x: 420, label: 'Units' },
-    { x: 480, label: 'Reference Interval' },
-  ],
-  (w, r) =>
-    w.line([
-      [36, r.name],
-      [200, r.flag ? `${r.val}   ${r.flag}` : r.val],
-      [310, r.prev ?? ''],
-      [420, r.unit ?? ''],
-      [480, r.range ?? ''],
-    ]),
-  (n) => `Page ${n} of 1   © Laboratory Corporation of America Holdings`,
-);
+const labcorpCols: Col[] = [
+  { x: 36, label: 'Test' },
+  { x: 200, label: 'Current Result and Flag' },
+  { x: 310, label: 'Previous Result and Date' },
+  { x: 420, label: 'Units' },
+  { x: 480, label: 'Reference Interval' },
+];
+const labcorpRow = (w: PdfWriter, r: Row) =>
+  w.line([
+    [36, `${r.name} 01`], // performing-lab code, keyed to the trailer legend
+    [200, r.flag ? `${r.val}   ${r.flag}` : r.val],
+    [310, r.prev ?? ''],
+    [420, r.unit ?? ''],
+    [480, r.range ?? ''],
+  ]);
+const labcorpFooter = (n: number) => `Page ${n} of 1   © Laboratory Corporation of America Holdings`;
+await makePdf(labcorp, labcorpCols, labcorpRow, labcorpFooter);
 // The duplicate Cholesterol row (in mmol/L) makes the first one a duplicate too.
 {
   const e = expected(labcorp);
@@ -328,6 +332,39 @@ await makePdf(
   e.draws[0]!.rows.push({ loinc: '2093-3', confidence: 'low', issues: ['unit_mismatch', 'duplicate'] } as never);
   writeFileSync(`${OUT}/${labcorp.name}.expected.json`, JSON.stringify(e, null, 2) + '\n');
 }
+
+// ---------------------------------------------------------------- Labcorp (Litholink) 24-hour urine PDF
+
+// Panel title sits directly above the column header; units are per 24 hours.
+const labcorp24hSections: Section[] = [
+  {
+    rows: [
+      { name: 'Urine Volume (Preserved)', val: '1850', unit: 'mL/24 hr', range: '500-4000', expect: { loinc: '3167-4', value: 1850, ucum: 'mL', low: 500, high: 4000, confidence: 'high' } },
+      { name: 'Calcium Oxalate Saturation', val: '7.40', range: '6.00-10.00', expect: { loinc: '34736-9', value: 7.4, ucum: '{ratio}', low: 6, high: 10, confidence: 'high' } },
+      { name: 'Calcium, Urine', val: '212', unit: 'mg/24 hr', range: '<250', expect: { loinc: '6874-2', value: 212, ucum: 'mg/(24.h)', high: 250, confidence: 'high' } },
+      { name: 'Citrate, Urine', val: '380', flag: 'Low', unit: 'mg/24 hr', range: '>450', expect: { loinc: '6687-8', value: 380, ucum: 'mg/(24.h)', low: 450, confidence: 'high' } },
+      { name: 'pH, 24 hr, Urine', val: '5.950', range: '5.800-6.200', expect: { loinc: '27378-9', value: 5.95, ucum: '[pH]', low: 5.8, high: 6.2, confidence: 'high' } },
+      { name: 'Sodium, Urine', val: '162', flag: 'High', unit: 'mmol/24 hr', range: '50-150', expect: { loinc: '2956-1', value: 162, ucum: 'mmol/(24.h)', low: 50, high: 150, confidence: 'high' } },
+      { name: 'Sulfate, Urine', val: '38', unit: 'meq/24 hr', range: '20-80', expect: { loinc: '26889-6', value: 38, ucum: 'meq/(24.h)', low: 20, high: 80, confidence: 'high' } },
+      { name: 'Creatinine/Kg Body Weight', val: '19.6', unit: 'mg/24 hr/kg', range: '11.9-24.4', expect: { loinc: '35654-3', value: 19.6, ucum: 'mg/kg/(24.h)', low: 11.9, high: 24.4, confidence: 'high' } },
+      { name: 'Calcium/Creatinine Ratio', val: '118', unit: 'mg/g creat', range: '34-196', expect: { loinc: '13717-4', value: 118, ucum: 'mg/g{creat}', low: 34, high: 196, confidence: 'high' } },
+      // Labcorp maps PCR to 93746-6, whose unit is g/24 h; the printed g/kg/24 hr doesn't fit, so it isn't in the dictionary.
+      { name: 'Protein Catabolic Rate', val: '0.9', unit: 'g/kg/24 hr', range: '0.8-1.4', expect: 'unmatched' },
+    ],
+  },
+];
+const labcorp24h: Fixture = {
+  name: 'labcorp-24h-urine-sample.pdf',
+  vendor: 'labcorp',
+  // Labcorp's own header: "FAMILY, GIVEN" with no label, first on the DOB line.
+  headerBlock: ['Sample, Jordan              DOB: 05/06/1975              Patient Report', 'Sex: Female', 'Date Collected: 03/02/2026 0700 Local', 'Litholink 24Hr Urine Panel'],
+  sections: labcorp24hSections,
+  patient: { family: 'Sample', given: ['Jordan'], birthDate: '1975-05-06', gender: 'female' },
+  draws: [{ collected: { local: '2026-03-02T07:00' }, loincs: loincsOf(labcorp24hSections) }],
+  trailer: ['Performing Labs', '01: LI - Labcorp Itasca, 150 Spring Lake Drive, Itasca, IL 60143'],
+};
+await makePdf(labcorp24h, labcorpCols, labcorpRow, labcorpFooter);
+save(labcorp24h);
 
 // ---------------------------------------------------------------- generic PDF
 

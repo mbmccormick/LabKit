@@ -3577,6 +3577,468 @@
           "panel": "urinalysis"
         }
       ]
+    },
+    {
+      "loinc": "26843-3",
+      "display": "Cystine [Presence] in 24 hour Urine",
+      "text": "24-hour urine cystine",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "answers": [
+        "Negative",
+        "Positive"
+      ],
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Cystine, Urine, Qualitative",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "3167-4",
+      "display": "Volume of 24 hour Urine",
+      "text": "24-hour urine volume",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mL",
+      "unitAliases": {
+        "mL/24 hr": "mL",
+        "mL/24hr": "mL"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 10000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Urine Volume (Preserved)",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "34736-9",
+      "display": "Calcium oxalate index in 24 hour Urine",
+      "text": "24-hour urine calcium oxalate saturation",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "plausible": {
+        "min": 0,
+        "max": 50
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Calcium Oxalate Saturation",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "6874-2",
+      "display": "Calcium [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine calcium",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 1500
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Calcium, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2701-1",
+      "display": "Oxalate [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine oxalate",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 500
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Oxalate, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "6687-8",
+      "display": "Citrate [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine citrate",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 3000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Citrate, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "42673-4",
+      "display": "Calcium hydrogen phosphate dihydrate [Saturation Fraction] in 24 hour Urine",
+      "text": "24-hour urine calcium phosphate saturation",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "plausible": {
+        "min": 0,
+        "max": 20
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Calcium Phosphate Saturation",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "27378-9",
+      "display": "pH of 24 hour Urine",
+      "text": "24-hour urine pH",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "[pH]",
+      "plausible": {
+        "min": 4,
+        "max": 9.5
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "pH, 24 hr, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "42678-3",
+      "display": "Urate [Saturation Fraction] in 24 hour Urine",
+      "text": "24-hour urine uric acid saturation",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "plausible": {
+        "min": 0,
+        "max": 20
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Uric Acid Saturation",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "3087-4",
+      "display": "Urate [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine uric acid",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 3000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Uric Acid, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2956-1",
+      "display": "Sodium [Moles/time] in 24 hour Urine",
+      "text": "24-hour urine sodium",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mmol/(24.h)",
+      "unitAliases": {
+        "mmol/24 hr": "mmol/(24.h)",
+        "mmol/24hr": "mmol/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 800
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Sodium, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2829-0",
+      "display": "Potassium [Moles/time] in 24 hour Urine",
+      "text": "24-hour urine potassium",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mmol/(24.h)",
+      "unitAliases": {
+        "mmol/24 hr": "mmol/(24.h)",
+        "mmol/24hr": "mmol/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 400
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Potassium, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "24447-5",
+      "display": "Magnesium [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine magnesium",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 600
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Magnesium, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2779-7",
+      "display": "Phosphate [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine phosphorus",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 4000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Phosphorus, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "25308-8",
+      "display": "Ammonia [Moles/time] in 24 hour Urine",
+      "text": "24-hour urine ammonium",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mmol/(24.h)",
+      "unitAliases": {
+        "mmol/24 hr": "mmol/(24.h)",
+        "mmol/24hr": "mmol/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 200
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Ammonium, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2079-2",
+      "display": "Chloride [Moles/time] in 24 hour Urine",
+      "text": "24-hour urine chloride",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mmol/(24.h)",
+      "unitAliases": {
+        "mmol/24 hr": "mmol/(24.h)",
+        "mmol/24hr": "mmol/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 800
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Chloride, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "26889-6",
+      "display": "Sulfate [Moles/time] in 24 hour Urine",
+      "text": "24-hour urine sulfate",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "meq/(24.h)",
+      "unitAliases": {
+        "meq/24 hr": "meq/(24.h)",
+        "mEq/24 hr": "meq/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 300
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Sulfate, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "3096-5",
+      "display": "Urea nitrogen [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine urea nitrogen",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "g/(24.h)",
+      "unitAliases": {
+        "g/24 hr": "g/(24.h)",
+        "g/24hr": "g/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 40
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Urea Nitrogen, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2162-6",
+      "display": "Creatinine [Mass/time] in 24 hour Urine",
+      "text": "24-hour urine creatinine",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr": "mg/(24.h)",
+        "mg/24hr": "mg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 5000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Creatinine, Urine",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "35654-3",
+      "display": "Creatinine/Body weight [Mass/kg/time] in 24 hour Urine",
+      "text": "24-hour urine creatinine per kg",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/kg/(24.h)",
+      "unitAliases": {
+        "mg/24 hr/kg": "mg/kg/(24.h)",
+        "mg/kg/24 hr": "mg/kg/(24.h)"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 60
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Creatinine/Kg Body Weight",
+          "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "13717-4",
+      "display": "Calcium/Creatinine [Mass Ratio] in 24 hour Urine",
+      "text": "24-hour urine calcium/creatinine ratio",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/g{creat}",
+      "unitAliases": {
+        "mg/g creat": "mg/g{creat}"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 1000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "Calcium/Creatinine Ratio",
+          "panel": "24h urine"
+        }
+      ]
     }
   ]
 }

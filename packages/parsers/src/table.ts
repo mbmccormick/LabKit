@@ -123,6 +123,26 @@ function stampFor(lines: Line[], idx: number, t: Template): Stamp | undefined {
   return both?.timeFound ? { ...both, match: found.match } : found;
 }
 
+/** Codes listed under a "Performing Labs" heading: "01: LITPP - Labcorp Itasca, ..." → "01". */
+export function legendLabCodes(lines: readonly Line[]): Set<string> {
+  const codes = new Set<string>();
+  lines.forEach((line, i) => {
+    if (!/^performing labs?:?$/i.test(line.text.trim())) return;
+    for (const next of lines.slice(i + 1, i + 11)) {
+      if (next.page !== line.page) break;
+      const m = /^([0-9A-Z]{2}):\s+\S/.exec(next.items[0]?.str.trim() ?? '');
+      if (m) codes.add(m[1]!);
+    }
+  });
+  return codes;
+}
+
+/** "Calcium, Urine 01" → "Calcium, Urine" when 01 is a listed performing-lab code. */
+export function stripLabCode(name: string, codes: ReadonlySet<string>): string {
+  const m = /^(.*\S)\s+([0-9A-Z]{2})$/.exec(name);
+  return m && codes.has(m[2]!) ? m[1]! : name;
+}
+
 type NameOnly = { idx: number; text: string; page: number; y: number; h: number };
 type WorkRow = RawRow & { idx: number; y: number; h: number };
 
@@ -142,6 +162,7 @@ export function extractTable(lines: Line[], t: Template): TableResult {
   };
   let colsPage = -1;
   const firstTableIdx = new Map<number, number>();
+  const labCodes = t.labCodes ? legendLabCodes(lines) : new Set<string>();
 
   lines.forEach((line, idx) => {
     const found = stampFor(lines, idx, t);
@@ -151,6 +172,9 @@ export function extractTable(lines: Line[], t: Template): TableResult {
     }
     const header = detectHeader(line, t);
     if (header) {
+      // Labcorp titles the panel on the line just above the column header ("Litholink 24Hr Urine Panel").
+      const above = lines[idx - 1];
+      if (above && above.page === line.page && above.items.length === 1 && line.y - above.y <= 3 * line.h && PANEL_WORDS.test(above.text) && looksLikePanel(above.text)) panel = above.text.trim();
       cols = header;
       colsPage = line.page;
       headerFound = true;
@@ -180,7 +204,7 @@ export function extractTable(lines: Line[], t: Template): TableResult {
       cells.set(band.role, [...(cells.get(band.role) ?? []), { ...it, str }.str]);
     }
     const get = (r: Role) => (cells.get(r) ?? []).join(' ').trim();
-    const name = get('name').replace(/[:\s]+$/, '');
+    const name = stripLabCode(get('name').replace(/[:\s]+$/, ''), labCodes);
     const value = get('outOfRange') || get('inRange') || get('result');
     const adjacent = lastRow && lastRow.page === line.page && lastRow.idx === idx - 1 && Math.abs(line.y - lastRow.y) <= 1.8 * lastRow.h;
     // Interpretive text is indented well past where test names start.

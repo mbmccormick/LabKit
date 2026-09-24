@@ -53,15 +53,19 @@ type Name = { family: string; given: string[] };
 const splitGiven = (s: string) => s.replace(/\./g, '').trim().split(/\s+/).map(titleCase);
 
 /**
- * Names printed as a block under a "Patient Information" label, with no
- * "Name:" field. Quest prints "FAMILY, GIVEN"; Health Gorilla prints the given
- * name(s) on one line and the family name on the next.
+ * Names printed with no "Name:" field. Quest prints "FAMILY, GIVEN" under a
+ * "Patient Information" label; Health Gorilla prints the given name(s) on one
+ * line and the family name on the next. Labcorp prints "FAMILY, GIVEN" first on
+ * the "DOB:" line of every page's header, and again under "Patient Details".
  */
 function blockNames(lines: LineLike[]): { comma: Name[]; twoLine: Name[] } {
   const comma: Name[] = [];
   const twoLine: Name[] = [];
   lines.forEach((line, i) => {
-    const label = line.items.find((it) => /^patient\s+information:?$/i.test(it.str.trim()));
+    const dob = line.items.findIndex((it) => /^(DOB|D\.O\.B\.?|Date of Birth)\s*:/i.test(it.str.trim()));
+    const lead = dob > 0 ? COMMA_NAME.exec(line.items[0]!.str.trim()) : null;
+    if (lead) comma.push({ family: titleCase(lead[1]!), given: splitGiven(lead[2]!) });
+    const label = line.items.find((it) => /^patient\s+(information|details):?$/i.test(it.str.trim()));
     if (!label) return;
     const below: string[] = [];
     for (const next of lines.slice(i + 1, i + 8)) {

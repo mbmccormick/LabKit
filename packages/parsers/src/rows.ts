@@ -133,7 +133,12 @@ export function makeMatcher(dictionary: Dictionary) {
   };
 }
 
-export const panelKey = (panel: string | undefined) => (panel && /urin|\bUA\b/i.test(panel) ? 'urinalysis' : undefined);
+/** Alias scope for a printed panel heading. Timed (24-hour) urine tests share names with spot urine tests, so they get their own. */
+export function panelKey(panel: string | undefined): string | undefined {
+  if (!panel) return undefined;
+  if (/urin/i.test(panel) && /\b24[\s-]*(h|hr|hrs|hour|hours)\b/i.test(panel)) return '24h urine';
+  return /urin|\bUA\b/i.test(panel) ? 'urinalysis' : undefined;
+}
 
 export function isBlocking(row: ParsedRow): boolean {
   return !row.entry || !row.value || row.issues.some((i) => BLOCKING.includes(i));

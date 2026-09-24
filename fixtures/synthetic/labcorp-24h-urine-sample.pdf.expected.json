@@ -1,0 +1,102 @@
+{
+  "vendor": "labcorp",
+  "patient": {
+    "family": "Sample",
+    "given": [
+      "Jordan"
+    ],
+    "birthDate": "1975-05-06",
+    "gender": "female"
+  },
+  "draws": [
+    {
+      "collected": {
+        "local": "2026-03-02T07:00"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "3167-4",
+          "value": 1850,
+          "ucum": "mL",
+          "low": 500,
+          "high": 4000,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "34736-9",
+          "value": 7.4,
+          "ucum": "{ratio}",
+          "low": 6,
+          "high": 10,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "6874-2",
+          "value": 212,
+          "ucum": "mg/(24.h)",
+          "high": 250,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "6687-8",
+          "value": 380,
+          "ucum": "mg/(24.h)",
+          "low": 450,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "27378-9",
+          "value": 5.95,
+          "ucum": "[pH]",
+          "low": 5.8,
+          "high": 6.2,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2956-1",
+          "value": 162,
+          "ucum": "mmol/(24.h)",
+          "low": 50,
+          "high": 150,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "26889-6",
+          "value": 38,
+          "ucum": "meq/(24.h)",
+          "low": 20,
+          "high": 80,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "35654-3",
+          "value": 19.6,
+          "ucum": "mg/kg/(24.h)",
+          "low": 11.9,
+          "high": 24.4,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "13717-4",
+          "value": 118,
+          "ucum": "mg/g{creat}",
+          "low": 34,
+          "high": 196,
+          "confidence": "high"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "Protein Catabolic Rate"
+  ]
+}

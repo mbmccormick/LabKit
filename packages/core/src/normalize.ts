@@ -299,5 +299,9 @@ const UCUM_LABELS: Record<string, string> = {
 /** Human-readable label for a UCUM code (UI only; the card always carries UCUM). */
 export function ucumLabel(ucum: string): string {
   if (ucum in UCUM_LABELS) return UCUM_LABELS[ucum]!;
-  return ucum.replace(/^u(?=[a-zA-Z])/, 'µ');
+  // Timed urine: "mg/(24.h)" → "mg/24 hr", "mg/g{creat}" → "mg/g creat".
+  return ucum
+    .replace(/^u(?=[a-zA-Z])/, 'µ')
+    .replace('/(24.h)', '/24 hr')
+    .replace('{creat}', ' creat');
 }
