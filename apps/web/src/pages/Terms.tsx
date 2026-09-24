@@ -1,3 +1,5 @@
+import { SourceLink } from '../components/Source';
+
 export function Terms() {
   return (
     <article class="prose">
@@ -21,6 +23,10 @@ export function Terms() {
         <li>The service is provided "as is," without warranty. It may change or stop at any time.</li>
       </ul>
       <h2>Notices</h2>
+      <p class="muted small">
+        The LabKit software is open source under the Apache License 2.0 (<SourceLink>source on GitHub</SourceLink>).
+        These terms cover your use of the labkit.health service.
+      </p>
       <p class="muted small">
         This material contains content from LOINC® (<a href="https://loinc.org">https://loinc.org</a>). LOINC is
         copyright © Regenstrief Institute, Inc. and the Logical Observation Identifiers Names and Codes (LOINC) Committee

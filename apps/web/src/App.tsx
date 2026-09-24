@@ -4,6 +4,7 @@ import { NotFound } from './pages/NotFound';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { useEffect } from 'preact/hooks';
+import { SourceLink } from './components/Source';
 import { onLinkClick, usePath } from './lib/router';
 
 const ROUTES: Record<string, { page: () => preact.JSX.Element; title: string }> = {
@@ -51,7 +52,7 @@ export function App() {
           LabKit adds your lab results to Apple Health. It doesn't interpret results and isn't medical advice.
         </p>
         <p>
-          <a href="/about">About</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
+          <a href="/about">About</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <SourceLink>GitHub</SourceLink>
         </p>
       </footer>
     </div>

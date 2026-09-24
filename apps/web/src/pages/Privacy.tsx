@@ -1,3 +1,5 @@
+import { SourceLink } from '../components/Source';
+
 export function Privacy() {
   return (
     <article class="prose">
@@ -28,6 +30,12 @@ export function Privacy() {
       <p>
         No analytics, advertising pixels, third-party fonts, or third-party scripts, apart from Cloudflare Turnstile,
         which loads only when you create a card.
+      </p>
+
+      <h2>Check for Yourself</h2>
+      <p>
+        You don't have to take our word for any of this. LabKit is open source, and the code that reads your report and
+        signs your card is public on <SourceLink>GitHub</SourceLink>.
       </p>
 
       <h2>Your Cards</h2>

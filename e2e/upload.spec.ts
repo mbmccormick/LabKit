@@ -133,6 +133,11 @@ test('About shows Buy Me a Coffee; the header logo reloads the home page', async
   await page.goto('/about');
   await expect(page).toHaveTitle('About · LabKit');
   await expect(page.getByRole('link', { name: 'Buy me a coffee' })).toHaveAttribute('href', 'https://buymeacoffee.com/mbmccormick');
+  // Open source: GitHub in the footer and on About, opening in a new tab.
+  const gh = page.locator('footer').getByRole('link', { name: 'GitHub' });
+  await expect(gh).toHaveAttribute('href', 'https://github.com/mbmccormick/LabKit');
+  await expect(gh).toHaveAttribute('target', '_blank');
+  await expect(page.getByRole('heading', { name: 'Open Source' })).toBeVisible();
 
   // A real page load, not client-side routing: a marker set on this document disappears.
   await page.evaluate(() => ((window as unknown as { marker: number }).marker = 1));

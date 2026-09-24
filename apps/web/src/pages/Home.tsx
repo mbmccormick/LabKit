@@ -5,6 +5,7 @@ import { ReviewScreen } from '../components/ReviewScreen';
 import { getDictionary } from '../lib/dictionary';
 import { parseInBrowser, type FileStatus } from '../lib/parse';
 import { buildReview, type ReviewModel } from '../lib/review';
+import { SourceLink } from '../components/Source';
 
 const ACCEPT = '.pdf,.zip,.jpg,.jpeg,.png,.heic,application/pdf,application/zip,image/jpeg,image/png,image/heic';
 
@@ -131,6 +132,9 @@ export function Home() {
           <li>Your report is read inside this browser tab. The file never leaves your device.</li>
           <li>To sign a card, its results pass through our server once and are never stored or logged.</li>
           <li>No accounts, no ads, no trackers. Close the tab and it's gone.</li>
+          <li>
+            LabKit is open source, so anyone can check these claims: <SourceLink>read the code on GitHub</SourceLink>.
+          </li>
         </ul>
       </section>
 

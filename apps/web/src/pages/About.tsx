@@ -1,4 +1,5 @@
 import { Coffee } from '../components/Coffee';
+import { SourceLink } from '../components/Source';
 
 export function About() {
   return (
@@ -35,6 +36,12 @@ export function About() {
         LabKit reads Quest and Labcorp reports, other lab PDFs, and scans or photos of printed reports. Everything is
         read on your device. Results it can't read confidently are shown for you to review, and anything it can't
         identify is left out.
+      </p>
+
+      <h2>Open Source</h2>
+      <p>
+        LabKit is open source under the Apache 2.0 license. You can read every line of code that handles your report,
+        report problems, or contribute support for more labs on <SourceLink>GitHub</SourceLink>.
       </p>
 
       <h2>Support LabKit</h2>
