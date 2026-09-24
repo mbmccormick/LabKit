@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+*.log
+coverage/
+playwright-report/
+test-results/
+
+# Real patient data: never commit.
+fixtures/private/
+
+# Generated
+apps/web/public/dictionary.json
+apps/worker/src/keys.gen.ts
+keys/dev/
+tools/health-cards-dev-tools/
+out/
+apps/web/public/vendor/

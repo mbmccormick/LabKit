@@ -1,0 +1,96 @@
+{
+  "vendor": "labcorp",
+  "patient": {
+    "family": "Sample",
+    "given": [
+      "Morgan"
+    ],
+    "birthDate": "1982-11-22",
+    "gender": "male"
+  },
+  "draws": [
+    {
+      "collected": {
+        "local": "2025-10-17T09:05"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "2345-7",
+          "value": 105,
+          "ucum": "mg/dL",
+          "low": 70,
+          "high": 99,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "4548-4",
+          "value": 5.4,
+          "ucum": "%",
+          "low": 4.8,
+          "high": 5.6,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "duplicate"
+          ],
+          "loinc": "2093-3",
+          "value": 182,
+          "ucum": "mg/dL",
+          "low": 100,
+          "high": 199,
+          "confidence": "low"
+        },
+        {
+          "issues": [],
+          "loinc": "13457-7",
+          "value": 97,
+          "ucum": "mg/dL",
+          "low": 0,
+          "high": 99,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "6690-2",
+          "value": 5.8,
+          "ucum": "10*3/uL",
+          "low": 3.4,
+          "high": 10.8,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "751-8",
+          "value": 3.1,
+          "ucum": "10*3/uL",
+          "low": 1.4,
+          "high": 7,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "no_range"
+          ],
+          "loinc": "736-9",
+          "value": 30,
+          "ucum": "%",
+          "confidence": "high"
+        },
+        {
+          "loinc": "2093-3",
+          "confidence": "low",
+          "issues": [
+            "unit_mismatch",
+            "duplicate"
+          ]
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "Vitamin B12"
+  ]
+}

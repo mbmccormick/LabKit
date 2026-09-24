@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # End-to-end tests run only when started by hand (Actions → ci → Run workflow).
+  # They once hung on Linux runners until GitHub's 6-hour default and used a
+  # month of minutes; they run locally with `pnpm test:e2e`.
+  workflow_dispatch:
+
+# A new push cancels the previous run for the same branch.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install the official SHC validator
+        run: bash scripts/setup-validator.sh
+      # Throwaway local key for the dev Worker (gitignored; never a staging/production key).
+      - run: pnpm gen-key --env dev
+      - run: pnpm typecheck
+      # Unit tests incl. golden encoder, §7.2 rules, dictionary/FROZEN checks, parsers on
+      # synthetic fixtures, and the official validator on Worker-signed cards.
+      - run: pnpm test
+
+  e2e:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: bash scripts/setup-validator.sh
+      - run: pnpm gen-key --env dev
+      - run: pnpm exec playwright install --with-deps chromium webkit
+      - name: End-to-end tests
+        run: pnpm test:e2e
+        timeout-minutes: 8
+        env:
+          # Show the local Worker's output in the log, to diagnose startup or hangs.
+          DEBUG: pw:webserver
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

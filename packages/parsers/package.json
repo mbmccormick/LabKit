@@ -1,0 +1,24 @@
+{
+  "name": "@labkit/parsers",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./pdftext": "./src/pdftext.ts",
+    "./ocr": "./src/ocr.ts"
+  },
+  "dependencies": {
+    "@labkit/core": "workspace:*",
+    "fflate": "^0.8.3"
+  },
+  "peerDependencies": {
+    "pdfjs-dist": "*",
+    "tesseract.js": "*"
+  },
+  "devDependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
+    "pdf-lib": "^1.17.1"
+  }
+}

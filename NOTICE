@@ -1,0 +1,29 @@
+LabKit
+Copyright 2026 Matt McCormick
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This license does not grant permission to use the LabKit name, logo, or the
+labkit.health domain and signing identity (Apache License 2.0, section 6).
+Self-hosted instances must sign cards with their own issuer and keys.
+
+This project includes or references third-party material that is NOT covered
+by the Apache License:
+
+- LOINC: dictionary/ contains content from LOINC® (https://loinc.org). LOINC
+  is copyright © Regenstrief Institute, Inc. and the Logical Observation
+  Identifiers Names and Codes (LOINC) Committee and is available at no cost
+  under the license at https://loinc.org/license. LOINC® is a registered
+  United States trademark of Regenstrief Institute, Inc.
+
+- apps/web/public/badges/works-with-apple-health.svg: Apple's "Works with
+  Apple Health" badge, used under Apple's artwork license. Apple, the Apple
+  logo, Apple Health, and iPhone are trademarks of Apple Inc., registered in
+  the U.S. and other countries.
+
+- apps/web/public/badges/buy-me-a-coffee.svg: Buy Me a Coffee button
+  artwork, a trademark of its owner.
+
+- pdf.js (Mozilla) and tesseract.js / tesseract.js-core, Apache License 2.0,
+  are installed from npm and self-hosted at build time; they are not
+  committed to this repository.

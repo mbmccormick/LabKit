@@ -1,0 +1,48 @@
+{
+  "vendor": "generic",
+  "patient": {
+    "family": "Placeholder",
+    "given": [
+      "Riley"
+    ],
+    "birthDate": "1975-07-07"
+  },
+  "draws": [
+    {
+      "collected": {
+        "local": "2026-03-01T07:15"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "2276-4",
+          "value": 85,
+          "ucum": "ng/mL",
+          "low": 16,
+          "high": 232,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "62292-8",
+          "value": 45,
+          "ucum": "ng/mL",
+          "low": 30,
+          "high": 100,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "30522-7",
+          "value": 0.6,
+          "ucum": "mg/L",
+          "high": 1,
+          "confidence": "medium"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "Mystery Marker"
+  ]
+}

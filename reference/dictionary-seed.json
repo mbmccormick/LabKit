@@ -1,0 +1,1735 @@
+{
+  "schemaVersion": 1,
+  "note": "Seed dictionary. Codes verified against LOINC (NLM Clinical Tables) and imported successfully into Apple Health (iOS) on 2026-09-23. display = LOINC Long Common Name. Once released, loinc/display/text are FROZEN per entry (Apple Health trend key). Quest/Labcorp aliases, unit variants and plausibility bounds still to be added.",
+  "entries": [
+    {
+      "loinc": "883-9",
+      "display": "ABO group [Type] in Blood",
+      "text": "ABO group",
+      "category": "blood_type",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "ABO Group"
+        }
+      ]
+    },
+    {
+      "loinc": "10331-7",
+      "display": "Rh [Type] in Blood",
+      "text": "Rh type",
+      "category": "blood_type",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Rhesus (Rh) Factor"
+        }
+      ]
+    },
+    {
+      "loinc": "704-7",
+      "display": "Basophils [#/volume] in Blood by Automated count",
+      "text": "Basophils",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Basophils"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "/uL",
+          "factor": 0.001,
+          "note": "Quest reports absolute counts in cells/uL"
+        }
+      ]
+    },
+    {
+      "loinc": "706-2",
+      "display": "Basophils/Leukocytes in Blood by Automated count",
+      "text": "Basophils %",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Basophils %"
+        }
+      ]
+    },
+    {
+      "loinc": "711-2",
+      "display": "Eosinophils [#/volume] in Blood by Automated count",
+      "text": "Eosinophils",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Eosinophils"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "/uL",
+          "factor": 0.001,
+          "note": "Quest reports absolute counts in cells/uL"
+        }
+      ]
+    },
+    {
+      "loinc": "713-8",
+      "display": "Eosinophils/Leukocytes in Blood by Automated count",
+      "text": "Eosinophils %",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Eosinophils %"
+        }
+      ]
+    },
+    {
+      "loinc": "4544-3",
+      "display": "Hematocrit [Volume Fraction] of Blood by Automated count",
+      "text": "Hematocrit",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Hematocrit"
+        }
+      ]
+    },
+    {
+      "loinc": "718-7",
+      "display": "Hemoglobin [Mass/volume] in Blood",
+      "text": "Hemoglobin",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "g/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Hemoglobin"
+        }
+      ]
+    },
+    {
+      "loinc": "731-0",
+      "display": "Lymphocytes [#/volume] in Blood by Automated count",
+      "text": "Lymphocytes",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Lymphocytes"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "/uL",
+          "factor": 0.001,
+          "note": "Quest reports absolute counts in cells/uL"
+        }
+      ]
+    },
+    {
+      "loinc": "736-9",
+      "display": "Lymphocytes/Leukocytes in Blood by Automated count",
+      "text": "Lymphocytes %",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Lymphocytes %"
+        }
+      ]
+    },
+    {
+      "loinc": "785-6",
+      "display": "MCH [Entitic mass] by Automated count",
+      "text": "Mean Corpuscular Hemoglobin",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "pg",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Mean Corpuscular Hemoglobin (MCH)"
+        }
+      ]
+    },
+    {
+      "loinc": "786-4",
+      "display": "MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count",
+      "text": "Mean Corpuscular Hemoglobin Concentration",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "g/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Mean Corpuscular Hemoglobin Concentration (MCHC)"
+        }
+      ]
+    },
+    {
+      "loinc": "787-2",
+      "display": "MCV [Entitic mean volume] in Red Blood Cells by Automated count",
+      "text": "Mean Corpuscular Volume",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "fL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Mean Corpuscular Volume (MCV)"
+        }
+      ]
+    },
+    {
+      "loinc": "32623-1",
+      "display": "Platelet [Entitic mean volume] in Blood by Automated count",
+      "text": "Mean Platelet Volume",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "fL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Mean Platelet Volume (MPV)"
+        }
+      ]
+    },
+    {
+      "loinc": "742-7",
+      "display": "Monocytes [#/volume] in Blood by Automated count",
+      "text": "Monocytes",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Monocytes"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "/uL",
+          "factor": 0.001,
+          "note": "Quest reports absolute counts in cells/uL"
+        }
+      ]
+    },
+    {
+      "loinc": "5905-5",
+      "display": "Monocytes/Leukocytes in Blood by Automated count",
+      "text": "Monocytes %",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Monocytes %"
+        }
+      ]
+    },
+    {
+      "loinc": "751-8",
+      "display": "Neutrophils [#/volume] in Blood by Automated count",
+      "text": "Neutrophils",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Neutrophils"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "/uL",
+          "factor": 0.001,
+          "note": "Quest reports absolute counts in cells/uL"
+        }
+      ]
+    },
+    {
+      "loinc": "770-8",
+      "display": "Neutrophils/Leukocytes in Blood by Automated count",
+      "text": "Neutrophils %",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Neutrophils %"
+        }
+      ]
+    },
+    {
+      "loinc": "777-3",
+      "display": "Platelets [#/volume] in Blood by Automated count",
+      "text": "Platelet Count",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Platelet Count"
+        }
+      ]
+    },
+    {
+      "loinc": "789-8",
+      "display": "Erythrocytes [#/volume] in Blood by Automated count",
+      "text": "Red Blood Cell (RBC) Count",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*6/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Red Blood Cell (RBC) Count"
+        }
+      ]
+    },
+    {
+      "loinc": "788-0",
+      "display": "Erythrocyte [DistWidth] in Blood by Automated count",
+      "text": "Red Cell Distribution Width",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Red Cell Distribution Width (RDW)"
+        }
+      ]
+    },
+    {
+      "loinc": "6690-2",
+      "display": "Leukocytes [#/volume] in Blood by Automated count",
+      "text": "White Blood Cell (WBC) Count",
+      "category": "cbc",
+      "valueType": "quantity",
+      "ucum": "10*3/uL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "White Blood Cell (WBC) Count"
+        }
+      ]
+    },
+    {
+      "loinc": "2143-6",
+      "display": "Cortisol [Mass/volume] in Serum or Plasma",
+      "text": "Cortisol",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Cortisol"
+        }
+      ]
+    },
+    {
+      "loinc": "2191-5",
+      "display": "Dehydroepiandrosterone sulfate (DHEA-S) [Mass/volume] in Serum or Plasma",
+      "text": "DHEA Sulfate",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "DHEA Sulfate"
+        }
+      ]
+    },
+    {
+      "loinc": "2243-4",
+      "display": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
+      "text": "Estradiol",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "pg/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Estradiol (E2)"
+        }
+      ]
+    },
+    {
+      "loinc": "15067-2",
+      "display": "Follitropin [Units/volume] in Serum or Plasma",
+      "text": "Follicle Stimulating Hormone",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "m[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Follicle Stimulating Hormone (FSH)"
+        }
+      ]
+    },
+    {
+      "loinc": "10501-5",
+      "display": "Lutropin [Units/volume] in Serum or Plasma",
+      "text": "Luteinizing Hormone",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "m[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Luteinizing Hormone (LH)"
+        }
+      ]
+    },
+    {
+      "loinc": "2842-3",
+      "display": "Prolactin [Mass/volume] in Serum or Plasma",
+      "text": "Prolactin",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Prolactin"
+        }
+      ]
+    },
+    {
+      "loinc": "12841-3",
+      "display": "Prostate Specific Ag Free/Prostate specific Ag.total in Serum or Plasma",
+      "text": "Prostate Specific Antigen (PSA) %, Free",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Prostate Specific Antigen (PSA) %, Free"
+        }
+      ]
+    },
+    {
+      "loinc": "10886-0",
+      "display": "Prostate Specific Ag Free [Mass/volume] in Serum or Plasma",
+      "text": "Prostate Specific Antigen (PSA), Free",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Prostate Specific Antigen (PSA), Free"
+        }
+      ]
+    },
+    {
+      "loinc": "2857-1",
+      "display": "Prostate specific Ag [Mass/volume] in Serum or Plasma",
+      "text": "Prostate Specific Antigen (PSA), Total",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Prostate Specific Antigen (PSA), Total"
+        }
+      ]
+    },
+    {
+      "loinc": "13967-5",
+      "display": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
+      "text": "Sex Hormone Binding Globulin",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Sex Hormone Binding Globulin (SHBG)"
+        }
+      ]
+    },
+    {
+      "loinc": "2991-8",
+      "display": "Testosterone Free [Mass/volume] in Serum or Plasma",
+      "text": "Testosterone, Free",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "pg/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Testosterone, Free"
+        }
+      ]
+    },
+    {
+      "loinc": "2986-8",
+      "display": "Testosterone [Mass/volume] in Serum or Plasma",
+      "text": "Testosterone, Total",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "ng/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Testosterone, Total"
+        }
+      ]
+    },
+    {
+      "loinc": "13068-2",
+      "display": "Nuclear Ab pattern [Interpretation] in Serum by Immunofluorescence",
+      "text": "ANA pattern",
+      "category": "inflammation_autoimmune",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Antinuclear Antibodies (ANA) Pattern"
+        }
+      ]
+    },
+    {
+      "loinc": "5048-4",
+      "display": "Nuclear Ab [Titer] in Serum by Immunofluorescence",
+      "text": "ANA titer",
+      "category": "inflammation_autoimmune",
+      "valueType": "titer",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Antinuclear Antibodies (ANA) Titer"
+        }
+      ]
+    },
+    {
+      "loinc": "8061-4",
+      "display": "Nuclear Ab [Presence] in Serum",
+      "text": "ANA screen",
+      "category": "inflammation_autoimmune",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Antinuclear Antibodies (ANA) Screen"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "13965-9",
+      "display": "Homocysteine [Moles/volume] in Serum or Plasma",
+      "text": "Homocysteine",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "umol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Homocysteine"
+        }
+      ]
+    },
+    {
+      "loinc": "11572-5",
+      "display": "Rheumatoid factor [Units/volume] in Serum or Plasma",
+      "text": "Rheumatoid Factor",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Rheumatoid Factor (RF)"
+        }
+      ]
+    },
+    {
+      "loinc": "1742-6",
+      "display": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Alanine Aminotransferase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Alanine Aminotransferase (ALT)"
+        }
+      ]
+    },
+    {
+      "loinc": "1751-7",
+      "display": "Albumin [Mass/volume] in Serum or Plasma",
+      "text": "Albumin",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "g/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Albumin"
+        }
+      ]
+    },
+    {
+      "loinc": "1759-0",
+      "display": "Albumin/Globulin [Mass Ratio] in Serum or Plasma",
+      "text": "Albumin / Globulin Ratio",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Albumin / Globulin Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "6768-6",
+      "display": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Alkaline Phosphatase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Alkaline Phosphatase (ALP)"
+        }
+      ]
+    },
+    {
+      "loinc": "1798-8",
+      "display": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Amylase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Amylase"
+        }
+      ]
+    },
+    {
+      "loinc": "1920-8",
+      "display": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Aspartate Aminotransferase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Aspartate Aminotransferase (AST)"
+        }
+      ]
+    },
+    {
+      "loinc": "3094-0",
+      "display": "Urea nitrogen [Mass/volume] in Serum or Plasma",
+      "text": "Blood Urea Nitrogen (BUN)",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Blood Urea Nitrogen (BUN)"
+        }
+      ]
+    },
+    {
+      "loinc": "17861-6",
+      "display": "Calcium [Mass/volume] in Serum or Plasma",
+      "text": "Calcium",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Calcium"
+        }
+      ]
+    },
+    {
+      "loinc": "2028-9",
+      "display": "Carbon dioxide, total [Moles/volume] in Serum or Plasma",
+      "text": "Carbon Dioxide",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Carbon Dioxide"
+        }
+      ]
+    },
+    {
+      "loinc": "2075-0",
+      "display": "Chloride [Moles/volume] in Serum or Plasma",
+      "text": "Chloride",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Chloride"
+        }
+      ]
+    },
+    {
+      "loinc": "2160-0",
+      "display": "Creatinine [Mass/volume] in Serum or Plasma",
+      "text": "Creatinine",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Creatinine"
+        }
+      ]
+    },
+    {
+      "loinc": "98979-8",
+      "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M",
+      "text": "eGFR (creatinine)",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mL/min/{1.73_m2}",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Creatinine-Based Estimated Glomerular Filtration Rate (eGFR)"
+        }
+      ]
+    },
+    {
+      "loinc": "2324-2",
+      "display": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Gamma-glutamyl Transferase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Gamma-glutamyl Transferase (GGT)"
+        }
+      ]
+    },
+    {
+      "loinc": "10834-0",
+      "display": "Globulin [Mass/volume] in Serum by calculation",
+      "text": "Globulin",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "g/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Globulin"
+        }
+      ]
+    },
+    {
+      "loinc": "3040-3",
+      "display": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Lipase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Lipase"
+        }
+      ]
+    },
+    {
+      "loinc": "2823-3",
+      "display": "Potassium [Moles/volume] in Serum or Plasma",
+      "text": "Potassium",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Potassium"
+        }
+      ]
+    },
+    {
+      "loinc": "2951-2",
+      "display": "Sodium [Moles/volume] in Serum or Plasma",
+      "text": "Sodium",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Sodium"
+        }
+      ]
+    },
+    {
+      "loinc": "1975-2",
+      "display": "Bilirubin.total [Mass/volume] in Serum or Plasma",
+      "text": "Total Bilirubin",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Total Bilirubin"
+        }
+      ]
+    },
+    {
+      "loinc": "2885-2",
+      "display": "Protein [Mass/volume] in Serum or Plasma",
+      "text": "Total Protein",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "g/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Total Protein"
+        }
+      ]
+    },
+    {
+      "loinc": "30522-7",
+      "display": "C reactive protein [Mass/volume] in Serum or Plasma by High sensitivity method",
+      "text": "hs-CRP",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "High-Sensitivity C-Reactive Protein (hs-CRP)"
+        }
+      ]
+    },
+    {
+      "loinc": "90909-3",
+      "display": "Arachidonate (C20:4w6)/Eicosapentaenoate (C20:5w3) [Mass Ratio] in Blood",
+      "text": "AA/EPA ratio",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Arachidonic Acid/EPA Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "1884-6",
+      "display": "Apolipoprotein B [Mass/volume] in Serum or Plasma",
+      "text": "Apolipoprotein B",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Apolipoprotein B (ApoB)"
+        }
+      ]
+    },
+    {
+      "loinc": "90916-8",
+      "display": "Arachidonate (C20:4w6)/Fatty acids.C14-C22 in Blood",
+      "text": "Arachidonic acid",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-6: Arachidonic Acid"
+        }
+      ]
+    },
+    {
+      "loinc": "90914-3",
+      "display": "Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood",
+      "text": "DHA",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-3: DHA"
+        }
+      ]
+    },
+    {
+      "loinc": "90913-5",
+      "display": "Docosapentaenate (C22:5w3)/Fatty acids.C14-C22 in Blood",
+      "text": "DPA",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-3: DPA"
+        }
+      ]
+    },
+    {
+      "loinc": "90912-7",
+      "display": "Eicosapentaenoate (C20:5w3)/Fatty acids.C14-C22 in Blood",
+      "text": "EPA",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-3: EPA"
+        }
+      ]
+    },
+    {
+      "loinc": "43729-3",
+      "display": "Lipoprotein.alpha.subparticle.large [Moles/volume] in Serum or Plasma",
+      "text": "HDL large",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "HDL Large"
+        }
+      ]
+    },
+    {
+      "loinc": "2085-9",
+      "display": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+      "text": "HDL-Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "HDL-Cholesterol"
+        }
+      ]
+    },
+    {
+      "loinc": "96735-6",
+      "display": "Lipoprotein.beta.subparticle.medium [Moles/volume] in Serum",
+      "text": "LDL medium",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL Medium"
+        }
+      ]
+    },
+    {
+      "loinc": "54434-6",
+      "display": "Lipoprotein.beta.subparticle [Moles/volume] in Serum or Plasma",
+      "text": "LDL particle number",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL Particle Number"
+        }
+      ]
+    },
+    {
+      "loinc": "35505-7",
+      "display": "Lipoprotein.beta.subparticle [Type] in Serum or Plasma",
+      "text": "LDL pattern",
+      "category": "lipids",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL Pattern"
+        }
+      ]
+    },
+    {
+      "loinc": "17782-4",
+      "display": "Lipoprotein.beta.subparticle [Entitic length] in Serum or Plasma",
+      "text": "LDL peak size",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "Ao",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL Peak Size"
+        }
+      ]
+    },
+    {
+      "loinc": "43727-7",
+      "display": "Lipoprotein.beta.subparticle.small [Moles/volume] in Serum or Plasma",
+      "text": "LDL small",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL Small"
+        }
+      ]
+    },
+    {
+      "loinc": "13457-7",
+      "display": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
+      "text": "LDL-Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "LDL-Cholesterol"
+        }
+      ]
+    },
+    {
+      "loinc": "90917-6",
+      "display": "Linoleate (C18:2w6)/Fatty acids.C14-C22 in Blood",
+      "text": "Linoleic acid",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-6: Linoleic Acid"
+        }
+      ]
+    },
+    {
+      "loinc": "43583-4",
+      "display": "Lipoprotein a [Moles/volume] in Serum or Plasma",
+      "text": "Lipoprotein (a)",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Lipoprotein (a)"
+        }
+      ]
+    },
+    {
+      "loinc": "43396-1",
+      "display": "Cholesterol non HDL [Mass/volume] in Serum or Plasma",
+      "text": "Non-HDL Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Non-HDL Cholesterol"
+        }
+      ]
+    },
+    {
+      "loinc": "90911-9",
+      "display": "Eicosapentaenoate (C20:5w3)+Docosapentaenate (C22:5w3)+Docosahexaenoate (C22:6w3)/Fatty acids.C14-C22 in Blood",
+      "text": "Omega-3 total (EPA+DPA+DHA)",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-3 Total / OmegaCheck"
+        }
+      ]
+    },
+    {
+      "loinc": "90915-0",
+      "display": "Arachidonate (C20:4w6)+Linoleate (C18:2w6)/Fatty acids.C14-C22 in Blood",
+      "text": "Omega-6 total",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega-6 Total"
+        }
+      ]
+    },
+    {
+      "loinc": "90910-1",
+      "display": "Omega 6 fatty acids (w6)/Omega 3 fatty acids (w3) [Mass Ratio] in Blood",
+      "text": "Omega-6/Omega-3 ratio",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Omega 6 / 3 Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "2093-3",
+      "display": "Cholesterol [Mass/volume] in Serum or Plasma",
+      "text": "Total Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Total Cholesterol"
+        }
+      ]
+    },
+    {
+      "loinc": "9830-1",
+      "display": "Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma",
+      "text": "Total Cholesterol / HDL Ratio",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Total Cholesterol / HDL Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "2571-8",
+      "display": "Triglyceride [Mass/volume] in Serum or Plasma",
+      "text": "Triglycerides",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Triglycerides"
+        }
+      ]
+    },
+    {
+      "loinc": "2345-7",
+      "display": "Glucose [Mass/volume] in Serum or Plasma",
+      "text": "Glucose",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Glucose"
+        }
+      ]
+    },
+    {
+      "loinc": "4548-4",
+      "display": "Hemoglobin A1c/Hemoglobin.total in Blood",
+      "text": "Hemoglobin A1c",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Hemoglobin A1c (HbA1c)"
+        }
+      ]
+    },
+    {
+      "loinc": "20448-7",
+      "display": "Insulin [Units/volume] in Serum or Plasma",
+      "text": "Insulin",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "u[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Insulin"
+        }
+      ]
+    },
+    {
+      "loinc": "21365-2",
+      "display": "Leptin [Mass/volume] in Serum or Plasma",
+      "text": "Leptin",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Leptin"
+        }
+      ]
+    },
+    {
+      "loinc": "3084-1",
+      "display": "Urate [Mass/volume] in Serum or Plasma",
+      "text": "Uric Acid",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Uric Acid"
+        }
+      ]
+    },
+    {
+      "loinc": "2276-4",
+      "display": "Ferritin [Mass/volume] in Serum or Plasma",
+      "text": "Ferritin",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Ferritin"
+        }
+      ]
+    },
+    {
+      "loinc": "2498-4",
+      "display": "Iron [Mass/volume] in Serum or Plasma",
+      "text": "Iron",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Iron"
+        }
+      ]
+    },
+    {
+      "loinc": "2502-3",
+      "display": "Iron saturation [Mass Fraction] in Serum or Plasma",
+      "text": "Iron % Saturation",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "%",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Iron % Saturation"
+        }
+      ]
+    },
+    {
+      "loinc": "2500-7",
+      "display": "Iron binding capacity [Mass/volume] in Serum or Plasma",
+      "text": "Iron Binding Capacity",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Iron Binding Capacity"
+        }
+      ]
+    },
+    {
+      "loinc": "26746-8",
+      "display": "Magnesium [Mass/volume] in Red Blood Cells",
+      "text": "Magnesium, RBC",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Magnesium, RBC"
+        }
+      ]
+    },
+    {
+      "loinc": "13964-2",
+      "display": "Methylmalonate [Moles/volume] in Serum or Plasma",
+      "text": "Methylmalonic Acid",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "nmol/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Methylmalonic Acid (MMA)"
+        }
+      ]
+    },
+    {
+      "loinc": "62292-8",
+      "display": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma",
+      "text": "Vitamin D",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Vitamin D"
+        }
+      ]
+    },
+    {
+      "loinc": "5763-8",
+      "display": "Zinc [Mass/volume] in Serum or Plasma",
+      "text": "Zinc",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Zinc"
+        }
+      ]
+    },
+    {
+      "loinc": "8098-6",
+      "display": "Thyroglobulin Ab [Units/volume] in Serum or Plasma",
+      "text": "Thyroglobulin Antibodies",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Thyroglobulin Antibodies (TgAb)"
+        }
+      ]
+    },
+    {
+      "loinc": "8099-4",
+      "display": "Thyroperoxidase Ab [Units/volume] in Serum or Plasma",
+      "text": "Thyroid Peroxidase Antibodies",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "[IU]/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Thyroid Peroxidase Antibodies (TPO)"
+        }
+      ]
+    },
+    {
+      "loinc": "3016-3",
+      "display": "Thyrotropin [Units/volume] in Serum or Plasma",
+      "text": "Thyroid-Stimulating Hormone",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "m[IU]/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Thyroid-Stimulating Hormone (TSH)"
+        }
+      ]
+    },
+    {
+      "loinc": "3024-7",
+      "display": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+      "text": "Thyroxine (T4) Free",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "ng/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Thyroxine (T4) Free"
+        }
+      ]
+    },
+    {
+      "loinc": "3051-0",
+      "display": "Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma",
+      "text": "Triiodothyronine (T3) Free",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "pg/mL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Triiodothyronine (T3) Free"
+        }
+      ]
+    },
+    {
+      "loinc": "77307-7",
+      "display": "Lead [Mass/volume] in Venous blood",
+      "text": "Lead",
+      "category": "toxins",
+      "valueType": "quantity",
+      "ucum": "ug/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Lead"
+        }
+      ]
+    },
+    {
+      "loinc": "5685-3",
+      "display": "Mercury [Mass/volume] in Blood",
+      "text": "Mercury",
+      "category": "toxins",
+      "valueType": "quantity",
+      "ucum": "ug/L",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Mercury"
+        }
+      ]
+    },
+    {
+      "loinc": "2965-2",
+      "display": "Specific gravity of Urine",
+      "text": "Urine specific gravity",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "1",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Specific Gravity - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "13945-1",
+      "display": "Erythrocytes [#/area] in Urine sediment by Microscopy high power field",
+      "text": "Urine RBC",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Red Blood Cell (RBC) - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "5821-4",
+      "display": "Leukocytes [#/area] in Urine sediment by Microscopy high power field",
+      "text": "Urine WBC",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "White Blood Cell (WBC) - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "1754-1",
+      "display": "Albumin [Mass/volume] in Urine",
+      "text": "Urine albumin",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Albumin, Random Urine without Creatinine"
+        }
+      ]
+    },
+    {
+      "loinc": "5767-9",
+      "display": "Appearance of Urine",
+      "text": "Urine appearance",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Appearance - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "5769-5",
+      "display": "Bacteria [#/area] in Urine sediment by Microscopy high power field",
+      "text": "Urine bacteria",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Bacteria - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "5770-3",
+      "display": "Bilirubin.total [Presence] in Urine by Test strip",
+      "text": "Urine bilirubin",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Bilirubin - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "5778-6",
+      "display": "Color of Urine",
+      "text": "Urine color",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Color - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "25428-4",
+      "display": "Glucose [Presence] in Urine by Test strip",
+      "text": "Urine glucose",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Glucose - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "5796-8",
+      "display": "Hyaline casts [#/area] in Urine sediment by Microscopy low power field",
+      "text": "Urine hyaline casts",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Hyaline Casts - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2514-8",
+      "display": "Ketones [Presence] in Urine by Test strip",
+      "text": "Urine ketones",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Ketones - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "5799-2",
+      "display": "Leukocyte esterase [Presence] in Urine by Test strip",
+      "text": "Urine leukocyte esterase",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Leukocyte Esterase - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "5802-4",
+      "display": "Nitrite [Presence] in Urine by Test strip",
+      "text": "Urine nitrite",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Nitrite - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "5794-3",
+      "display": "Hemoglobin [Presence] in Urine by Test strip",
+      "text": "Urine occult blood",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Occult Blood - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "5803-2",
+      "display": "pH of Urine by Test strip",
+      "text": "Urine pH",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "[pH]",
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "pH - Urine"
+        }
+      ]
+    },
+    {
+      "loinc": "20454-5",
+      "display": "Protein [Presence] in Urine by Test strip",
+      "text": "Urine protein",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Protein - Urine"
+        }
+      ],
+      "answers": [
+        "Negative",
+        "Positive"
+      ]
+    },
+    {
+      "loinc": "11277-1",
+      "display": "Epithelial cells.squamous [#/area] in Urine sediment by Microscopy high power field",
+      "text": "Urine squamous epithelial cells",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "function",
+          "name": "Squamous Epithelial Cells - Urine"
+        }
+      ]
+    }
+  ]
+}

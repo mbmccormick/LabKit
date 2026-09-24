@@ -1,0 +1,104 @@
+# labkit.health Worker (SPEC §4, §13). Config syntax checked against
+# developers.cloudflare.com/workers (static assets, rate limiting, environments).
+#
+# Top level = local development (`pnpm dev`). Deploy with `pnpm run deploy --env staging|production`.
+# Secrets per env (never in this file):
+#   wrangler secret put SIGNING_KEY_JWK --env <env>
+#   wrangler secret put TURNSTILE_SECRET --env <env>
+# Local secrets live in apps/worker/.dev.vars (gitignored; created by `pnpm gen-key --env dev`).
+
+name = "labkit"
+account_id = "2811029308981c4250191c87dd44d7f6"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+workers_dev = false
+
+# Generates src/keys.gen.ts and apps/web/public/dictionary.json before dev/deploy.
+[build]
+command = "pnpm -w run build:data"
+
+[assets]
+directory = "../web/dist"
+binding = "ASSETS"
+# The Worker runs first for every request so security headers are guaranteed on
+# HTML (SPEC §11.3: _headers does not apply to Worker-generated responses) and
+# www → apex can redirect. SPA routes fall back to index.html.
+run_worker_first = true
+not_found_handling = "single-page-application"
+
+# SPEC §11.1: no request logging of bodies. Workers Logs/Logpush stay off; review
+# before launch (M4 logging audit).
+[observability]
+enabled = false
+
+[vars]
+ISSUER = "http://localhost:8787"
+KEY_ENV = "dev"
+ACTIVE_KID = "set-by-dev-vars"
+# Cloudflare's always-pass test site key.
+TURNSTILE_SITE_KEY = "1x00000000000000000000AA"
+
+# SPEC asks for 20 requests / 600 s per IP, but the binding only supports
+# periods of 10 or 60 seconds. 10 / 60 s is the closest starting point; tune in M4.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+  [ratelimits.simple]
+  limit = 10
+  period = 60
+
+[[analytics_engine_datasets]]
+binding = "METRICS"
+dataset = "labkit_dev"
+
+# ---------------------------------------------------------------- staging
+[env.staging]
+workers_dev = false
+routes = [
+  { pattern = "staging.labkit.health", custom_domain = true },
+]
+
+[env.staging.vars]
+ISSUER = "https://staging.labkit.health"
+KEY_ENV = "staging"
+ACTIVE_KID = "DZo4aCWJXABpT9wh7jN3DuzU7mlxSNN7Iiz1pSvSDg8"
+TURNSTILE_SITE_KEY = "0x4AAAAAAFBqOS8Aqa-WIcx5"
+
+[[env.staging.ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1002"
+  [env.staging.ratelimits.simple]
+  limit = 10
+  period = 60
+
+# Re-enable once Analytics Engine is turned on for the account
+# (dash.cloudflare.com → Workers → Analytics Engine). The Worker treats METRICS as optional.
+# [[env.staging.analytics_engine_datasets]]
+# binding = "METRICS"
+# dataset = "labkit_staging"
+
+# ---------------------------------------------------------------- production
+[env.production]
+workers_dev = false
+routes = [
+  { pattern = "labkit.health", custom_domain = true },
+  { pattern = "www.labkit.health", custom_domain = true },
+]
+
+[env.production.vars]
+ISSUER = "https://labkit.health"
+KEY_ENV = "production"
+ACTIVE_KID = "73MXHOWnVZ42VLIlAnPFeWlhDikRN0e_PPG7UT21Mrg"
+TURNSTILE_SITE_KEY = "0x4AAAAAAFBrSLbL2nSJ34Tw"
+
+[[env.production.ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1003"
+  [env.production.ratelimits.simple]
+  limit = 10
+  period = 60
+
+# Re-enable once Analytics Engine is turned on for the account (see staging above).
+# [[env.production.analytics_engine_datasets]]
+# binding = "METRICS"
+# dataset = "labkit_production"

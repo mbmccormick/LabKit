@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "worker",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@labkit/worker", "exec", "wrangler", "dev", "--port", "8787"],
+      "port": 8787
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "vendor": "quest-healthgorilla",
+  "patient": {
+    "birthDate": "1990-03-04",
+    "gender": "female",
+    "family": "Example",
+    "given": [
+      "Taylor"
+    ]
+  },
+  "draws": [
+    {
+      "collected": {
+        "utc": "2026-04-17T13:40:00Z"
+      },
+      "rows": [
+        {
+          "loinc": "2093-3",
+          "value": 182,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "mg/dL",
+          "high": 200
+        },
+        {
+          "loinc": "25428-4",
+          "value": "Negative",
+          "confidence": "high",
+          "issues": []
+        },
+        {
+          "loinc": "5821-4",
+          "value": "None seen",
+          "confidence": "high",
+          "issues": []
+        },
+        {
+          "loinc": "6690-2",
+          "value": 5.8,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "10*3/uL",
+          "low": 3.8,
+          "high": 10.8
+        },
+        {
+          "loinc": "98979-8",
+          "value": 98,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "mL/min/{1.73_m2}",
+          "low": 60
+        },
+        {
+          "loinc": "90909-3",
+          "value": 10.2,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "{ratio}",
+          "low": 3.7,
+          "high": 40.7
+        },
+        {
+          "loinc": "90916-8",
+          "value": 11.8,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "%",
+          "low": 8.6,
+          "high": 15.6
+        },
+        {
+          "loinc": "54434-6",
+          "value": 1200,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "nmol/L",
+          "high": 1138
+        },
+        {
+          "loinc": "9830-1",
+          "value": 3.1,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "{ratio}",
+          "high": 5
+        },
+        {
+          "loinc": "1754-1",
+          "value": 0.2,
+          "confidence": "high",
+          "issues": [
+            "no_range"
+          ],
+          "comparator": "<",
+          "ucum": "mg/dL"
+        },
+        {
+          "loinc": "2143-6",
+          "value": 12.3,
+          "confidence": "high",
+          "issues": [
+            "no_range"
+          ],
+          "ucum": "ug/dL"
+        },
+        {
+          "loinc": "8099-4",
+          "value": 1,
+          "confidence": "high",
+          "issues": [],
+          "comparator": "<",
+          "ucum": "[IU]/mL",
+          "high": 9
+        },
+        {
+          "loinc": "883-9",
+          "value": "O",
+          "confidence": "high",
+          "issues": []
+        },
+        {
+          "loinc": "10331-7",
+          "value": "Rh(D) positive",
+          "confidence": "high",
+          "issues": []
+        },
+        {
+          "loinc": "1884-6",
+          "value": 88,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "mg/dL",
+          "high": 90
+        },
+        {
+          "loinc": "43583-4",
+          "value": 10,
+          "confidence": "high",
+          "issues": [],
+          "comparator": "<",
+          "ucum": "nmol/L",
+          "high": 75
+        },
+        {
+          "loinc": "20448-7",
+          "value": 5.2,
+          "confidence": "high",
+          "issues": [],
+          "ucum": "u[IU]/mL",
+          "high": 18.4
+        },
+        {
+          "loinc": "13965-9",
+          "value": 9.1,
+          "confidence": "high",
+          "issues": [
+            "no_range"
+          ],
+          "ucum": "umol/L"
+        },
+        {
+          "loinc": "2345-7",
+          "value": 88,
+          "confidence": "high",
+          "issues": [
+            "no_range"
+          ],
+          "ucum": "mg/dL"
+        }
+      ]
+    }
+  ],
+  "unmatched": []
+}

@@ -1,0 +1,208 @@
+{
+  "vendor": "quest-healthgorilla",
+  "patient": {
+    "family": "Example",
+    "given": [
+      "Taylor",
+      "Q"
+    ],
+    "birthDate": "1990-03-04",
+    "gender": "female"
+  },
+  "draws": [
+    {
+      "collected": {
+        "utc": "2026-04-17T13:40:00Z"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "2093-3",
+          "value": 182,
+          "ucum": "mg/dL",
+          "high": 200,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2085-9",
+          "value": 58,
+          "ucum": "mg/dL",
+          "low": 40,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2571-8",
+          "value": 162,
+          "ucum": "mg/dL",
+          "high": 150,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "no_range"
+          ],
+          "loinc": "13457-7",
+          "value": 97,
+          "ucum": "mg/dL",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "6690-2",
+          "value": 5.8,
+          "ucum": "10*3/uL",
+          "low": 3.8,
+          "high": 10.8,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "718-7",
+          "value": 13.9,
+          "ucum": "g/dL",
+          "low": 11.7,
+          "high": 15.5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "751-8",
+          "value": 3.12,
+          "ucum": "10*3/uL",
+          "low": 1.5,
+          "high": 7.8,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "no_range"
+          ],
+          "loinc": "770-8",
+          "value": 53.8,
+          "ucum": "%",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2345-7",
+          "value": 88,
+          "ucum": "mg/dL",
+          "low": 65,
+          "high": 99,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "3094-0",
+          "value": 14,
+          "ucum": "mg/dL",
+          "low": 7,
+          "high": 25,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "implausible"
+          ],
+          "loinc": "2951-2",
+          "value": 14,
+          "ucum": "mmol/L",
+          "low": 135,
+          "high": 146,
+          "confidence": "low"
+        },
+        {
+          "issues": [],
+          "loinc": "98979-8",
+          "value": 98,
+          "ucum": "mL/min/{1.73_m2}",
+          "low": 60,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "30522-7",
+          "value": 0.2,
+          "comparator": "<",
+          "ucum": "mg/L",
+          "high": 1,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "62292-8",
+          "value": 45,
+          "ucum": "ng/mL",
+          "low": 30,
+          "high": 100,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "5778-6",
+          "value": "Yellow",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "25428-4",
+          "value": "Negative",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2965-2",
+          "value": 1.018,
+          "ucum": "1",
+          "low": 1.001,
+          "high": 1.035,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "5803-2",
+          "value": 6,
+          "ucum": "[pH]",
+          "low": 5,
+          "high": 8,
+          "confidence": "high"
+        }
+      ]
+    },
+    {
+      "collected": {
+        "utc": "2026-04-18T08:05:00Z"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "4548-4",
+          "value": 5.4,
+          "ucum": "%",
+          "high": 5.7,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "8061-4",
+          "value": "Negative",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "3016-3",
+          "value": 1.62,
+          "ucum": "m[IU]/L",
+          "low": 0.4,
+          "high": 4.5,
+          "confidence": "high"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "BUN/CREATININE RATIO"
+  ]
+}
