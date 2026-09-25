@@ -36,9 +36,17 @@ function finish(): never {
   process.exit(failed ? 1 : 0);
 }
 
-// 1. Live manifest
-const res = await fetch(`${origin}/.well-known/labkit-build.json`, { headers: { 'Cache-Control': 'no-cache' } });
-const text = await res.text();
+// 1. Live manifest. Right after a deploy the edge can serve the previous version for a few
+// seconds, so with --expect wait (up to a minute) for the new manifest to appear.
+const expected = expectPath ? readFileSync(expectPath, 'utf8') : undefined;
+const getManifest = () => fetch(`${origin}/.well-known/labkit-build.json`, { headers: { 'Cache-Control': 'no-cache' } });
+let res = await getManifest();
+let text = await res.text();
+for (let attempt = 0; expected !== undefined && text !== expected && attempt < 12; attempt++) {
+  await new Promise((r) => setTimeout(r, 5000));
+  res = await getManifest();
+  text = await res.text();
+}
 let manifest: BuildManifest;
 try {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -56,9 +64,7 @@ console.log('');
 
 report({ ok: manifest.env === env, label: `manifest is for ${env}` });
 if (manifest.dirty) report({ ok: false, label: 'manifest is from a build with uncommitted changes' });
-if (expectPath) {
-  report({ ok: readFileSync(expectPath, 'utf8') === text, label: `live manifest is byte-identical to ${expectPath}` });
-}
+if (expected !== undefined) report({ ok: expected === text, label: `live manifest is byte-identical to ${expectPath}` });
 
 // 2. Attestation: signed by this repository's deploy workflow on a GitHub-hosted runner, from the commit it names.
 const dir = mkdtempSync(join(tmpdir(), 'labkit-verify-'));
