@@ -3,7 +3,7 @@ import type { ParsedReport } from '@labkit/core';
 export type Stamp = { iso: string; timeFound: boolean; match: string };
 
 const COLLECTED_RE =
-  /\b(?:collected|collection(?: date)?(?:\s*\/\s*time)?|date collected|specimen collected|date of collection|drawn)\s*(?:(?:on|at|date)\s*)?(?::\s*)?(\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})(?!\d)(?:[\s,T]+(\d{1,2}):?(\d{2})(?::\d{2})?\s*([AP]\.?M\.?)?)?(?:\s*(?:local|utc|gmt|[ECMP][SD]T))?/i;
+  /\b(?:collected|collection(?: date)?(?:\s*\/\s*time)?|date collected|specimen collected|date of collection|drawn)\s*(?:(?:on|at|date)\s*)?(?::\s*)?(\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})(?!\d)(?:[\s,T]+(\d{1,2}):?(\d{2})(?::\d{2})?\s*(?:([AP]\.?M\.?)(?:\s*(?:local|utc|gmt|[ECMP][SD]T))?|(?:local|utc|gmt|[ECMP][SD]T))?|\s*(?:local|utc|gmt|[ECMP][SD]T))?/i;
 
 /** "Collected: 04/17/2026 01:40 PM" → ISO UTC. tz says how to read the wall-clock time. */
 export function parseStampText(text: string, tz: 'utc' | 'local'): Stamp | undefined {

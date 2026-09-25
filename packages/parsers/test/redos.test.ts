@@ -48,6 +48,7 @@ describe('collection stamps', () => {
     fast(() => parseStampText('Collected' + spaces + 'x', 'utc'));
     fast(() => parseStampText('Collected date' + spaces + ':' + spaces + 'x', 'utc'));
     fast(() => parseStampText('Collected 04/17/2026 01:40' + spaces + 'x', 'utc'));
+    fast(() => parseStampText('Collected 04/17/2026' + spaces + 'x', 'utc'));
   });
 
   it('parse as before', () => {
@@ -55,6 +56,11 @@ describe('collection stamps', () => {
     expect(parseStampText('Collection Date/Time: 4/17/26 13:40 UTC', 'local')).toEqual({ iso: '2026-04-17T13:40:00Z', timeFound: true, match: 'Collection Date/Time: 4/17/26 13:40 UTC' });
     expect(parseStampText('Date collected on: 04/17/2026 Page 2', 'utc')).toEqual({ iso: '2026-04-17T00:00:00Z', timeFound: false, match: 'Date collected on: 04/17/2026' });
     expect(parseStampText('Specimen collected at  :  04/17/2026, 8:05 A.M.', 'utc')).toEqual({ iso: '2026-04-17T08:05:00Z', timeFound: true, match: 'Specimen collected at  :  04/17/2026, 8:05 A.M.' });
+    // The match keeps trailing spaces after the time: the table strips it from the line.
+    expect(parseStampText('Collected 04/17/2026 01:40  Page 1', 'utc')).toEqual({ iso: '2026-04-17T01:40:00Z', timeFound: true, match: 'Collected 04/17/2026 01:40  ' });
+    expect(parseStampText('Collected: 04/17/2026 01:40   UTC', 'utc')?.match).toBe('Collected: 04/17/2026 01:40   UTC');
+    expect(parseStampText('Collected: 04/17/2026 01:40 PM  EST x', 'utc')?.match).toBe('Collected: 04/17/2026 01:40 PM  EST');
+    expect(parseStampText('Collected: 04/17/2026 PST', 'utc')).toEqual({ iso: '2026-04-17T00:00:00Z', timeFound: false, match: 'Collected: 04/17/2026 PST' });
     expect(parseStampText('Collected: 13/17/2026', 'utc')).toBeUndefined();
   });
 });
