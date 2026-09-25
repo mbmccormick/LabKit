@@ -14,6 +14,12 @@ export const SECURITY_HEADERS: Readonly<Record<string, string>> = {
 export function withSecurityHeaders(res: Response): Response {
   const out = new Response(res.body, res);
   for (const [k, v] of Object.entries(SECURITY_HEADERS)) out.headers.set(k, v);
+  // no-transform stops Cloudflare's edge from injecting into HTML (e.g. the Web Analytics
+  // beacon, which the zone enables by default), so visitors get exactly the signed file (SPEC §11.2, §13.1).
+  if ((out.headers.get('Content-Type') ?? '').includes('text/html')) {
+    const cc = out.headers.get('Cache-Control');
+    if (!cc?.includes('no-transform')) out.headers.set('Cache-Control', cc ? `${cc}, no-transform` : 'no-transform');
+  }
   return out;
 }
 

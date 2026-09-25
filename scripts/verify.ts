@@ -7,6 +7,19 @@ export type Check = { ok: boolean; label: string; detail?: string };
 type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
 /**
+ * Request headers like a browser's. Cloudflare's edge only rewrites HTML (e.g. injecting its
+ * analytics beacon) for requests that look like a browser loading a page, so fetch the way
+ * visitors do or the check sees a file they never get.
+ */
+export function browserHeaders(path: string): Record<string, string> {
+  return {
+    'Cache-Control': 'no-cache',
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+    Accept: path.endsWith('.html') ? 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' : '*/*',
+  };
+}
+
+/**
  * Downloads every web file listed in the manifest and compares its SHA-256. Right after a deploy
  * the edge may not have new files yet (unknown paths get index.html), so `retries` rechecks the
  * mismatches every `retryDelayMs` before failing.
@@ -25,7 +38,7 @@ export async function checkAssets(
       while (next < entries.length) {
         const [path, expected] = entries[next++]!;
         try {
-          const res = await fetchFn(`${origin}${encodeURI(path)}`, { headers: { 'Cache-Control': 'no-cache' } });
+          const res = await fetchFn(`${origin}${encodeURI(path)}`, { headers: browserHeaders(path) });
           const body = new Uint8Array(await res.arrayBuffer());
           if (!res.ok || sha256(body) !== expected) failed.push([path, expected, String(res.status)]);
         } catch (err) {

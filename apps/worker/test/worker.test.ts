@@ -269,6 +269,17 @@ describe('routing and headers', () => {
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) expect(res.headers.get(k)).toBe(v);
   });
 
+  it('marks HTML no-transform so the edge cannot inject scripts (§11.2)', async () => {
+    const html = (cc?: string) => ({
+      fetch: async () => new Response('<!doctype html>', { headers: { 'Content-Type': 'text/html; charset=utf-8', ...(cc ? { 'Cache-Control': cc } : {}) } }),
+    });
+    const get = async (assets: Env['ASSETS']) => (await setup({ ASSETS: assets }).fetch(new Request('https://staging.labkit.health/'))).headers.get('Cache-Control');
+    expect(await get(html('public, max-age=0, must-revalidate'))).toBe('public, max-age=0, must-revalidate, no-transform');
+    expect(await get(html())).toBe('no-transform');
+    const js = { fetch: async () => new Response('x', { headers: { 'Content-Type': 'text/javascript', 'Cache-Control': 'public, max-age=0' } }) };
+    expect(await get(js)).toBe('public, max-age=0');
+  });
+
   it('redirects www to the apex', async () => {
     const { fetch } = setup();
     const res = await fetch(new Request('https://www.labkit.health/about?x=1'));

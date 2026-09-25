@@ -66,6 +66,19 @@ describe('checkAssets', () => {
     expect((await checkAssets(late, 'https://x', manifest(), { retries: 1, retryDelayMs: 0 })).ok).toBe(true);
   });
 
+  it('fetches like a browser, so edge-injected HTML is caught', async () => {
+    // Like Cloudflare Web Analytics: inject a beacon only for browsers loading a page.
+    const injecting = async (url: string, init?: RequestInit) => {
+      const h = new Headers(init?.headers);
+      const path = new URL(url).pathname;
+      const inject = path.endsWith('.html') && h.get('Accept')?.includes('text/html') && h.get('User-Agent')?.includes('Mozilla');
+      return new Response(FILES[path] + (inject ? '<script src="https://static.cloudflareinsights.com/beacon.min.js"></script>' : ''));
+    };
+    const res = await checkAssets(injecting, 'https://x', manifest());
+    expect(res.ok).toBe(false);
+    expect(res.detail).toContain('/index.html');
+  });
+
   it('names files that differ or are missing', async () => {
     const res = await checkAssets(site({ '/index.html': '<!doctype html>' }), 'https://x', manifest());
     expect(res.ok).toBe(false);
