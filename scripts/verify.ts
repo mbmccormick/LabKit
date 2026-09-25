@@ -6,28 +6,45 @@ export type Check = { ok: boolean; label: string; detail?: string };
 
 type Fetch = (url: string, init?: RequestInit) => Promise<Response>;
 
-/** Downloads every web file listed in the manifest and compares its SHA-256. */
-export async function checkAssets(fetchFn: Fetch, origin: string, manifest: BuildManifest, concurrency = 8): Promise<Check> {
-  const entries = Object.entries(manifest.assets);
-  const mismatched: string[] = [];
-  let next = 0;
-  const worker = async () => {
-    while (next < entries.length) {
-      const [path, expected] = entries[next++]!;
-      try {
-        const res = await fetchFn(`${origin}${encodeURI(path)}`, { headers: { 'Cache-Control': 'no-cache' } });
-        const body = new Uint8Array(await res.arrayBuffer());
-        if (!res.ok || sha256(body) !== expected) mismatched.push(`${path} (${res.status})`);
-      } catch (err) {
-        mismatched.push(`${path} (${err instanceof Error ? err.message : 'fetch failed'})`);
+/**
+ * Downloads every web file listed in the manifest and compares its SHA-256. Right after a deploy
+ * the edge may not have new files yet (unknown paths get index.html), so `retries` rechecks the
+ * mismatches every `retryDelayMs` before failing.
+ */
+export async function checkAssets(
+  fetchFn: Fetch,
+  origin: string,
+  manifest: BuildManifest,
+  { concurrency = 8, retries = 0, retryDelayMs = 10_000 } = {},
+): Promise<Check> {
+  const all = Object.entries(manifest.assets);
+  const pass = async (entries: [string, string][]) => {
+    const failed: [string, string, string][] = [];
+    let next = 0;
+    const worker = async () => {
+      while (next < entries.length) {
+        const [path, expected] = entries[next++]!;
+        try {
+          const res = await fetchFn(`${origin}${encodeURI(path)}`, { headers: { 'Cache-Control': 'no-cache' } });
+          const body = new Uint8Array(await res.arrayBuffer());
+          if (!res.ok || sha256(body) !== expected) failed.push([path, expected, String(res.status)]);
+        } catch (err) {
+          failed.push([path, expected, err instanceof Error ? err.message : 'fetch failed']);
+        }
       }
-    }
+    };
+    await Promise.all(Array.from({ length: Math.min(concurrency, entries.length) }, worker));
+    return failed;
   };
-  await Promise.all(Array.from({ length: Math.min(concurrency, entries.length) }, worker));
-  mismatched.sort();
+  let failed = await pass(all);
+  for (let attempt = 0; failed.length > 0 && attempt < retries; attempt++) {
+    await new Promise((r) => setTimeout(r, retryDelayMs));
+    failed = await pass(failed.map(([path, expected]) => [path, expected]));
+  }
+  const mismatched = failed.map(([path, , why]) => `${path} (${why})`).sort();
   return mismatched.length === 0
-    ? { ok: true, label: `all ${entries.length} web files match the signed build` }
-    : { ok: false, label: `${mismatched.length} of ${entries.length} web files differ from the signed build`, detail: mismatched.slice(0, 20).join('\n') };
+    ? { ok: true, label: `all ${all.length} web files match the signed build` }
+    : { ok: false, label: `${mismatched.length} of ${all.length} web files differ from the signed build`, detail: mismatched.slice(0, 20).join('\n') };
 }
 
 /** GET against the Cloudflare API; returns `result`, throws on API errors. */

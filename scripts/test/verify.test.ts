@@ -56,6 +56,16 @@ describe('checkAssets', () => {
     expect((await checkAssets(site(FILES), 'https://x', manifest())).ok).toBe(true);
   });
 
+  it('rechecks mismatches when asked, for files the edge does not have yet', async () => {
+    let calls = 0;
+    const late = async (url: string) => {
+      const path = new URL(url).pathname;
+      if (path === '/assets/app-1234.js' && calls++ === 0) return new Response(FILES['/index.html']);
+      return new Response(FILES[path]);
+    };
+    expect((await checkAssets(late, 'https://x', manifest(), { retries: 1, retryDelayMs: 0 })).ok).toBe(true);
+  });
+
   it('names files that differ or are missing', async () => {
     const res = await checkAssets(site({ '/index.html': '<!doctype html>' }), 'https://x', manifest());
     expect(res.ok).toBe(false);

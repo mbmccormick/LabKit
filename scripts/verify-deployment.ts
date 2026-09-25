@@ -81,7 +81,8 @@ try {
 }
 
 // 3. Web files
-report(await checkAssets((u, i) => fetch(u, i), origin, manifest));
+// Just deployed (--expect): give the edge up to a minute to serve new files.
+report(await checkAssets((u, i) => fetch(u, i), origin, manifest, { retries: expected !== undefined ? 6 : 0 }));
 
 // 4. Deployed Worker (needs Cloudflare account access; the deploy job has it)
 const token = process.env.CLOUDFLARE_API_TOKEN;
