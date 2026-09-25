@@ -26,7 +26,7 @@ const BLOCKING: readonly RowIssue[] = ['implausible', 'unit_mismatch', 'ambiguou
 /** Informational only: a missing reference range says nothing about whether the value was read correctly. */
 const INFO: readonly RowIssue[] = ['no_range'];
 
-const NOTE_RANGE = /^\s*reference\s+range\s*:?\s+(.+?)\s*$/i;
+const NOTE_RANGE = /^\s*reference\s+range(?:\s*:\s+|\s+)(\S(?:.*\S)?)\s*$/i;
 
 /**
  * Quest often prints the reference range in the comment under a result

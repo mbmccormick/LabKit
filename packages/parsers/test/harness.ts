@@ -51,7 +51,7 @@ export function compact(r: ExtractedReport) {
       collectedAt: d.collectedAt,
       rows: d.rows.map((row) => {
         const v = row.value;
-        const out: Record<string, unknown> = { loinc: row.entry!.loinc, value: v ? (v.kind === 'quantity' ? v.value : v.text.replace(/^1:/, '1:')) : undefined };
+        const out: Record<string, unknown> = { loinc: row.entry!.loinc, value: v ? (v.kind === 'quantity' ? v.value : v.text) : undefined };
         if (v?.kind === 'quantity') {
           out.ucum = v.ucum;
           if (v.comparator) out.comparator = v.comparator;

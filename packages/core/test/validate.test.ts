@@ -63,7 +63,7 @@ describe('validateCardPayload (SPEC §7.2)', () => {
         [e[0].resource, e[1].resource] = [e[1].resource, e[0].resource];
       }),
     );
-    expect(swapped?.path).toMatch(new RegExp(`^${E.replace(/\./g, '\\.')}\\[0\\]`));
+    expect(swapped?.path?.slice(0, `${E}[0]`.length)).toBe(`${E}[0]`);
   });
   it('requires fullUrl resource:N in order', () => {
     expect(errorOf(mutate((p) => (p.vc.credentialSubject.fhirBundle.entry[2].fullUrl = 'resource:9')))?.path).toBe(`${E}[2].fullUrl`);
