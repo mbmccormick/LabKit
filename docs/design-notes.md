@@ -24,7 +24,7 @@ Deploys run only in [.github/workflows/deploy.yml](../.github/workflows/deploy.y
 
 - **Staging:** push to `main`.
 - **Production:** push a `v*` tag on a commit in `main` (`git tag v1.2.0 && git push origin v1.2.0`), then approve the run in the `production` environment.
-- **Re-check a live deployment** without deploying: Actions → deploy → Run workflow (from `main`), choose the environment.
+- **Re-check a live deployment** without deploying: Actions → verify → Run workflow (from `main`), choose the environment ([verify.yml](../.github/workflows/verify.yml)). Production needs your approval, as it uses the `production` environment's token.
 
 The `build` job has no secrets. It runs typecheck, tests and the validator, then `pnpm build:release --env <env>`, and signs `out/<env>/worker/index.js` and `out/<env>/build-manifest.json`. The `deploy` job verifies those signatures, deploys the prebuilt bundle with `wrangler deploy --no-bundle` (tagged with the commit), runs `pnpm smoke`, then `pnpm verify:deployment --expect …` with the Cloudflare token. That also reads the deployed version back from Cloudflare and fails unless it holds exactly the signed bundle and `_headers`, one version serves all traffic, Logpush and Workers Logs are off, and there are no tail consumers. Users run the same command without the token; see [verify.md](verify.md).
 
