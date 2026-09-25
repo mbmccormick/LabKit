@@ -1,0 +1,14 @@
+# Keeps the GitHub Actions in .github/workflows/ current. They're pinned to commit SHAs
+# (SPEC §13.1); Dependabot updates the SHA and its version comment together, in one weekly PR.
+# npm security fixes come from Dependabot security updates (repository settings), not here.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: CI
