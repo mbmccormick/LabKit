@@ -47,6 +47,7 @@ Found a report LabKit can't read? Open an issue describing the lab and layout. *
 - A strict Content Security Policy is enforced on every response; tests fail if a new external origin appears.
 - The signing Worker never logs request bodies or any patient or result field. Metrics are counts only.
 - Private signing keys live only in Cloudflare Worker secrets. [`keys/`](keys) holds public keys.
+- Every deployment is built and signed by GitHub Actions from a public commit, and you can check that the live site matches it: see [docs/verify.md](docs/verify.md).
 
 See the [Privacy](https://labkit.health/privacy) and [Terms](https://labkit.health/terms) pages.
 
@@ -86,15 +87,15 @@ packages/parsers/   Intake, pdf.js text, OCR, layout reconstruction, lab templat
 dictionary/         Test dictionary (LOINC codes, labels, units, aliases) and frozen-label hashes
 fixtures/synthetic/ Generated test reports with fake patients, and their expected results
 e2e/                Playwright tests
-scripts/            Key generation, build data, deploy, validator wrapper, fixture generator
-docs/               Design notes, iOS test checklist
+scripts/            Key generation, build data, release build and verification, validator wrapper, fixture generator
+docs/               Design notes, deployment verification, iOS test checklist
 ```
 
 [SPEC.md](SPEC.md) is the full technical specification, and [docs/design-notes.md](docs/design-notes.md) records operational details and decisions.
 
 ### Running your own instance
 
-LabKit deploys to Cloudflare Workers (see `apps/worker/wrangler.toml`). A self-hosted instance signs cards with **its own** issuer URL and key, generated with `pnpm gen-key`; set `ISSUER`, `ACTIVE_KID` and your Turnstile keys, then `pnpm run deploy --env <env>`. Cards from your instance show your domain in Apple Health, not labkit.health.
+LabKit deploys to Cloudflare Workers (see `apps/worker/wrangler.toml`). A self-hosted instance signs cards with **its own** issuer URL and key, generated with `pnpm gen-key`; set `ISSUER`, `ACTIVE_KID` and your Turnstile keys, and deploy from your fork with the GitHub Actions workflow in `.github/workflows/deploy.yml` (setup in [docs/design-notes.md](docs/design-notes.md#deployment-spec-131)). Cards from your instance show your domain in Apple Health, not labkit.health.
 
 ## Contributing
 

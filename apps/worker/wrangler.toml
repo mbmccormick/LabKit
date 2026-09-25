@@ -1,7 +1,8 @@
 # labkit.health Worker (SPEC §4, §13). Config syntax checked against
 # developers.cloudflare.com/workers (static assets, rate limiting, environments).
 #
-# Top level = local development (`pnpm dev`). Deploy with `pnpm run deploy --env staging|production`.
+# Top level = local development (`pnpm dev`). Staging and production deploy only from GitHub Actions
+# (.github/workflows/deploy.yml, SPEC §13.1): the signed output of `pnpm build:release`, with --no-bundle.
 # Secrets per env (never in this file):
 #   wrangler secret put SIGNING_KEY_JWK --env <env>
 #   wrangler secret put TURNSTILE_SECRET --env <env>
@@ -51,6 +52,11 @@ namespace_id = "1001"
 binding = "METRICS"
 dataset = "labkit_dev"
 
+# SPEC §13.1: the served build manifest carries this version ID (LabKit-Worker-Version header)
+# so it can be matched with the deploy-time check in the Actions log.
+[version_metadata]
+binding = "CF_VERSION_METADATA"
+
 # ---------------------------------------------------------------- staging
 [env.staging]
 workers_dev = false
@@ -63,6 +69,9 @@ ISSUER = "https://staging.labkit.health"
 KEY_ENV = "staging"
 ACTIVE_KID = "DZo4aCWJXABpT9wh7jN3DuzU7mlxSNN7Iiz1pSvSDg8"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFBqOS8Aqa-WIcx5"
+
+[env.staging.version_metadata]
+binding = "CF_VERSION_METADATA"
 
 [[env.staging.ratelimits]]
 name = "RATE_LIMITER"
@@ -90,6 +99,9 @@ ISSUER = "https://labkit.health"
 KEY_ENV = "production"
 ACTIVE_KID = "73MXHOWnVZ42VLIlAnPFeWlhDikRN0e_PPG7UT21Mrg"
 TURNSTILE_SITE_KEY = "0x4AAAAAAFBrSLbL2nSJ34Tw"
+
+[env.production.version_metadata]
+binding = "CF_VERSION_METADATA"
 
 [[env.production.ratelimits]]
 name = "RATE_LIMITER"

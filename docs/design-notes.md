@@ -4,19 +4,49 @@ Operational details and decisions that differ from, or refine, [SPEC.md](../SPEC
 
 ## Environments and secrets
 
-Per SPEC §13. Vars are in [apps/worker/wrangler.toml](apps/worker/wrangler.toml); secrets are set with `wrangler secret put <NAME> --env <env>`:
+Per SPEC §13. Vars are in [apps/worker/wrangler.toml](apps/worker/wrangler.toml). Secrets never pass through GitHub: set them in the Cloudflare dashboard (Workers → labkit-<env> → Settings → Variables and Secrets) or with `wrangler secret put <NAME> --env <env>`:
 
 - `SIGNING_KEY_JWK`: private JWK for `ACTIVE_KID`. `/api/health` returns 503 and `/api/sign` 500 if it doesn't match `keys/<env>/<ACTIVE_KID>.json`.
 - `TURNSTILE_SECRET`
 
-The Turnstile **site** key goes in both `wrangler.toml` (`TURNSTILE_SITE_KEY`) and `apps/web/.env.<env>` (baked into the build). The deploy script checks they match.
+The Turnstile **site** key goes in both `wrangler.toml` (`TURNSTILE_SITE_KEY`) and `apps/web/.env.<env>` (baked into the build). `pnpm build:release` checks they match.
 
 ## Key rotation (SPEC §14)
 
 1. `pnpm gen-key --env <env>`; back up the private JWK offline.
-2. Commit the new `keys/<env>/<kid>.json`, deploy (the JWKS now lists both keys).
-3. `wrangler secret put SIGNING_KEY_JWK --env <env>`, set `ACTIVE_KID`, deploy.
+2. Commit the new `keys/<env>/<kid>.json` and deploy (see below); the JWKS now lists both keys.
+3. Set the `SIGNING_KEY_JWK` secret, commit the new `ACTIVE_KID`, deploy.
 4. **Never delete an old public key** unless you intend to invalidate every card it signed.
+
+## Deployment (SPEC §13.1)
+
+Deploys run only in [.github/workflows/deploy.yml](../.github/workflows/deploy.yml):
+
+- **Staging:** push to `main`.
+- **Production:** push a `v*` tag on a commit in `main` (`git tag v1.2.0 && git push origin v1.2.0`), then approve the run in the `production` environment.
+- **Re-check a live deployment** without deploying: Actions → deploy → Run workflow (from `main`), choose the environment.
+
+The `build` job has no secrets. It runs typecheck, tests and the validator, then `pnpm build:release --env <env>`, and signs `out/<env>/worker/index.js` and `out/<env>/build-manifest.json`. The `deploy` job verifies those signatures, deploys the prebuilt bundle with `wrangler deploy --no-bundle` (tagged with the commit), runs `pnpm smoke`, then `pnpm verify:deployment --expect …` with the Cloudflare token. That also reads the deployed version back from Cloudflare and fails unless its code is the signed bundle, one version serves all traffic, Logpush and Workers Logs are off, and there are no tail consumers. Users run the same command without the token; see [verify.md](verify.md).
+
+Changing a secret in Cloudflare creates a new Worker version with the same code, so a re-check still passes. Any code change made outside the workflow fails the next check.
+
+### One-time setup
+
+**Cloudflare**
+
+1. Create an API token (My Profile → API Tokens → Create Token → *Edit Cloudflare Workers* template), limited to this account and the `labkit.health` zone. Create one token per environment, or share one.
+2. Revoke any older broad tokens, and run `wrangler logout` on machines that used to deploy.
+3. Keep account membership to the owner.
+
+**GitHub** (Settings)
+
+1. **Environments → `staging`:** deployment branches: `main` only. Secret `CLOUDFLARE_API_TOKEN`.
+2. **Environments → `production`:** required reviewer: the owner; prevent self-review off (solo maintainer); deployment branches and tags: `main` (for manual re-checks) and tags `v*`. Secret `CLOUDFLARE_API_TOKEN`.
+3. **Rules → Rulesets:**
+   - `main`: block force pushes and deletion, and require the `ci` workflow's `test` check.
+   - Tags `v*`: restrict creation, update and deletion to the owner (bypass list).
+4. **Code security:** keep private vulnerability reporting on, and Dependabot version updates for GitHub Actions if wanted (actions are pinned to commit SHAs).
+5. [.github/CODEOWNERS](../.github/CODEOWNERS) requires owner review for workflows, the Worker, scripts and keys.
 
 ## Works with Apple Health badge
 

@@ -6,6 +6,10 @@ import { handleSign } from './sign';
 import { loadKeyState, type KeyState } from './signer';
 import type { FetchLike } from './turnstile';
 
+export const BUILD_MANIFEST_PATH = '/.well-known/labkit-build.json';
+/** Written into the web build by scripts/build-release.ts. */
+export const BUILD_MANIFEST_ASSET = '/build-manifest.json';
+
 export type AppOptions = {
   dictionary: DictionaryFile;
   keysets: Readonly<Record<string, readonly PublicJwk[]>>;
@@ -41,6 +45,18 @@ export function createApp(opts: AppOptions) {
       }
       if (req.method !== 'GET' && req.method !== 'HEAD') return apiError(405, 'method_not_allowed', 'use GET', {}, { Allow: 'GET, HEAD, OPTIONS' });
       return jwksResponse(keysFor(env));
+    }
+
+    // SPEC §13.1: the signed build manifest, served byte-for-byte as built so it can be
+    // checked with `gh attestation verify`. The version header is Cloudflare's, not ours.
+    if (url.pathname === BUILD_MANIFEST_PATH) {
+      if (req.method !== 'GET' && req.method !== 'HEAD') return apiError(405, 'method_not_allowed', 'use GET', {}, { Allow: 'GET, HEAD' });
+      const asset = await env.ASSETS.fetch(new Request(new URL(BUILD_MANIFEST_ASSET, url), { method: req.method }));
+      // Missing files fall back to index.html (SPA handling), e.g. in local development.
+      if (!asset.ok || !(asset.headers.get('Content-Type') ?? '').includes('json')) return apiError(404, 'not_found', 'no build manifest');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache', 'Access-Control-Allow-Origin': '*' };
+      if (env.CF_VERSION_METADATA?.id) headers['LabKit-Worker-Version'] = env.CF_VERSION_METADATA.id;
+      return new Response(asset.body, { status: 200, headers });
     }
 
     if (url.pathname === '/api/health') {

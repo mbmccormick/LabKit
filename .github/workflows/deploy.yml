@@ -1,0 +1,162 @@
+name: deploy
+
+# SPEC §13.1. The only way LabKit is deployed:
+#   push to main           → staging
+#   v* tag on a main commit → production (the `production` environment requires approval)
+# `build` builds and signs; `deploy` ships that exact signed build, then reads it back from
+# Cloudflare and checks it (results are in this run's public log).
+# Run by hand (Actions → deploy → Run workflow, from main) to re-check a live deployment
+# without deploying.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Deployment to re-check (nothing is deployed)
+        type: choice
+        options: [staging, production]
+
+permissions: {}
+
+jobs:
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # Sigstore signing certificate
+      attestations: write
+    outputs:
+      env: ${{ steps.env.outputs.env }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0 # to check a release tag is on main
+          persist-credentials: false
+      - name: Choose environment
+        id: env
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+              echo "::error::$GITHUB_REF_NAME is not a commit on main"
+              exit 1
+            fi
+            echo env=production >> "$GITHUB_OUTPUT"
+          else
+            echo env=staging >> "$GITHUB_OUTPUT"
+          fi
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+        with:
+          version: 12
+      # No dependency cache: a release build starts from the lockfile alone.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile
+      - name: Install the official SHC validator
+        run: bash scripts/setup-validator.sh
+      # Throwaway local key for the tests' dev Worker (never a staging/production key).
+      - run: pnpm gen-key --env dev
+      - run: pnpm typecheck
+      - run: pnpm test
+      - name: Build release
+        run: pnpm build:release --env "$DEPLOY_ENV"
+        env:
+          DEPLOY_ENV: ${{ steps.env.outputs.env }}
+      - name: Sign the Worker bundle and build manifest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            out/${{ steps.env.outputs.env }}/worker/index.js
+            out/${{ steps.env.outputs.env }}/build-manifest.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-${{ steps.env.outputs.env }}
+          path: out/${{ steps.env.outputs.env }}
+          if-no-files-found: error
+          retention-days: 90
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: ${{ needs.build.outputs.env }}
+      url: ${{ needs.build.outputs.env == 'production' && 'https://labkit.health' || 'https://staging.labkit.health' }}
+    concurrency:
+      group: deploy-${{ needs.build.outputs.env }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      attestations: read
+    env:
+      DEPLOY_ENV: ${{ needs.build.outputs.env }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+        with:
+          version: 12
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: release-${{ needs.build.outputs.env }}
+          path: out/${{ needs.build.outputs.env }}
+      - name: Verify the build's signatures
+        run: |
+          for f in "out/$DEPLOY_ENV/worker/index.js" "out/$DEPLOY_ENV/build-manifest.json"; do
+            gh attestation verify "$f" --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/deploy.yml" \
+              --source-digest "$GITHUB_SHA" --deny-self-hosted-runners
+          done
+      - name: Deploy the signed build unchanged
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          rm -rf apps/web/dist
+          cp -R "out/$DEPLOY_ENV/web" apps/web/dist
+          # --config is required: given an entry path, Wrangler otherwise looks for its config
+          # next to that file and deploys with no bindings, assets or routes.
+          pnpm --filter @labkit/worker exec wrangler deploy "$GITHUB_WORKSPACE/out/$DEPLOY_ENV/worker/index.js" \
+            --config wrangler.toml --no-bundle --env "$DEPLOY_ENV" \
+            --tag "$GITHUB_SHA" --message "$GITHUB_REF_NAME, run $GITHUB_RUN_ID"
+      - run: pnpm smoke --env "$DEPLOY_ENV"
+      - name: Check the live deployment against the signed build
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: pnpm verify:deployment --env "$DEPLOY_ENV" --repo "$GITHUB_REPOSITORY" --expect "out/$DEPLOY_ENV/build-manifest.json"
+
+  check:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.env }}
+    permissions:
+      contents: read
+      attestations: read
+    env:
+      DEPLOY_ENV: ${{ inputs.env }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+        with:
+          version: 12
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile
+      - name: Check the live deployment against its signed build
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: pnpm verify:deployment --env "$DEPLOY_ENV" --repo "$GITHUB_REPOSITORY"

@@ -9,7 +9,7 @@ Goal: prove Apple Health's behaviour with the labkit.health issuer before buildi
    `pnpm --filter @labkit/worker exec wrangler secret put SIGNING_KEY_JWK --env staging`
 3. `pnpm --filter @labkit/worker exec wrangler secret put TURNSTILE_SECRET --env staging`
 4. In `apps/worker/wrangler.toml` `[env.staging.vars]` set `ACTIVE_KID` (printed by gen-key) and `TURNSTILE_SITE_KEY`; put the same site key in `apps/web/.env.staging`.
-5. Commit `keys/staging/<kid>.json`, then `pnpm run deploy --env staging`. The script smoke-tests `/api/health`, the JWKS and headers.
+5. Commit `keys/staging/<kid>.json` and push to `main`; the deploy workflow ships staging and smoke-tests `/api/health`, the JWKS and headers. *(Updated 2026-09-25: deploys run only in GitHub Actions.)*
 6. `pnpm validate:card <any staging card>` (no `--jwks`) validates against the live staging JWKS.
 
 ## 2. Make the test cards

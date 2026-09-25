@@ -291,6 +291,42 @@ describe('routing and headers', () => {
   });
 });
 
+describe('GET /.well-known/labkit-build.json (§13.1)', () => {
+  const MANIFEST = '{\n  "schema": 1\n}\n';
+  const assets = (served: Response) => ({
+    fetch: async (req: Request) => {
+      expect(new URL(req.url).pathname).toBe('/build-manifest.json');
+      return served;
+    },
+  });
+
+  it('serves the build manifest byte-for-byte with CORS and the Cloudflare version', async () => {
+    const { fetch } = setup({
+      ASSETS: assets(new Response(MANIFEST, { headers: { 'Content-Type': 'application/json' } })),
+      CF_VERSION_METADATA: { id: 'v-123', tag: 'abc', timestamp: '2026-09-25T00:00:00Z' },
+    });
+    const res = await fetch(new Request('https://staging.labkit.health/.well-known/labkit-build.json'));
+    expect(res.status).toBe(200);
+    expect(await res.text()).toBe(MANIFEST);
+    expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*');
+    expect(res.headers.get('LabKit-Worker-Version')).toBe('v-123');
+    expect(res.headers.get('Content-Security-Policy')).toBe(CONTENT_SECURITY_POLICY);
+  });
+
+  it('404s when the build has no manifest (SPA fallback returns HTML)', async () => {
+    const { fetch } = setup();
+    const res = await fetch(new Request('https://staging.labkit.health/.well-known/labkit-build.json'));
+    expect(res.status).toBe(404);
+    expect(res.headers.get('LabKit-Worker-Version')).toBeNull();
+  });
+
+  it('rejects other methods', async () => {
+    const { fetch } = setup();
+    const res = await fetch(new Request('https://staging.labkit.health/.well-known/labkit-build.json', { method: 'POST', body: '{}' }));
+    expect(res.status).toBe(405);
+  });
+});
+
 describe('Turnstile siteverify (live, Cloudflare test secrets)', () => {
   it('always-pass secret succeeds and always-fail secret fails', async () => {
     expect(await verifyTurnstile(TOKEN, PASS_SECRET, null)).toBe(true);

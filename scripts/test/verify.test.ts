@@ -1,0 +1,125 @@
+// Deployment verification (SPEC §13.1): manifest hashing and the checks behind `pnpm verify:deployment`.
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { hashAssets, parseManifest, serializeManifest, sha256, type BuildManifest } from '../manifest';
+import { checkAssets, checkCloudflare, type CloudflareApi } from '../verify';
+
+const WORKER = 'export default { fetch() { return new Response("ok") } };\n';
+const FILES: Record<string, string> = { '/index.html': '<!doctype html>', '/assets/app-1234.js': 'console.log(1)' };
+
+function manifest(): BuildManifest {
+  return {
+    schema: 1,
+    repository: 'example/labkit',
+    commit: 'a'.repeat(40),
+    env: 'staging',
+    run: 'https://github.com/example/labkit/actions/runs/1',
+    worker: { file: 'index.js', sha256: sha256(WORKER) },
+    assets: Object.fromEntries(Object.entries(FILES).map(([p, c]) => [p, sha256(c)])),
+  };
+}
+
+describe('build manifest', () => {
+  it('hashes every served file by URL path, sorted, skipping Workers config files', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'labkit-manifest-'));
+    mkdirSync(join(dir, 'assets'));
+    writeFileSync(join(dir, 'index.html'), FILES['/index.html']!);
+    writeFileSync(join(dir, 'assets/app-1234.js'), FILES['/assets/app-1234.js']!);
+    writeFileSync(join(dir, '_headers'), '/*\n  X: y\n');
+    writeFileSync(join(dir, 'build-manifest.json'), '{}');
+    expect(hashAssets(dir)).toEqual({ '/assets/app-1234.js': sha256(FILES['/assets/app-1234.js']!), '/index.html': sha256(FILES['/index.html']!) });
+  });
+
+  it('round-trips and rejects anything that is not a manifest', () => {
+    const m = manifest();
+    expect(parseManifest(serializeManifest(m))).toEqual(m);
+    expect(() => parseManifest('{"schema":1}')).toThrow();
+    expect(() => parseManifest(serializeManifest({ ...m, commit: 'main' }))).toThrow();
+    expect(() => parseManifest(serializeManifest({ ...m, assets: { '/../etc/passwd': sha256('x') } }))).toThrow();
+  });
+});
+
+describe('checkAssets', () => {
+  const site = (files: Record<string, string>) => async (url: string) => {
+    const body = files[new URL(url).pathname];
+    // Like Workers static assets' SPA handling: unknown paths get index.html.
+    return new Response(body ?? files['/index.html'], { status: 200 });
+  };
+
+  it('passes when every file matches', async () => {
+    expect((await checkAssets(site(FILES), 'https://x', manifest())).ok).toBe(true);
+  });
+
+  it('names files that differ or are missing', async () => {
+    const res = await checkAssets(site({ '/index.html': '<!doctype html>' }), 'https://x', manifest());
+    expect(res.ok).toBe(false);
+    expect(res.detail).toContain('/assets/app-1234.js');
+    expect(res.detail).not.toContain('/index.html');
+  });
+});
+
+describe('checkCloudflare', () => {
+  type State = {
+    versions?: { version_id: string; percentage: number }[];
+    modules?: { name: string; content_type: string; content_base64?: string }[];
+    worker?: Record<string, unknown>;
+  };
+  const b64 = (s: string) => Buffer.from(s).toString('base64');
+  const good = (): Required<State> => ({
+    versions: [{ version_id: 'v1', percentage: 100 }],
+    modules: [{ name: 'index.js', content_type: 'application/javascript+module', content_base64: b64(WORKER) }],
+    worker: { logpush: false, observability: { enabled: false, logs: { enabled: false } }, tail_consumers: [] },
+  });
+  const api = (state: State): CloudflareApi => {
+    const s = { ...good(), ...state };
+    return async (path) => {
+      if (path === '/accounts/acct/workers/scripts/labkit-staging/deployments') return { deployments: [{ versions: s.versions }] };
+      if (/^\/accounts\/acct\/workers\/workers\/labkit-staging\/versions\/v\d\?include=modules$/.test(path)) return { annotations: { 'workers/tag': 'a'.repeat(40) }, modules: s.modules };
+      if (path === '/accounts/acct/workers/workers/labkit-staging') return s.worker;
+      throw new Error(`unexpected ${path}`);
+    };
+  };
+  const run = async (state: State) => checkCloudflare(api(state), 'acct', 'labkit-staging', manifest());
+  const failed = async (state: State) => (await run(state)).checks.filter((c) => !c.ok).map((c) => c.label);
+
+  it('passes for the signed bundle with logging off', async () => {
+    const { checks, versionId } = await run({});
+    expect(checks.every((c) => c.ok)).toBe(true);
+    expect(versionId).toBe('v1');
+  });
+
+  it('fails when the deployed code differs (e.g. a dashboard edit)', async () => {
+    const modules = [{ name: 'index.js', content_type: 'application/javascript+module', content_base64: b64(WORKER + '// edited\n') }];
+    expect(await failed({ modules })).toEqual(['version v1 code differs from the signed Worker bundle']);
+  });
+
+  it('fails when an extra module is deployed alongside the bundle', async () => {
+    const modules = [...good().modules, { name: 'extra.js', content_type: 'application/javascript+module', content_base64: b64('') }];
+    expect(await failed({ modules })).toHaveLength(1);
+  });
+
+  it('fails when traffic is split across versions, and checks each version', async () => {
+    const versions = [
+      { version_id: 'v1', percentage: 90 },
+      { version_id: 'v2', percentage: 10 },
+    ];
+    const { checks, versionId } = await run({ versions });
+    expect(checks.filter((c) => !c.ok).map((c) => c.label)).toEqual(['traffic is not served by exactly one version']);
+    expect(checks.filter((c) => c.label.startsWith('version v'))).toHaveLength(2);
+    expect(versionId).toBeUndefined();
+  });
+
+  it('fails when a tail consumer is attached', async () => {
+    expect(await failed({ worker: { tail_consumers: [{ name: 'copy-requests' }] } })).toEqual(['tail consumers attached: copy-requests']);
+  });
+
+  it('fails when Logpush, Workers Logs or traces are on', async () => {
+    expect(await failed({ worker: { logpush: true } })).toEqual(['request logging is on: Logpush on']);
+    expect(await failed({ worker: { observability: { enabled: true } } })).toEqual(['request logging is on: Workers Logs on']);
+    expect(await failed({ worker: { observability: { logs: { enabled: true }, traces: { enabled: true } } } })).toEqual([
+      'request logging is on: Workers Logs on, traces on',
+    ]);
+  });
+});

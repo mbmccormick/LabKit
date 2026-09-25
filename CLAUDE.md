@@ -16,7 +16,8 @@ Read SPEC.md before any work. Implement milestone by milestone (§16); do not st
 ## Commands
 
 - `pnpm test` (unit), `pnpm test:e2e`, `pnpm validate:card <file>`, `pnpm gen-key --env staging`
-- `pnpm dev` (web + worker locally), `pnpm run deploy --env staging` (`pnpm deploy` is a pnpm built-in, so `run` is required)
+- `pnpm dev` (web + worker locally), `pnpm build:release --env staging` (what CI deploys), `pnpm verify:deployment --env staging`
+- Deploys run only in GitHub Actions (`.github/workflows/deploy.yml`, SPEC §13.1): push to `main` → staging, `v*` tag → production. Never deploy from a local machine.
 
 ## Definition of done for any change
 

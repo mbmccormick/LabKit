@@ -1,5 +1,6 @@
+import { BuildInfo } from '../components/BuildInfo';
 import { Coffee } from '../components/Coffee';
-import { SourceLink } from '../components/Source';
+import { SOURCE_URL, SourceLink } from '../components/Source';
 
 export function About() {
   return (
@@ -42,6 +43,22 @@ export function About() {
       <p>
         LabKit is open source under the Apache 2.0 license. You can read every line of code that handles your report,
         report problems, or contribute support for more labs on <SourceLink>GitHub</SourceLink>.
+      </p>
+
+      <h2>Verify This Deployment</h2>
+      <p>
+        To sign your cards, LabKit's server receives your name, date of birth and results. It doesn't store or log them,
+        and you can check that the code running here is the code on GitHub.
+      </p>
+      <BuildInfo />
+      <p>
+        Every release is built and signed by GitHub Actions from a public commit. You can confirm that the files this
+        site sends your browser match that signed build. When a release is deployed, the server code is also checked
+        against the signed build, and the result is in the public deploy log. The guide to{' '}
+        <a href={`${SOURCE_URL}/blob/main/docs/verify.md`} target="_blank" rel="noopener noreferrer">
+          verifying a deployment
+        </a>{' '}
+        walks through the checks.
       </p>
 
       <h2>Support LabKit</h2>

@@ -329,7 +329,8 @@ Requirements (get a short legal review before public launch; this list is not le
 4. Health data never enters URLs, query strings, localStorage, sessionStorage, IndexedDB or service-worker caches. The redirect link is generated on demand and only placed in an `href` the user taps.
 5. State consumer-health-data laws (e.g. Washington My Health My Data Act): the design minimizes exposure by never collecting data, but the privacy policy must still describe the transient server-side processing during signing accurately.
 6. FDA: stay within display/transfer of lab data. No interpretation, risk scores, "optimal" ranges or recommendations. Reference ranges come only from the lab report.
-7. Pages: Privacy Policy, Terms (incl. LOINC attribution and Apple trademark notice), About (signature meaning, supported sources, "not medical advice").
+7. Pages: Privacy Policy, Terms (incl. LOINC attribution and Apple trademark notice), About (signature meaning, supported sources, "not medical advice", how to verify the deployment).
+8. Users can verify that the deployed code matches the public repository (§13.1). *(Added 2026-09-25.)*
 
 ## 12. Parsing pipeline
 
@@ -424,9 +425,20 @@ Worker bindings / vars per environment:
 
 `www.labkit.health` → 301 to apex. HTTPS only; TLS 1.2 minimum (Cloudflare zone setting). DNS on Cloudflare; confirm the registrar supports `.health` (Cloudflare Registrar may not; register elsewhere and delegate nameservers if so).
 
+### 13.1 Deployment and verification *(Added 2026-09-25.)*
+
+Users send names, birth dates and results to the Worker, so they should be able to check that the deployed code is the code in the public repository. Cloudflare offers no remote attestation for Workers, so the guarantee is: every deployment is built and signed by GitHub Actions from a public commit; anyone can check the served web files against that build; the Worker's code is checked against the signed build at deploy time. The owner, GitHub and Cloudflare remain trusted, and `docs/verify.md` says so.
+
+1. **Deploys come only from GitHub Actions** (`.github/workflows/deploy.yml`). A push to `main` deploys staging; a `v*` tag on a commit in `main` deploys production, gated by the `production` GitHub environment (required reviewer). There is no local deploy command. The Cloudflare API token lives only in the GitHub environments, scoped to the Workers permissions the deploy needs.
+2. **Build once, deploy that build.** The `build` job (no secrets) runs typecheck, tests and the official validator, then `pnpm build:release --env <env>` writes `out/<env>/`: the web build, the Worker bundle (`worker/index.js`), and `build-manifest.json` (commit, env, workflow run, SHA-256 of the Worker bundle and of every web file). The bundle and manifest are signed with `actions/attest-build-provenance` (Sigstore). The `deploy` job verifies the attestation, then deploys the prebuilt bundle unchanged (`wrangler deploy --no-bundle`, version tagged with the commit).
+3. **The site describes itself.** The manifest is served verbatim at `/.well-known/labkit-build.json`, with the Cloudflare version ID in the `LabKit-Worker-Version` header. The About page links the commit and explains how to verify.
+4. **Anyone can verify:** `pnpm verify:deployment --env <env>` fetches the live manifest, checks its attestation with `gh attestation verify` (repo, signer workflow and commit enforced), then downloads every web file and compares hashes. `docs/verify.md` covers this and the manual equivalent.
+5. **Deploy-time Worker check.** With a Cloudflare token (deploy job, or a manual `workflow_dispatch` run), the same command also reads the deployed version back from the Cloudflare API and fails unless: one version serves 100% of traffic, its code is exactly the signed Worker bundle, Logpush and observability are off, and there are no tail consumers. The result is in the public Actions log. Changes made later (dashboard edits, secret changes) are not continuously monitored; access controls cover that gap.
+6. Secrets (`SIGNING_KEY_JWK`, `TURNSTILE_SECRET`) never pass through GitHub; the owner sets them in Cloudflare directly.
+
 ## 14. Key management
 
-1. `pnpm gen-key --env staging|production` generates a P-256 key locally, computes the RFC 7638 thumbprint as `kid`, writes the public JWK to `keys/<env>/<kid>.json`, and prints the private JWK once for `wrangler secret put SIGNING_KEY_JWK --env <env>`. The private key is never written to disk in the repo.
+1. `pnpm gen-key --env staging|production` generates a P-256 key locally, computes the RFC 7638 thumbprint as `kid`, writes the public JWK to `keys/<env>/<kid>.json`, and prints the private JWK once for `wrangler secret put SIGNING_KEY_JWK --env <env>` (or the dashboard's Variables and Secrets page). The private key is never written to disk in the repo, and never passes through GitHub (§13.1).
 2. The owner stores an encrypted offline backup of each production private key (password manager). Loss of the key means future cards need a new kid; existing cards keep verifying as long as the public key stays published.
 3. Rotation: generate a new key, commit its public JWK, deploy (JWKS now lists both), switch `ACTIVE_KID` and the secret, deploy. **Never remove a public key from JWKS** unless deliberately invalidating every card it signed.
 4. `Signer` interface (`sign(signingInput: Uint8Array): Promise<Uint8Array /* 64-byte r||s */>`) with `WebCryptoSigner` in v1. An `AzureKeyVaultSigner` (HSM-backed, non-exportable key, ES256 sign-digest API) can replace it later without touching callers; Key Vault returns raw r||s. (AWS KMS would return DER, requiring conversion.)
@@ -457,7 +469,7 @@ No real patient data in the repo, CI logs, test snapshots or error messages.
 
 **M3: PDFs and OCR.** pdf.js positioned extraction, quest-pdf, generic template, labcorp-pdf (fixtures permitting), lazy OCR. Accept: synthetic fixture suite passes; a 10-page text PDF parses in < 3 s on an iPhone 13-class device; OCR rows always require confirmation.
 
-**M4: Launch hardening.** Production key and environment, security headers verified (securityheaders.com A), Privacy/Terms/About pages, logging audit (prove no bodies logged), rate-limit tuning, legal review, manual iOS checklist on production.
+**M4: Launch hardening.** Production key and environment, security headers verified (securityheaders.com A), Privacy/Terms/About pages, logging audit (prove no bodies logged), rate-limit tuning, legal review, manual iOS checklist on production. Deployment verification (§13.1): staging and production deploy only through Actions, `pnpm verify:deployment` passes against both, and the deploy-time check is shown on staging to fail when the deployed code differs from the signed bundle or a tail consumer is added.
 
 **Post-v1 candidates:** opt-in LLM fallback, SHC revocation (`rid` + CRL), Azure Key Vault signer, more vendors, localization, Function Health data import if Function ever offers a user-facing export API.
 

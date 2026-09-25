@@ -25,7 +25,7 @@ console.log(`Wrote public key keys/${env}/${kid}.json`);
 
 const secretOut = argValue('--secret-out');
 if (secretOut && env !== 'dev') {
-  // Write the private JWK to a file (mode 600) for `pnpm run deploy --secrets-file`, instead of printing it.
+  // Write the private JWK to a file (mode 600) for `wrangler secret bulk <file> --env <env>`, instead of printing it.
   const { appendFileSync, chmodSync } = await import('node:fs');
   appendFileSync(secretOut, `SIGNING_KEY_JWK=${privateJwk}\n`, { mode: 0o600 });
   chmodSync(secretOut, 0o600);
@@ -48,7 +48,7 @@ Next steps (${env}):
 
 ${privateJwk}
 
-  2. Commit keys/${env}/${kid}.json and deploy once so the JWKS lists the new key.
+  2. Commit keys/${env}/${kid}.json and deploy once (GitHub Actions, SPEC §13.1) so the JWKS lists the new key.
   3. Set ACTIVE_KID = "${kid}" under [env.${env}.vars] in apps/worker/wrangler.toml and deploy again.
   Never remove an old public key from keys/${env}/ (SPEC §14.3).
 `);

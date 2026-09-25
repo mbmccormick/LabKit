@@ -25,6 +25,7 @@ deployments at labkit.health and staging.labkit.health. Examples:
 - any way health data could be stored, logged, or sent to a third party
 - bypassing Turnstile or rate limits at scale
 - Content Security Policy or header weaknesses
+- a live deployment that doesn't match its signed build (see [docs/verify.md](docs/verify.md))
 
 Out of scope: denial-of-service testing, social engineering, and issues in
 third-party services (Cloudflare, Apple Health) themselves.

@@ -1,0 +1,5 @@
+# Changes here affect what gets deployed and signed (SPEC §13.1, §14).
+/.github/        @mbmccormick
+/apps/worker/    @mbmccormick
+/scripts/        @mbmccormick
+/keys/           @mbmccormick
