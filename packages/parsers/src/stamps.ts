@@ -3,7 +3,7 @@ import type { ParsedReport } from '@labkit/core';
 export type Stamp = { iso: string; timeFound: boolean; match: string };
 
 const COLLECTED_RE =
-  /\b(?:collected|collection(?: date)?(?:\s*\/\s*time)?|date collected|specimen collected|date of collection|drawn)\s*(?:on|at|date)?\s*:?\s*(\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})(?!\d)(?:[\s,T]+(\d{1,2}):?(\d{2})(?::\d{2})?\s*([AP]\.?M\.?)?)?(?:\s*(?:local|utc|gmt|[ECMP][SD]T))?/i;
+  /\b(?:collected|collection(?: date)?(?:\s*\/\s*time)?|date collected|specimen collected|date of collection|drawn)\s*(?:(?:on|at|date)\s*)?(?::\s*)?(\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})(?!\d)(?:[\s,T]+(\d{1,2}):?(\d{2})(?::\d{2})?\s*([AP]\.?M\.?)?)?(?:\s*(?:local|utc|gmt|[ECMP][SD]T))?/i;
 
 /** "Collected: 04/17/2026 01:40 PM" → ISO UTC. tz says how to read the wall-clock time. */
 export function parseStampText(text: string, tz: 'utc' | 'local'): Stamp | undefined {
@@ -35,7 +35,8 @@ function titleCase(s: string): string {
     .replace(/(^|[\s\-'’])(\p{L})/gu, (_, sep: string, ch: string) => sep + ch.toUpperCase());
 }
 
-const NAME_STOP = /\s{2,}|\s+(?:DOB|D\.O\.B|Date of Birth|Birth ?Date|Sex|Gender|Age|ID|MRN|Phone|Acct|Account)\b|$/i;
+// `\s` not `\s+` before the labels: two or more spaces already stop at `\s{2,}`.
+const NAME_STOP = /\s{2,}|\s(?:DOB|D\.O\.B|Date of Birth|Birth ?Date|Sex|Gender|Age|ID|MRN|Phone|Acct|Account)\b|$/i;
 
 function parseDate(m: string): string | undefined {
   const us = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(m);
@@ -47,7 +48,8 @@ function parseDate(m: string): string | undefined {
 type LineLike = { page: number; y: number; h: number; text: string; items: { str: string; x: number }[] };
 
 const NAME_PART = /^[\p{L}'’\-.]+(?: [\p{L}'’\-.]+)*$/u;
-const COMMA_NAME = /^([\p{L}'’\- ]+),\s*([\p{L}'’\-. ]+)$/u;
+// Given names start after the spaces `\s*` took, so the two can't trade spaces.
+const COMMA_NAME = /^([\p{L}'’\- ]+),\s*([\p{L}'’\-.][\p{L}'’\-. ]*)$/u;
 
 type Name = { family: string; given: string[] };
 const splitGiven = (s: string) => s.replace(/\./g, '').trim().split(/\s+/).map(titleCase);
@@ -93,7 +95,7 @@ export function extractPatient(lines: LineLike[]): ParsedReport['patient'] {
   const out: ParsedReport['patient'] = {};
   for (const { text: line } of lines) {
     if (!out.family) {
-      const m = /\b(?:patient(?:\s+name)?|name)\s*:\s*(.+)$/i.exec(line);
+      const m = /\b(?:patient(?:\s+name)?|name)\s*:\s*(\S.*)$/i.exec(line);
       if (m) {
         const nameText = m[1]!.split(NAME_STOP)[0]!.trim();
         const comma = COMMA_NAME.exec(nameText);
@@ -108,12 +110,12 @@ export function extractPatient(lines: LineLike[]): ParsedReport['patient'] {
       }
     }
     if (!out.birthDate) {
-      const m = /\b(?:DOB|D\.O\.B\.?|Date of Birth|Birth ?Date)\s*:?\s*(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2})/i.exec(line);
+      const m = /\b(?:DOB|D\.O\.B\.?|Date of Birth|Birth ?Date)\s*(?::\s*)?(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2})/i.exec(line);
       const d = m && parseDate(m[1]!);
       if (d) out.birthDate = d;
     }
     if (!out.gender) {
-      const m = /\b(?:Sex|Gender)\s*(?:\/\s*\w+)?\s*:?\s*(Male|Female|M|F)\b/i.exec(line);
+      const m = /\b(?:Sex|Gender)\s*(?:\/\s*\w+\s*)?(?::\s*)?(Male|Female|M|F)\b/i.exec(line);
       if (m) out.gender = /^m/i.test(m[1]!) ? 'male' : 'female';
     }
   }

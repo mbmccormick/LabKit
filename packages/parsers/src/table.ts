@@ -7,6 +7,19 @@ import type { Line, TextItem } from './types';
 
 export type Column = { role: Role; x0: number; x1: number };
 
+// Cell-content tests. Each has exactly one way to match any input, so a long run
+// of digits or spaces in a crafted or garbled line can't make them backtrack.
+/** A printed number: "12", "12.5", ".5". */
+const NUM = String.raw`(?:\d+(?:\.\d+)?|\.\d+)`;
+/** "3.5-5.0": a reference range. */
+export const RANGE_CELL = new RegExp(String.raw`^${NUM}\s*-\s*${NUM}(\s|$)`);
+/** "<150 nmol/L": a comparator range with a unit after it. */
+export const COMPARATOR_RANGE_CELL = new RegExp(String.raw`^(<|>|<=|>=|≤|≥|[<>]\s*or\s*=)\s*${NUM}\s+\S`, 'i');
+/** "3/u" in "10*3/uL": digits that are part of a unit, not a value. */
+export const UNIT_DIGITS = /(?<!\d)[0-9]+\/[a-z]/gi;
+/** "08:40 AM UTC": the time/zone tail of a wrapped stamp. */
+export const STAMP_TAIL = /^\d{1,2}(:\d{2})?\s*(?:[AP]M\s*)?(UTC|GMT)?$/i;
+
 export type RawRow = {
   name: string;
   value: string;
@@ -84,10 +97,10 @@ function realign(it: TextItem, band: Column, cols: Column[], hasNameAlready: boo
     const unitCol = cols.find((c) => c.role === 'units');
     const near = nearest();
     if (VALUE_ROLES.includes(near.role)) {
-      if (rangeCol && /^\d*\.?\d+\s*-\s*\d*\.?\d+(\s|$)/.test(text)) return rangeCol;
+      if (rangeCol && RANGE_CELL.test(text)) return rangeCol;
       // "<150 nmol/L" after the result is the reference range, not a second value.
-      if (rangeCol && hasValueAlready && /^(<|>|<=|>=|≤|≥|[<>]\s*or\s*=)\s*\d*\.?\d+\s+\S/i.test(text) && !/^\S+\s+(H|L|HH|LL|A|AA)$/i.test(text)) return rangeCol;
-      if (!/\d/.test(text.replace(/[0-9]+\/[a-z]/gi, '')) && printedToUcum(text)) return unitCol ?? rangeCol ?? near;
+      if (rangeCol && hasValueAlready && COMPARATOR_RANGE_CELL.test(text) && !/^\S+\s+(H|L|HH|LL|A|AA)$/i.test(text)) return rangeCol;
+      if (!/\d/.test(text.replace(UNIT_DIGITS, '')) && printedToUcum(text)) return unitCol ?? rangeCol ?? near;
     }
     return near;
   }
@@ -197,7 +210,7 @@ export function extractTable(lines: Line[], t: Template): TableResult {
       if (found && str.includes(found.match)) str = str.replace(found.match, '').trim();
       if (!str || META_ITEM.test(str)) continue;
       // Drop the time/zone tail of a wrapped stamp ("08:40 AM UTC").
-      if (/^\d{1,2}(:\d{2})?\s*([AP]M)?\s*(UTC|GMT)?$/i.test(str) && !cells.size) continue;
+      if (STAMP_TAIL.test(str) && !cells.size) continue;
       const hasValue = VALUE_ROLES.some((r) => cells.has(r));
       const band = realign(it, assignColumn(it, cols), cols, cells.has('name'), hasValue);
       if (band.role === 'name' && nameX === undefined) nameX = it.x;
