@@ -40,7 +40,8 @@ const run = process.env.GITHUB_RUN_ID
   : null;
 
 // --- build
-const exec = (cmd: string, args: string[]) => execFileSync(cmd, args, { cwd: ROOT, stdio: 'inherit' });
+// LABKIT_KEY_ENV: build-data (also run by wrangler's [build] step) embeds only this env's public keys.
+const exec = (cmd: string, args: string[]) => execFileSync(cmd, args, { cwd: ROOT, stdio: 'inherit', env: { ...process.env, LABKIT_KEY_ENV: env } });
 const OUT = `${ROOT}out/${env}`;
 const DIST = `${ROOT}apps/web/dist`;
 rmSync(OUT, { recursive: true, force: true });

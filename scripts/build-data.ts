@@ -36,9 +36,12 @@ for (const [loinc, hash] of Object.entries(frozen.entries)) {
 mkdirSync(`${ROOT}apps/web/public`, { recursive: true });
 writeIfChanged(`${ROOT}apps/web/public/dictionary.json`, JSON.stringify(parsed.data));
 
+// Release builds (scripts/build-release.ts) set LABKIT_KEY_ENV so the Worker carries only its own
+// environment's keys, never the throwaway dev key CI generates for the tests.
+const onlyEnv = process.env.LABKIT_KEY_ENV;
 const keysets: Record<string, unknown[]> = {};
 for (const env of ENVS) {
-  const keys = readPublicKeys(env);
+  const keys = onlyEnv && env !== onlyEnv ? [] : readPublicKeys(env);
   for (const k of keys) {
     if ((await jwkThumbprint(k)) !== k.kid) throw new Error(`keys/${env}/${k.kid}.json: kid is not the RFC 7638 thumbprint`);
   }
