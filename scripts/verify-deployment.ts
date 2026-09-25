@@ -91,7 +91,15 @@ if (token) {
   try {
     const { checks: cf, versionId } = await checkCloudflare(cloudflareApi(token), accountId, `${name}-${env}`, manifest);
     cf.forEach(report);
-    if (versionId && liveVersion) report({ ok: versionId === liveVersion, label: `the site is served by version ${versionId}` });
+    if (versionId && liveVersion) {
+      // Just deployed (--expect): the edge may answer from the previous version for a few seconds.
+      let serving = liveVersion;
+      for (let attempt = 0; expected !== undefined && serving !== versionId && attempt < 12; attempt++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        serving = (await getManifest()).headers.get('LabKit-Worker-Version') ?? serving;
+      }
+      report({ ok: versionId === serving, label: `the site is served by version ${versionId}`, ...(versionId === serving ? {} : { detail: `answering: ${serving}` }) });
+    }
   } catch (err) {
     report({ ok: false, label: 'could not read the deployment from Cloudflare', detail: err instanceof Error ? err.message : String(err) });
   }
