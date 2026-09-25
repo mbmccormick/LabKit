@@ -26,7 +26,7 @@ This:
 3. Downloads every web file from the site and checks it against the manifest.
 4. Prints the commit and a link to the build and deploy log.
 
-Every line should start with ✓. Open the deploy log and find the step **Check the live deployment against the signed build**. It shows that the server code Cloudflare holds is exactly the signed bundle (`version … code is exactly the signed Worker bundle`), that logging is off, and that there are no tail consumers. The `LabKit-Worker-Version` header on the manifest names the Cloudflare version that answered you. It should match the version in that log.
+Every line should start with ✓. Open the deploy log and find the step **Check the live deployment against the signed build**. It shows that the server code Cloudflare holds is exactly the signed build (`version … code and _headers are exactly the signed build`), that logging is off, and that there are no tail consumers. The `LabKit-Worker-Version` header on the manifest names the Cloudflare version that answered you. It should match the version in that log.
 
 Use `--env staging` to check `staging.labkit.health`.
 

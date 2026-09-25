@@ -67,16 +67,23 @@ export async function checkCloudflare(api: CloudflareApi, accountId: string, scr
     ...(single ? {} : { detail: JSON.stringify(versions) }),
   });
 
+  // A version holds the Worker module plus the static-assets config (_headers). Each must be
+  // exactly the signed file, and nothing else may be there.
+  const expected = new Map([[manifest.worker.file, manifest.worker.sha256], ...Object.entries(manifest.config)]);
   for (const { version_id: id } of versions) {
     const version = (await api(`${base}/workers/${script}/versions/${id}?include=modules`)) as Version;
-    const modules = version.modules ?? [];
-    const hashes = modules.map((m) => `${m.name} ${m.content_base64 === undefined ? 'no content' : sha256(Buffer.from(m.content_base64, 'base64'))}`);
-    const exact = modules.length === 1 && hashes[0] === `${modules[0]!.name} ${manifest.worker.sha256}`;
+    const modules = (version.modules ?? []).map((m) => ({ name: m.name, sha256: m.content_base64 === undefined ? 'no content' : sha256(Buffer.from(m.content_base64, 'base64')) }));
+    const exact =
+      modules.length === expected.size && modules.every((m) => expected.get(m.name) === m.sha256) && modules.some((m) => m.name === manifest.worker.file);
     const tag = version.annotations?.['workers/tag'];
     checks.push({
       ok: exact,
-      label: exact ? `version ${id} code is exactly the signed Worker bundle` : `version ${id} code differs from the signed Worker bundle`,
-      detail: [`expected ${manifest.worker.file} ${manifest.worker.sha256}`, ...hashes.map((h) => `deployed ${h}`), `tag ${tag ?? '(none)'}`].join('\n'),
+      label: exact ? `version ${id} code and _headers are exactly the signed build` : `version ${id} differs from the signed build`,
+      detail: [
+        ...[...expected].map(([name, hash]) => `signed   ${name} ${hash}`),
+        ...modules.map((m) => `deployed ${m.name} ${m.sha256}`),
+        `tag ${tag ?? '(none)'}`,
+      ].join('\n'),
     });
   }
 

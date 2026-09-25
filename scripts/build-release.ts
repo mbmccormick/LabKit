@@ -3,13 +3,13 @@
 // Builds exactly what the deploy job ships (SPEC §13.1) into out/<env>/:
 //   web/                  the web build, including build-manifest.json
 //   worker/index.js       the bundled Worker, deployed unchanged with `wrangler deploy --no-bundle`
-//   build-manifest.json   commit, env, run, and SHA-256 of the Worker and every web file
+//   build-manifest.json   commit, env, run, and SHA-256 of the Worker, every web file and _headers
 // CI signs worker/index.js and build-manifest.json with actions/attest-build-provenance.
 // Tests are not run here; the workflow runs them first.
 import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { argValue, hostFor, isDeployEnv, readPublicKeys, readWranglerConfig, REPOSITORY, ROOT } from './lib';
-import { hashAssets, MANIFEST_FILE, serializeManifest, sha256, type BuildManifest } from './manifest';
+import { hashAssetConfig, hashAssets, MANIFEST_FILE, serializeManifest, sha256, type BuildManifest } from './manifest';
 
 const env = argValue('--env');
 if (!isDeployEnv(env)) {
@@ -63,6 +63,7 @@ const manifest: BuildManifest = {
   run,
   worker: { file: 'index.js', sha256: sha256(readFileSync(`${OUT}/worker/index.js`)) },
   assets: hashAssets(DIST),
+  config: hashAssetConfig(DIST),
 };
 const text = serializeManifest(manifest);
 writeFileSync(`${DIST}/${MANIFEST_FILE}`, text);

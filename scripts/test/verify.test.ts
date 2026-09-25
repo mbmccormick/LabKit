@@ -3,10 +3,11 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { hashAssets, parseManifest, serializeManifest, sha256, type BuildManifest } from '../manifest';
+import { hashAssetConfig, hashAssets, parseManifest, serializeManifest, sha256, type BuildManifest } from '../manifest';
 import { checkAssets, checkCloudflare, type CloudflareApi } from '../verify';
 
 const WORKER = 'export default { fetch() { return new Response("ok") } };\n';
+const HEADERS = '/*\n  X-Content-Type-Options: nosniff\n';
 const FILES: Record<string, string> = { '/index.html': '<!doctype html>', '/assets/app-1234.js': 'console.log(1)' };
 
 function manifest(): BuildManifest {
@@ -18,6 +19,7 @@ function manifest(): BuildManifest {
     run: 'https://github.com/example/labkit/actions/runs/1',
     worker: { file: 'index.js', sha256: sha256(WORKER) },
     assets: Object.fromEntries(Object.entries(FILES).map(([p, c]) => [p, sha256(c)])),
+    config: { _headers: sha256(HEADERS) },
   };
 }
 
@@ -30,6 +32,7 @@ describe('build manifest', () => {
     writeFileSync(join(dir, '_headers'), '/*\n  X: y\n');
     writeFileSync(join(dir, 'build-manifest.json'), '{}');
     expect(hashAssets(dir)).toEqual({ '/assets/app-1234.js': sha256(FILES['/assets/app-1234.js']!), '/index.html': sha256(FILES['/index.html']!) });
+    expect(hashAssetConfig(dir)).toEqual({ _headers: sha256('/*\n  X: y\n') });
   });
 
   it('round-trips and rejects anything that is not a manifest', () => {
@@ -38,6 +41,7 @@ describe('build manifest', () => {
     expect(() => parseManifest('{"schema":1}')).toThrow();
     expect(() => parseManifest(serializeManifest({ ...m, commit: 'main' }))).toThrow();
     expect(() => parseManifest(serializeManifest({ ...m, assets: { '/../etc/passwd': sha256('x') } }))).toThrow();
+    expect(() => parseManifest(serializeManifest({ ...m, config: { 'worker.js': sha256('x') } }))).toThrow();
   });
 });
 
@@ -69,7 +73,11 @@ describe('checkCloudflare', () => {
   const b64 = (s: string) => Buffer.from(s).toString('base64');
   const good = (): Required<State> => ({
     versions: [{ version_id: 'v1', percentage: 100 }],
-    modules: [{ name: 'index.js', content_type: 'application/javascript+module', content_base64: b64(WORKER) }],
+    // As Cloudflare returns it: the Worker module plus the static-assets _headers file.
+    modules: [
+      { name: 'index.js', content_type: 'application/javascript+module', content_base64: b64(WORKER) },
+      { name: '_headers', content_type: 'text/plain', content_base64: b64(HEADERS) },
+    ],
     worker: { logpush: false, observability: { enabled: false, logs: { enabled: false } }, tail_consumers: [] },
   });
   const api = (state: State): CloudflareApi => {
@@ -84,15 +92,21 @@ describe('checkCloudflare', () => {
   const run = async (state: State) => checkCloudflare(api(state), 'acct', 'labkit-staging', manifest());
   const failed = async (state: State) => (await run(state)).checks.filter((c) => !c.ok).map((c) => c.label);
 
-  it('passes for the signed bundle with logging off', async () => {
+  it('passes for the signed bundle and _headers with logging off', async () => {
     const { checks, versionId } = await run({});
     expect(checks.every((c) => c.ok)).toBe(true);
     expect(versionId).toBe('v1');
   });
 
   it('fails when the deployed code differs (e.g. a dashboard edit)', async () => {
-    const modules = [{ name: 'index.js', content_type: 'application/javascript+module', content_base64: b64(WORKER + '// edited\n') }];
-    expect(await failed({ modules })).toEqual(['version v1 code differs from the signed Worker bundle']);
+    const modules = good().modules.map((m) => (m.name === 'index.js' ? { ...m, content_base64: b64(WORKER + '// edited\n') } : m));
+    expect(await failed({ modules })).toEqual(['version v1 differs from the signed build']);
+  });
+
+  it('fails when _headers differs or the Worker module is missing', async () => {
+    const edited = good().modules.map((m) => (m.name === '_headers' ? { ...m, content_base64: b64('/*\n') } : m));
+    expect(await failed({ modules: edited })).toEqual(['version v1 differs from the signed build']);
+    expect(await failed({ modules: good().modules.filter((m) => m.name !== 'index.js') })).toEqual(['version v1 differs from the signed build']);
   });
 
   it('fails when an extra module is deployed alongside the bundle', async () => {
