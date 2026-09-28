@@ -130,7 +130,7 @@ export function Home() {
         <h2>Private by Design</h2>
         <ul class="checks">
           <li>Your report is read inside this browser tab. The file never leaves your device.</li>
-          <li>To sign a card, its results pass through our server once and are never stored or logged.</li>
+          <li>To sign a card, its contents pass through our server once and are never stored or logged.</li>
           <li>No accounts, no ads, no trackers. Close the tab and it's gone.</li>
           <li>
             LabKit is open source, so anyone can check these claims: <SourceLink>read the code on GitHub</SourceLink>.
@@ -141,11 +141,11 @@ export function Home() {
       <section class="panel">
         <h2>How It Works</h2>
         <ol class="steps">
-          <li>Choose your lab report. We read the results, units, reference ranges, and collection date.</li>
-          <li>Check anything we flag. A card can't be edited once it's in Apple Health.</li>
+          <li>Choose your lab report. LabKit reads the results, units, reference ranges, and collection dates.</li>
+          <li>Review anything LabKit flags. Cards can't be edited once they're in Apple Health.</li>
           <li>
-            Tap <strong>Add to Apple Health</strong> on your iPhone, or download the card file and open it on your
-            iPhone.
+            On your iPhone, tap <strong>Add to Apple Health</strong>. On a computer, download the card and send it to
+            your iPhone.
           </li>
         </ol>
       </section>
@@ -153,8 +153,8 @@ export function Home() {
       <section class="panel">
         <h2>Supported Reports</h2>
         <p>
-          Quest and Labcorp reports, other lab PDFs, and photos of printed reports, including results from
-          direct-to-consumer testing services. If your provider already sends results to Apple Health through Health
+          PDFs from Quest, Labcorp, and other labs, including direct-to-consumer testing services, and scans or photos
+          of printed reports. If your provider already sends results to Apple Health through Health
           Records, you don't need LabKit.
         </p>
       </section>

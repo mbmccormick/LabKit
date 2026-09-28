@@ -20,11 +20,11 @@ export function loadTurnstile(): Promise<Turnstile> {
     const s = document.createElement('script');
     s.src = SRC;
     s.async = true;
-    s.onload = () => (window.turnstile ? resolve(window.turnstile) : reject(new Error('Turnstile failed to initialize')));
+    s.onload = () => (window.turnstile ? resolve(window.turnstile) : reject(new Error("Couldn't load the human check. Check your connection and try again.")));
     s.onerror = () => {
       loading = undefined;
       s.remove();
-      reject(new Error('Could not load the human check. Check your connection and try again.'));
+      reject(new Error("Couldn't load the human check. Check your connection and try again."));
     };
     document.head.appendChild(s);
   });

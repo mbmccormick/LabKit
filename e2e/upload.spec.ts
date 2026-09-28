@@ -29,7 +29,7 @@ test('Quest PDF → review → confirm flagged rows → sign → download → ve
   await expect(create).toBeDisabled(); // until the attestation box is ticked
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/review-${info.project.name}.png`, fullPage: true });
 
-  await page.getByLabel("I've reviewed and confirmed these results match my lab report").check();
+  await page.getByLabel("I've checked that these results match my lab report").check();
   await create.click();
   await expect(page.getByRole('heading', { name: 'Your Cards Are Ready' })).toBeVisible({ timeout: 30_000 });
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/done-${info.project.name}.png`, fullPage: true });
@@ -91,7 +91,7 @@ test('clicking the not-ready Create button goes to the next Review item, then th
   await page.evaluate(() => scrollTo(0, 0));
   const create = page.getByRole('button', { name: 'Create Card' });
   await create.click({ force: true });
-  const box = page.getByLabel("I've reviewed and confirmed these results match my lab report");
+  const box = page.getByLabel("I've checked that these results match my lab report");
   await expect(box).toBeInViewport();
   await expect(box).toBeFocused();
   await expect(page.getByRole('heading', { name: 'Your Card Is Ready' })).toHaveCount(0);

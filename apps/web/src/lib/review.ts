@@ -34,9 +34,9 @@ export type ReviewModel = {
 export function blockReason(row: ParsedRow): string | undefined {
   if (!row.entry) return "We couldn't identify this test.";
   if (row.issues.includes('ambiguous_match')) return 'This name matches more than one test.';
-  if (row.issues.includes('unit_mismatch')) return `The unit (${row.raw.unit ?? 'none'}) can't be used for this test.`;
+  if (row.issues.includes('unit_mismatch')) return row.raw.unit ? `The unit ${row.raw.unit} can't be used for this test.` : 'This result has no unit, and this test needs one.';
   if (!row.value) return "We couldn't read this result.";
-  if (row.issues.includes('implausible')) return 'This value is outside what is physiologically possible, so it was probably misread.';
+  if (row.issues.includes('implausible')) return 'This value is outside the possible range for this test, so it was probably misread.';
   return undefined;
 }
 
@@ -55,7 +55,7 @@ export function buildReview(reports: ExtractedReport[]): ReviewModel {
   // Patient: must be the same person across files; fields fill in from any file.
   const p: ExtractedReport['patient'] = {};
   for (const r of reports) {
-    if (!samePerson(p, r.patient)) model.patientProblem = "These files seem to belong to different people. Upload one person's reports at a time.";
+    if (!samePerson(p, r.patient)) model.patientProblem = "These files seem to belong to different people. Choose one person's reports at a time.";
     p.family ??= r.patient.family;
     if (!p.given?.length && r.patient.given?.length) p.given = r.patient.given;
     p.birthDate ??= r.patient.birthDate;
@@ -137,7 +137,7 @@ export function readiness(model: ReviewModel): { ready: boolean; problems: strin
   }
   const cards = active.filter((d) => d.rows.some((r) => r.decision === 'included'));
   if (!cards.length && !pending) problems.push('There are no results to add.');
-  if (cards.length > 12) problems.push('At most 12 collections can be signed at once. Leave some out.');
+  if (cards.length > 12) problems.push('You can create up to 12 cards at once. Leave some collections out.');
   return { ready: problems.length === 0, problems };
 }
 

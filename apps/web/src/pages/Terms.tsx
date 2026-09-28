@@ -7,19 +7,19 @@ export function Terms() {
       <p>By using LabKit, you agree to these terms.</p>
       <ul>
         <li>
-          LabKit is a tool for adding your own lab results to your own Apple Health. Only upload reports that are
-          yours, or that you are authorized to handle.
+          LabKit is a tool for adding your own lab results to your own Apple Health. Only use reports that are yours,
+          or that you're authorized to handle.
         </li>
         <li>
-          You're responsible for checking that every value you sign matches your lab report. Signed cards can't be
-          edited, and in Apple Health a card can only be removed as a whole.
+          You're responsible for checking that every value on your cards matches your lab report. Cards can't be
+          edited, and in Apple Health a card can only be deleted as a whole.
         </li>
         <li>
           The signature on a card shows that LabKit created it and that it hasn't been changed. It doesn't certify that
           the values are correct or came from a lab. Don't present cards as anything more than that.
         </li>
         <li>LabKit doesn't provide medical advice or interpret results.</li>
-        <li>Don't try to misuse the signing service (for example, automated or bulk signing, or signing others' data).</li>
+        <li>Don't misuse the signing service, for example by automating requests or signing someone else's results.</li>
         <li>The service is provided "as is," without warranty. It may change or stop at any time.</li>
       </ul>
       <h2>Notices</h2>
