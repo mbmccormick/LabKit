@@ -8,15 +8,16 @@ export function About() {
       <h1>About LabKit</h1>
       <p>
         LabKit (labkit.health) turns your lab report into a <a href="https://spec.smarthealth.cards">SMART Health Card</a>,
-        a standard format you can add to Apple Health as lab results. A card holds the results from one collection date and
-        time, so a report with several collection dates becomes one card per date.
+        a standard format you can add to Apple Health as lab results. Each card holds the results from one collection, so
+        a report with several collection dates becomes several cards.
       </p>
 
       <h2>What the Signature Means</h2>
       <p>
         Every card is signed by <code>https://labkit.health</code>, so Apple Health can verify where it came from. A
         valid signature means LabKit created the card and it hasn't been changed since. It does <strong>not</strong>{' '}
-        mean the values are correct or that they came from a lab: you check the values yourself before signing.
+        mean the values are correct or that they came from a lab. You confirm the values yourself before the card is
+        created.
       </p>
 
       <h2>Not Medical Advice</h2>
@@ -28,15 +29,15 @@ export function About() {
 
       <h2>Lab Results Only</h2>
       <p>
-        LabKit signs lab results only. It never creates immunization or COVID-19 cards, and it signs only tests on its
-        supported list.
+        LabKit signs only lab results, and only for tests on its supported list. It never creates immunization or
+        COVID-19 cards.
       </p>
 
       <h2>Supported Reports</h2>
       <p>
-        LabKit reads Quest and Labcorp reports, other lab PDFs, and scans or photos of printed reports. Everything is
-        read on your device. Results it can't read confidently are shown for you to review, and anything it can't
-        identify is left out.
+        LabKit reads PDFs from Quest, Labcorp, and other labs, including direct-to-consumer testing services, and scans
+        or photos of printed reports. Everything is read on your device. You review any result LabKit isn't sure about,
+        and anything it can't identify is left out.
       </p>
 
       <h2>Open Source</h2>
@@ -47,18 +48,18 @@ export function About() {
 
       <h2>Verify This Deployment</h2>
       <p>
-        To sign your cards, LabKit's server receives your name, date of birth and results. It doesn't store or log them,
+        To sign your cards, LabKit's server receives your name, date of birth, and results. It doesn't store or log them,
         and you can check that the code running here is the code on GitHub.
       </p>
       <BuildInfo />
       <p>
-        Every release is built and signed by GitHub Actions from a public commit. You can confirm that the files this
-        site sends your browser match that signed build. When a release is deployed, the server code is also checked
-        against the signed build, and the result is in the public deploy log. The guide to{' '}
+        Every release is built and signed by GitHub Actions from a public commit. You can check that the files your
+        browser receives match that build. The server code is checked against it at deploy time, and the result is in the
+        public deploy log. The{' '}
         <a href={`${SOURCE_URL}/blob/main/docs/verify.md`} target="_blank" rel="noopener noreferrer">
-          verifying a deployment
+          verification guide
         </a>{' '}
-        walks through the checks.
+        walks through each check.
       </p>
 
       <h2>Support LabKit</h2>

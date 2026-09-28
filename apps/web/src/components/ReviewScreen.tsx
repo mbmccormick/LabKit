@@ -72,7 +72,7 @@ export function ReviewScreen(props: {
     setState({ phase: 'challenge' });
     try {
       const health = await getHealth();
-      if (!health.ok) throw new Error('Signing is temporarily unavailable. Please try again later.');
+      if (!health.ok) throw new Error('Signing is temporarily unavailable. Try again later.');
       const drafts = buildCards(model, await props.dictionary, health.issuer);
       const ts = await loadTurnstile();
       if (widgetId.current) ts.remove(widgetId.current);
@@ -80,8 +80,8 @@ export function ReviewScreen(props: {
         sitekey: TURNSTILE_SITE_KEY,
         action: 'sign',
         callback: (token: string) => void submit(token, drafts),
-        'error-callback': () => setState({ phase: 'error', message: 'The human check failed. Please try again.' }),
-        'expired-callback': () => setState({ phase: 'error', message: 'The human check expired. Please try again.' }),
+        'error-callback': () => setState({ phase: 'error', message: 'The human check failed. Try again.' }),
+        'expired-callback': () => setState({ phase: 'error', message: 'The human check expired. Try again.' }),
       });
     } catch (e) {
       setState({ phase: 'error', message: (e as Error).message });
@@ -108,14 +108,14 @@ export function ReviewScreen(props: {
     } catch (e) {
       if (widgetId.current) window.turnstile?.remove(widgetId.current);
       widgetId.current = undefined;
-      let message = 'Something went wrong. Please try again.';
+      let message = 'Something went wrong. Try again.';
       if (e instanceof SignError) {
-        if (e.error.code === 'rate_limited') message = 'Too many requests. Please wait a minute and try again.';
-        else if (e.error.code === 'turnstile_failed') message = 'The human check failed. Please try again.';
+        if (e.error.code === 'rate_limited') message = 'Too many requests. Wait a minute and try again.';
+        else if (e.error.code === 'turnstile_failed') message = 'The human check failed. Try again.';
         else if (e.error.code === 'too_large') message = 'Too many results at once. Leave some collections out and try again.';
         else if (e.error.code === 'invalid_payload')
           message = `A card was rejected${e.error.cardIndex !== undefined ? ` (card ${e.error.cardIndex + 1})` : ''}: ${e.error.message}.`;
-        else message = 'Signing is temporarily unavailable. Please try again later.';
+        else message = 'Signing is temporarily unavailable. Try again later.';
       }
       setState({ phase: 'error', message });
     }
@@ -148,8 +148,8 @@ export function ReviewScreen(props: {
     <div class="flow">
       <h1>Check Your Results</h1>
       <p class="muted">
-        Here's what we imported. Please review any results marked <span class="badge check">Review</span> against your
-        report. Once a card is generated and added to Apple Health, it can't be edited, only removed as a whole.
+        Here's what LabKit found. Compare anything marked <span class="badge check">Review</span> with your report. Once
+        a card is in Apple Health, it can't be edited, only deleted as a whole.
       </p>
 
       <section class="panel">
@@ -214,7 +214,7 @@ export function ReviewScreen(props: {
           <h2>Confirm Your Results</h2>
           <label class="confirm">
             <input type="checkbox" checked={attested} disabled={busy} onChange={(e) => setAttested(e.currentTarget.checked)} />
-            <span>I've reviewed and confirmed these results match my lab report</span>
+            <span>I've checked that these results match my lab report</span>
           </label>
         </section>
       ) : (
@@ -235,7 +235,7 @@ export function ReviewScreen(props: {
 
       <div class="actions sticky-actions">
         <button class="button" onClick={props.onCancel} disabled={busy}>
-          Choose a Different File
+          Start Over
         </button>
         {/* aria-disabled (not disabled) while waiting on the user, so a click can take them to what's left to do. */}
         <button

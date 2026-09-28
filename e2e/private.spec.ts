@@ -32,7 +32,7 @@ test.describe('private reports', () => {
       // Readiness messages name rule outcomes/test labels only (no values).
       const problems = await page.locator('ul.errors li').allTextContents();
       if (problems.length) throw new Error(`not ready: ${problems.join(' | ')}`);
-      await page.getByLabel("I've reviewed and confirmed these results match my lab report").check();
+      await page.getByLabel("I've checked that these results match my lab report").check();
       const create = page.getByRole('button', { name: /^Create/ });
       await expect(create).toBeEnabled();
       await create.click();

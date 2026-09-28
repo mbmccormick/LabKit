@@ -28,8 +28,8 @@ export function Privacy() {
 
       <h2>No Tracking</h2>
       <p>
-        No analytics, advertising pixels, third-party fonts, or third-party scripts, apart from Cloudflare Turnstile,
-        which loads only when you create a card.
+        LabKit uses no analytics, advertising pixels, third-party fonts, or third-party scripts. The one exception is
+        Cloudflare Turnstile, which loads only when you create a card.
       </p>
 
       <h2>Check for Yourself</h2>

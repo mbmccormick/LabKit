@@ -55,7 +55,7 @@ async function imageToCanvas(bytes: Uint8Array, kind: 'jpeg' | 'png' | 'heic'): 
     const img = new Image();
     img.src = url;
     await img.decode().catch(() => {
-      throw new Error(kind === 'heic' ? "This browser can't open HEIC photos. Open LabKit in Safari, or upload a JPEG or PDF." : "This image couldn't be opened.");
+      throw new Error(kind === 'heic' ? "This browser can't open HEIC photos. Open LabKit in Safari, or choose a JPEG or PDF." : "This image couldn't be opened.");
     });
     const scale = Math.min(1, MAX_OCR_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
     const { canvas, ctx } = canvasFor(img.naturalWidth * scale, img.naturalHeight * scale);

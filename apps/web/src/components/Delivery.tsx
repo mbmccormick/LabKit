@@ -58,7 +58,7 @@ export function Delivery(props: { cards: Delivered[]; onRestart: () => void }) {
           <li>In Apple Health, each card appears as its own source, listed as labkit.health.</li>
           <li>Deleting a card in Apple Health removes all of its results. Individual results can't be removed.</li>
           <li>Results for the same test from different cards appear together in one trend chart.</li>
-          <li>We didn't keep a copy. When you close this tab, your results are gone from this page too.</li>
+          <li>LabKit doesn't keep a copy. Once you close this tab, you can't get these cards back.</li>
         </ul>
       </section>
 
