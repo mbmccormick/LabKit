@@ -1,6 +1,6 @@
 // Column reconstruction from a header line (SPEC §12.3 steps 3–7).
 import { printedToUcum } from '@labkit/core';
-import { parseStampText, type Stamp } from './stamps';
+import { parseStampText, valueBelow, type Stamp } from './stamps';
 import type { Role, Template } from './template';
 import { VALUE_ROLES } from './template';
 import type { Line, TextItem } from './types';
@@ -124,11 +124,22 @@ function looksLikePanel(text: string): boolean {
   return PANEL_WORDS.test(text) || (letters.length >= 4 && upper / letters.length > 0.8);
 }
 
-/** A collection stamp whose time wrapped onto the next line: "Collected: 04/17/2026" / "08:40 AM UTC". */
+const BOXED_COLLECTED = /^date (?:and|&) time collected$/i;
+
+/**
+ * A collection stamp whose time wrapped onto the next line: "Collected: 04/17/2026" / "08:40 AM UTC".
+ * Also a boxed header, where the date sits under the label: "Date and Time Collected" / "11/28/16 00:00".
+ */
 function stampFor(lines: Line[], idx: number, t: Template): Stamp | undefined {
   const line = lines[idx]!;
   const found = parseStampText(line.text, t.collectedTz);
-  if (!found || found.timeFound) return found;
+  if (!found) {
+    const label = line.items.find((it) => BOXED_COLLECTED.test(it.str.trim()));
+    const value = label && valueBelow(lines, idx, label);
+    const boxed = value ? parseStampText(`Collected: ${value}`, t.collectedTz) : undefined;
+    return boxed && { ...boxed, match: label!.str.trim() };
+  }
+  if (found.timeFound) return found;
   const next = lines[idx + 1];
   if (!next || next.page !== line.page || !/^\s*\d{1,2}(:\d{2})?\s*([AP]\.?M\.?)?\b/i.test(next.text)) return found;
   const joined = /\d:\s*$/.test(line.text) ? line.text.replace(/\s+$/, '') + next.text.trimStart() : `${line.text} ${next.text}`;

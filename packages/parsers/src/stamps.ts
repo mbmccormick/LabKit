@@ -94,6 +94,60 @@ function parseDate(m: string): string | undefined {
 
 type LineLike = { page: number; y: number; h: number; text: string; items: { str: string; x: number }[] };
 
+/**
+ * Boxed headers (Labcorp's older report form) print a row of labels and the values on
+ * the line below: "Date and Time Collected  Date Entered" / "11/28/16 00:00  11/29/16".
+ * Returns the text under `label`: the next line's items whose nearest label is this one.
+ */
+export function valueBelow(lines: readonly LineLike[], idx: number, label: { x: number }): string | undefined {
+  const line = lines[idx]!;
+  const next = lines[idx + 1];
+  if (!next || next.page !== line.page || next.y - line.y > 2.5 * line.h) return undefined;
+  const nearest = (x: number) => line.items.reduce((a, b) => (Math.abs(b.x - x) < Math.abs(a.x - x) ? b : a));
+  const text = next.items
+    .filter((it) => nearest(it.x) === label)
+    .map((it) => it.str.trim())
+    .join(' ')
+    .trim();
+  return text || undefined;
+}
+
+/** "01/11/90" in a boxed header: a two-digit birth year is in the past century unless that would be in the future. */
+function parseShortDob(s: string): string | undefined {
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{2})$/.exec(s);
+  if (!m) return undefined;
+  const yy = Number(m[3]);
+  const year = yy <= new Date().getUTCFullYear() % 100 ? 2000 + yy : 1900 + yy;
+  return `${year}-${m[1]!.padStart(2, '0')}-${m[2]!.padStart(2, '0')}`;
+}
+
+/** Patient fields from a boxed header (labels above values). */
+function boxedPatient(lines: readonly LineLike[]): ParsedReport['patient'] {
+  const field: Record<'last' | 'first' | 'middle' | 'dob' | 'sex', string | undefined> = { last: undefined, first: undefined, middle: undefined, dob: undefined, sex: undefined };
+  const LABELS: [keyof typeof field, RegExp][] = [
+    ['last', /^patient last name$/i],
+    ['first', /^patient first name$/i],
+    ['middle', /^patient middle name$/i],
+    ['dob', /^date of birth$/i],
+    ['sex', /^sex$/i],
+  ];
+  lines.forEach((line, idx) => {
+    for (const it of line.items) {
+      const key = LABELS.find(([, re]) => re.test(it.str.trim()))?.[0];
+      if (key && field[key] === undefined) field[key] = valueBelow(lines, idx, it);
+    }
+  });
+  const out: ParsedReport['patient'] = {};
+  if (field.last && field.first && NAME_PART.test(field.last) && NAME_PART.test(field.first)) {
+    out.family = titleCase(field.last);
+    out.given = splitGiven(field.middle && NAME_PART.test(field.middle) ? `${field.first} ${field.middle}` : field.first);
+  }
+  const dob = field.dob && (parseDate(field.dob) ?? parseShortDob(field.dob));
+  if (dob) out.birthDate = dob;
+  if (field.sex && /^(m|male|f|female)$/i.test(field.sex)) out.gender = /^m/i.test(field.sex) ? 'male' : 'female';
+  return out;
+}
+
 const NAME_PART = /^[\p{L}'’\-.]+(?: [\p{L}'’\-.]+)*$/u;
 // Given names start after the spaces `\s*` took, so the two can't trade spaces.
 const COMMA_NAME = /^([\p{L}'’\- ]+),\s*([\p{L}'’\-.][\p{L}'’\-. ]*)$/u;
@@ -177,6 +231,15 @@ export function extractPatient(lines: LineLike[]): ParsedReport['patient'] {
       out.family = pick.family;
       out.given = pick.given;
     }
+  }
+  if (!out.family || !out.birthDate || !out.gender) {
+    const boxed = boxedPatient(lines);
+    if (!out.family && boxed.family) {
+      out.family = boxed.family;
+      out.given = boxed.given;
+    }
+    if (!out.birthDate && boxed.birthDate) out.birthDate = boxed.birthDate;
+    if (!out.gender && boxed.gender) out.gender = boxed.gender;
   }
   return out;
 }

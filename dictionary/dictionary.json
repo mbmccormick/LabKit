@@ -2923,6 +2923,9 @@
       "category": "thyroid",
       "valueType": "quantity",
       "ucum": "m[IU]/L",
+      "unitAliases": {
+        "uIU/mL": "m[IU]/L"
+      },
       "plausible": {
         "min": 0,
         "max": 500
