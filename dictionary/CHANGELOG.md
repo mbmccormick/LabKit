@@ -6,6 +6,7 @@ Record every change to `dictionary.json` here. `loinc`, `display` and `text` of 
 
 - Added 5 entries that consumer panels (Function Health, Superpower and similar) and routine Quest/Labcorp orders include: 2132-9 Vitamin B12, 2284-8 Folate, 19123-9 Magnesium (serum), 1869-7 Apolipoprotein A1, 33863-2 Cystatin C. Codes and `display` (Long Common Name) were checked against LOINC 2.82 listings (loinc.org, findacode.com) and lab test catalogs (ARUP, Mayo, Labcorp). Exact-equivalent unit aliases only: `ng/L` = `pg/mL` (B12), `ug/L` = `ng/mL` (folate).
 - Added generic aliases for names consumer reports print: `CRP-hs`, `Fasting Insulin`, `Fasting Glucose`/`Glucose, Fasting`, `A1C`, `ALP`, `Transferrin Saturation`, `Total Iron Binding Capacity`, `Urea Nitrogen`, `Free Thyroxine`, `PSA`.
+- Added 2 entries that Quest and Labcorp print on routine panels and were left unmatched: 3097-3 BUN/Creatinine Ratio (CMP; unit `{ratio}`, as for the albumin/globulin ratio) and 13458-5 VLDL Cholesterol (Labcorp lipid panel, "VLDL Cholesterol Cal"). Both ACTIVE in LOINC 2.82 (tx.fhir.org); `display` is the Long Common Name verbatim (NLM Clinical Tables). Aliases are the names on Labcorp's and Quest's published sample reports.
 - `mEq/L` → `mmol/L` unit alias on sodium, potassium, chloride and carbon dioxide only (monovalent, so 1 mEq = 1 mmol). Never global: for calcium and magnesium 1 mEq/L = 0.5 mmol/L.
 - Not yet in `FROZEN.json`. Confirm an import into Apple Health and review the `text` labels before the next production release.
 

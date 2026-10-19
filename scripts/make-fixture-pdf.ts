@@ -69,7 +69,8 @@ const questSections: Section[] = [
     rows: [
       { name: 'GLUCOSE', val: '88', range: '65-99', unit: 'mg/dL', prev: '101', prevDate: '10/23/2024', expect: { loinc: '2345-7', value: 88, ucum: 'mg/dL', low: 65, high: 99, confidence: 'high' } },
       { name: 'UREA NITROGEN (BUN)', val: '14', range: '7-25', unit: 'mg/dL', expect: { loinc: '3094-0', value: 14, ucum: 'mg/dL', low: 7, high: 25, confidence: 'high' } },
-      { name: 'BUN/CREATININE RATIO', val: '12', range: '6-22', unit: '(calc)', expect: 'unmatched' },
+      { name: 'BUN/CREATININE RATIO', val: '12', range: '6-22', unit: '(calc)', expect: { loinc: '3097-3', value: 12, ucum: '{ratio}', low: 6, high: 22, confidence: 'high' } },
+      { name: 'FIBRINOGEN ACTIVITY, CLAUSS', val: '310', range: '175-425', unit: 'mg/dL', expect: 'unmatched' },
       { name: 'SODIUM', val: '14', flag: 'L', range: '135-146', unit: 'mmol/L', expect: { loinc: '2951-2', value: 14, ucum: 'mmol/L', low: 135, high: 146, confidence: 'low', issues: ['implausible'] } },
       { name: 'EGFR', val: '98', range: '> OR = 60', unit: 'mL/min/1.73m2', expect: { loinc: '98979-8', value: 98, ucum: 'mL/min/{1.73_m2}', low: 60, confidence: 'high' } },
       { name: 'HS CRP', val: '<0.2', range: '<1.0', unit: 'mg/L', expect: { loinc: '30522-7', value: 0.2, comparator: '<', ucum: 'mg/L', high: 1, confidence: 'high' } },
@@ -287,6 +288,9 @@ const labcorpSections: Section[] = [
       { name: 'Hemoglobin A1c', val: '5.4', unit: '%', range: '4.8-5.6', prev: '5.5 04/01/2025', expect: { loinc: '4548-4', value: 5.4, ucum: '%', low: 4.8, high: 5.6, confidence: 'high' } },
       { name: 'Cholesterol, Total', val: '182', unit: 'mg/dL', range: '100-199', expect: { loinc: '2093-3', value: 182, ucum: 'mg/dL', low: 100, high: 199, confidence: 'high' } },
       { name: 'LDL Chol Calc (NIH)', val: '97', unit: 'mg/dL', range: '0-99', prev: '130 04/01/2025', expect: { loinc: '13457-7', value: 97, ucum: 'mg/dL', low: 0, high: 99, confidence: 'high' } },
+      { name: 'VLDL Cholesterol Cal', val: '18', unit: 'mg/dL', range: '5-40', expect: { loinc: '13458-5', value: 18, ucum: 'mg/dL', low: 5, high: 40, confidence: 'high' } },
+      // Labcorp prints the eGFR unit without the "m2".
+      { name: 'eGFR', val: '102', unit: 'mL/min/1.73', range: '>59', expect: { loinc: '98979-8', value: 102, ucum: 'mL/min/{1.73_m2}', low: 59, confidence: 'high' } },
       { name: 'WBC', val: '5.8', unit: 'x10E3/uL', range: '3.4-10.8', expect: { loinc: '6690-2', value: 5.8, ucum: '10*3/uL', low: 3.4, high: 10.8, confidence: 'high' } },
       { name: 'Neutrophils (Absolute)', val: '3.1', unit: 'x10E3/uL', range: '1.4-7.0', expect: { loinc: '751-8', value: 3.1, ucum: '10*3/uL', low: 1.4, high: 7, confidence: 'high' } },
       { name: 'Lymphs', val: '30', unit: '%', range: 'Not Estab.', expect: { loinc: '736-9', value: 30, ucum: '%', confidence: 'high', issues: ['no_range'] } },

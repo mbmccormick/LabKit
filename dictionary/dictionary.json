@@ -4275,6 +4275,74 @@
           "name": "Cystatin C"
         }
       ]
+    },
+    {
+      "loinc": "3097-3",
+      "display": "Urea nitrogen/Creatinine [Mass Ratio] in Serum or Plasma",
+      "text": "BUN / Creatinine Ratio",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "plausible": {
+        "min": 0.5,
+        "max": 200
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "BUN/CREATININE RATIO"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "BUN/Creatinine Ratio"
+        },
+        {
+          "vendor": "generic",
+          "name": "BUN/Creatinine Ratio"
+        },
+        {
+          "vendor": "generic",
+          "name": "BUN/Creat Ratio"
+        },
+        {
+          "vendor": "generic",
+          "name": "Urea Nitrogen/Creatinine Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "13458-5",
+      "display": "Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation",
+      "text": "VLDL-Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "plausible": {
+        "min": 0,
+        "max": 1000
+      },
+      "aliases": [
+        {
+          "vendor": "labcorp",
+          "name": "VLDL Cholesterol Cal"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "VLDL Cholesterol Calc"
+        },
+        {
+          "vendor": "generic",
+          "name": "VLDL Cholesterol"
+        },
+        {
+          "vendor": "generic",
+          "name": "VLDL-C"
+        },
+        {
+          "vendor": "generic",
+          "name": "VLDL"
+        }
+      ]
     }
   ]
 }

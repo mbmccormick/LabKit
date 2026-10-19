@@ -103,6 +103,15 @@
           "confidence": "high"
         },
         {
+          "issues": [],
+          "loinc": "3097-3",
+          "value": 12,
+          "ucum": "{ratio}",
+          "low": 6,
+          "high": 22,
+          "confidence": "high"
+        },
+        {
           "issues": [
             "implausible"
           ],
@@ -221,6 +230,6 @@
     }
   ],
   "unmatched": [
-    "BUN/CREATININE RATIO"
+    "FIBRINOGEN ACTIVITY, CLAUSS"
   ]
 }

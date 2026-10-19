@@ -19,7 +19,7 @@ describe('review model', () => {
     expect(by('13457-7').row.issues).toEqual(['no_range']);
     expect(by('2951-2')).toMatchObject({ decision: 'excluded', locked: true }); // implausible sodium
     expect(by('2951-2').reason).toMatch(/possible range/);
-    expect(m.unmatched.map((u) => u.text).join()).toMatch(/BUN\/CREATININE RATIO/);
+    expect(m.unmatched.map((u) => u.text).join()).toMatch(/FIBRINOGEN ACTIVITY/);
   });
 
   it('cannot create cards until every pending row is decided', async () => {
