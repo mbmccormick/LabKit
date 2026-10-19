@@ -21,7 +21,8 @@ import {
 import type { RawRow } from './table';
 import type { Method } from './types';
 
-const FLAG_RE = /^(H|L|HH|LL|A|AA|High|Low|Abnormal|Abn|Critical|Crit|\*+)$/i;
+// Portals print "(H)" or arrows (↑ ▲) beside a value; Labcorp may print an icon and a word.
+const FLAG_RE = /^(?:\(?(?:H|L|HH|LL|A|AA)\)?|High|Low|Abnormal|Abn|Critical|Crit|\*+|[↑↓▲▼])$/i;
 const BLOCKING: readonly RowIssue[] = ['implausible', 'unit_mismatch', 'ambiguous_match'];
 /** Informational only: a missing reference range says nothing about whether the value was read correctly. */
 const INFO: readonly RowIssue[] = ['no_range'];
@@ -51,12 +52,9 @@ export function rangeFromNotes(notes: readonly string[] | undefined, valueUnit: 
 /** Split a printed cell into value, trailing unit and flag: "105 H" → 105 / H, "88 mg/dL" → 88 / mg/dL. */
 export function splitValueCell(text: string): { cell?: Cell; value: string; unit?: string; flag?: string } {
   let tokens = text.trim().split(/\s+/).filter(Boolean);
-  let flag: string | undefined;
-  const flagAt = tokens.findIndex((tok, i) => i > 0 && FLAG_RE.test(tok));
-  if (flagAt > 0) {
-    flag = tokens[flagAt]!;
-    tokens = tokens.filter((_, i) => i !== flagAt);
-  }
+  const flags = tokens.filter((tok, i) => i > 0 && FLAG_RE.test(tok));
+  const flag = flags.length ? flags.join(' ') : undefined;
+  if (flags.length) tokens = tokens.filter((tok, i) => i === 0 || !FLAG_RE.test(tok));
   for (let k = tokens.length; k >= 1; k--) {
     const head = tokens.slice(0, k).join(' ');
     const cell = parseCell(head);

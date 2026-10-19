@@ -2,28 +2,71 @@ import type { ParsedReport } from '@labkit/core';
 
 export type Stamp = { iso: string; timeFound: boolean; match: string };
 
-const COLLECTED_RE =
-  /\b(?:collected|collection(?: date)?(?:\s*\/\s*time)?|date collected|specimen collected|date of collection|drawn)\s*(?:(?:on|at|date)\s*)?(?::\s*)?(\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})(?!\d)(?:[\s,T]+(\d{1,2}):?(\d{2})(?::\d{2})?\s*(?:([AP]\.?M\.?)(?:\s*(?:local|utc|gmt|[ECMP][SD]T))?|(?:local|utc|gmt|[ECMP][SD]T))?|\s*(?:local|utc|gmt|[ECMP][SD]T))?/i;
+/** Zone printed after a stamp: Quest's own reports print the performing site's US zone ("11:00 EDT"). */
+const ZONE = String.raw`(?:local|utc|gmt|[ECMP][SD]?T|AK[SD]T|H[SD]T)\b`;
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
-/** "Collected: 04/17/2026 01:40 PM" → ISO UTC. tz says how to read the wall-clock time. */
+// Label, then one date form: "04/17/2026", "2026-04-17" or "Apr 17, 2026". Then an optional time,
+// after spaces/comma/T, " / " (Quest: "09/29/2020 / 11:00 EDT") or " at ".
+const COLLECTED_RE = new RegExp(
+  String.raw`\b(?:collected|collection(?: date)?(?:\s*\/\s*time| (?:and )?time)?|date(?:\s*\/\s*time)? collected|(?:specimen|sample) collected|date of collection|drawn|draw date)\s*(?:(?:on|at|date)\s*)?(?::\s*)?` +
+    String.raw`(?:(?<um>\d{1,2})\/(?<ud>\d{1,2})\/(?<uy>\d{4}|\d{2})|(?<iy>\d{4})-(?<im>\d{2})-(?<id>\d{2})|(?<mn>${MONTHS.join('|')})[a-z]*\.?\s+(?<md>\d{1,2}),?\s+(?<my>\d{4}))(?!\d)` +
+    String.raw`(?:(?:\s*\/\s*|\s+at\s+|[\s,T]+)(?<h>\d{1,2}):?(?<mi>\d{2})(?::\d{2})?\s*(?:(?<ap>[AP]\.?M\.?)(?:\s*${ZONE})?|${ZONE})?|\s*${ZONE})?`,
+  'i',
+);
+const ZONE_AT_END = new RegExp(String.raw`(?:^|\s|\d)(${ZONE.replace(String.raw`\b`, '')})\s*$`, 'i');
+
+/** Fixed US offsets in hours; the generic "ET"/"PT" forms follow DST through their IANA zone. */
+const ZONE_OFFSETS: Record<string, number> = { EST: -5, EDT: -4, CST: -6, CDT: -5, MST: -7, MDT: -6, PST: -8, PDT: -7, AKST: -9, AKDT: -8, HST: -10, HDT: -9 };
+const ZONE_IANA: Record<string, string> = { ET: 'America/New_York', CT: 'America/Chicago', MT: 'America/Denver', PT: 'America/Los_Angeles' };
+
+/** Wall-clock time in an IANA zone → epoch ms. */
+function zonedToUtc(y: number, mo: number, d: number, h: number, mi: number, zone: string): number {
+  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: zone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  const wall = Date.UTC(y, mo, d, h, mi);
+  const offsetAt = (t: number) => {
+    const p = Object.fromEntries(fmt.formatToParts(t).map((x) => [x.type, Number(x.value)]));
+    return Date.UTC(p.year!, p.month! - 1, p.day!, p.hour!, p.minute!) - t;
+  };
+  const first = wall - offsetAt(wall);
+  return wall - offsetAt(first);
+}
+
+/**
+ * "Collected: 04/17/2026 01:40 PM" → ISO UTC. tz says how to read a wall-clock
+ * time with no zone on it; a zone printed on the stamp always wins. A date with
+ * no time is midnight local (or in the printed zone): reading it as UTC would show
+ * the previous day anywhere in the Americas.
+ */
 export function parseStampText(text: string, tz: 'utc' | 'local'): Stamp | undefined {
   const m = COLLECTED_RE.exec(text);
   if (!m) return undefined;
-  const month = Number(m[1]);
-  const day = Number(m[2]);
-  let year = Number(m[3]);
+  const g = m.groups!;
+  let year: number;
+  let month: number;
+  let day: number;
+  if (g.uy !== undefined) [year, month, day] = [Number(g.uy), Number(g.um), Number(g.ud)];
+  else if (g.iy !== undefined) [year, month, day] = [Number(g.iy), Number(g.im), Number(g.id)];
+  else [year, month, day] = [Number(g.my), MONTHS.indexOf(g.mn!.toLowerCase()) + 1, Number(g.md)];
   if (year < 100) year += 2000;
-  let hour = m[4] !== undefined ? Number(m[4]) : 0;
-  const minute = m[5] !== undefined ? Number(m[5]) : 0;
-  const ampm = m[6]?.replace(/\./g, '').toUpperCase();
+  const timeFound = g.h !== undefined;
+  let hour = timeFound ? Number(g.h) : 0;
+  const minute = g.mi !== undefined ? Number(g.mi) : 0;
+  const ampm = g.ap?.replace(/\./g, '').toUpperCase();
   if (ampm === 'PM' && hour < 12) hour += 12;
   if (ampm === 'AM' && hour === 12) hour = 0;
   if (month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || minute > 59) return undefined;
-  // An explicit zone on the stamp wins over the template's assumption.
-  if (/\b(utc|gmt)\b/i.test(m[0])) tz = 'utc';
-  const d = tz === 'utc' ? new Date(Date.UTC(year, month - 1, day, hour, minute)) : new Date(year, month - 1, day, hour, minute);
-  if (Number.isNaN(d.getTime()) || (tz === 'utc' ? d.getUTCDate() : d.getDate()) !== day) return undefined;
-  return { iso: d.toISOString().replace(/\.\d{3}Z$/, 'Z'), timeFound: m[4] !== undefined, match: m[0] };
+
+  const zone = ZONE_AT_END.exec(m[0])?.[1]?.toUpperCase();
+  let t: number;
+  if (zone && zone in ZONE_OFFSETS) t = Date.UTC(year, month - 1, day, hour, minute) - ZONE_OFFSETS[zone]! * 3_600_000;
+  else if (zone && zone in ZONE_IANA) t = zonedToUtc(year, month - 1, day, hour, minute, ZONE_IANA[zone]!);
+  else if (zone === 'UTC' || zone === 'GMT' || (tz === 'utc' && timeFound && zone !== 'LOCAL')) t = Date.UTC(year, month - 1, day, hour, minute);
+  else t = new Date(year, month - 1, day, hour, minute).getTime();
+  // Rejects impossible dates (04/31) that Date would roll over.
+  const check = new Date(Date.UTC(year, month - 1, day));
+  if (Number.isNaN(t) || check.getUTCDate() !== day || check.getUTCMonth() !== month - 1) return undefined;
+  return { iso: new Date(t).toISOString().replace(/\.\d{3}Z$/, 'Z'), timeFound, match: m[0] };
 }
 
 // ---------- patient ----------
@@ -42,7 +85,11 @@ function parseDate(m: string): string | undefined {
   const us = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(m);
   if (us) return `${us[3]}-${us[1]!.padStart(2, '0')}-${us[2]!.padStart(2, '0')}`;
   const iso = /(\d{4})-(\d{2})-(\d{2})/.exec(m);
-  return iso ? iso[0] : undefined;
+  if (iso) return iso[0];
+  const named = new RegExp(String.raw`^(${MONTHS.join('|')})[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})$`, 'i').exec(m);
+  if (!named) return undefined;
+  const month = MONTHS.indexOf(named[1]!.toLowerCase()) + 1;
+  return `${named[3]}-${String(month).padStart(2, '0')}-${named[2]!.padStart(2, '0')}`;
 }
 
 type LineLike = { page: number; y: number; h: number; text: string; items: { str: string; x: number }[] };
@@ -90,6 +137,8 @@ function blockNames(lines: LineLike[]): { comma: Name[]; twoLine: Name[] } {
 
 const sameName = (a: Name, b: Name) => a.family.toLowerCase() === b.family.toLowerCase() && a.given[0]?.toLowerCase() === b.given[0]?.toLowerCase();
 
+const DOB_RE = new RegExp(String.raw`\b(?:DOB|D\.O\.B\.?|Date of Birth|Birth ?Date)\s*(?::\s*)?(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2}|(?:${MONTHS.join('|')})[a-z]*\.?\s+\d{1,2},?\s+\d{4})`, 'i');
+
 /** Patient name, DOB and sex from the report's header block. */
 export function extractPatient(lines: LineLike[]): ParsedReport['patient'] {
   const out: ParsedReport['patient'] = {};
@@ -110,7 +159,7 @@ export function extractPatient(lines: LineLike[]): ParsedReport['patient'] {
       }
     }
     if (!out.birthDate) {
-      const m = /\b(?:DOB|D\.O\.B\.?|Date of Birth|Birth ?Date)\s*(?::\s*)?(\d{1,2}\/\d{1,2}\/\d{4}|\d{4}-\d{2}-\d{2})/i.exec(line);
+      const m = DOB_RE.exec(line);
       const d = m && parseDate(m[1]!);
       if (d) out.birthDate = d;
     }

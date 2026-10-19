@@ -156,9 +156,11 @@ export function parseFlag(s: string): Flag | undefined {
 export type Range = { low?: number; high?: number };
 
 export function parseRange(input: string): Range | { qualitative: string } | undefined {
-  const s = input.trim().replace(/\s+/g, ' ');
+  let s = input.trim().replace(/\s+/g, ' ');
+  // Portals print "(65 - 99)" or "65 to 99".
+  if (s.startsWith('(') && s.endsWith(')')) s = s.slice(1, -1).trim();
   if (!s) return undefined;
-  const between = /^((?:\d+(?:\.\d+)?|\.\d+)) ?[-–] ?((?:\d+(?:\.\d+)?|\.\d+))$/.exec(s);
+  const between = /^((?:\d+(?:\.\d+)?|\.\d+))(?: ?[-–] ?| to )((?:\d+(?:\.\d+)?|\.\d+))$/i.exec(s);
   if (between) {
     const low = Number(between[1]);
     const high = Number(between[2]);
@@ -201,11 +203,17 @@ export const GLOBAL_UNIT_ALIASES: Readonly<Record<string, string>> = {
   '%': '%',
   '% by wt': '%',
   'Thousand/uL': '10*3/uL',
+  'Thous/uL': '10*3/uL',
+  'Thou/uL': '10*3/uL',
   'K/uL': '10*3/uL',
   'x10E3/uL': '10*3/uL',
+  '10*3/uL': '10*3/uL',
   'Million/uL': '10*6/uL',
+  'Mill/uL': '10*6/uL',
+  'Mil/uL': '10*6/uL',
   'M/uL': '10*6/uL',
   'x10E6/uL': '10*6/uL',
+  '10*6/uL': '10*6/uL',
   'cells/uL': '/uL',
   '/uL': '/uL',
   fL: 'fL',
@@ -224,6 +232,11 @@ export function cleanUnit(printed: string): string {
   return printed
     .normalize('NFKC')
     .replace(/[µμ]/g, 'u')
+    // "mcg", "mcL", "mcIU", "mcmol": the US "mc" spelling of micro.
+    .replace(/\bmc(?=(?:g|l|iu|mol)\b)/gi, 'u')
+    // "x10^3/uL", "10E3/uL", "x 10(3)/uL", "10*3/uL" → "10*3/uL".
+    .replace(/^(?:x\s*)?10\s*(?:(?:\^|\*|E)\s*\(?([36])\)?|\(([36])\))\s*\//i, (_, a?: string, b?: string) => `10*${a ?? b}/`)
+    .replace(/1\.73\s+m2\b/, '1.73m2')
     .replace(/\s*\(?\b(?:calc|calculated|est|estimated)\b\)?\s*$/i, '')
     .replace(/\s+/g, ' ')
     .trim();

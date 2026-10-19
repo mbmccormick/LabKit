@@ -940,6 +940,10 @@
         {
           "vendor": "generic",
           "name": "PSA, Total"
+        },
+        {
+          "vendor": "generic",
+          "name": "PSA"
         }
       ]
     },
@@ -1288,6 +1292,10 @@
         {
           "vendor": "generic",
           "name": "Alkaline Phosphatase"
+        },
+        {
+          "vendor": "generic",
+          "name": "ALP"
         }
       ]
     },
@@ -1382,6 +1390,10 @@
         {
           "vendor": "generic",
           "name": "Blood Urea Nitrogen"
+        },
+        {
+          "vendor": "generic",
+          "name": "Urea Nitrogen"
         }
       ]
     },
@@ -1422,6 +1434,9 @@
       "category": "kidney_liver_electrolytes",
       "valueType": "quantity",
       "ucum": "mmol/L",
+      "unitAliases": {
+        "mEq/L": "mmol/L"
+      },
       "plausible": {
         "min": 2,
         "max": 60
@@ -1456,6 +1471,9 @@
       "category": "kidney_liver_electrolytes",
       "valueType": "quantity",
       "ucum": "mmol/L",
+      "unitAliases": {
+        "mEq/L": "mmol/L"
+      },
       "plausible": {
         "min": 50,
         "max": 150
@@ -1639,6 +1657,9 @@
       "category": "kidney_liver_electrolytes",
       "valueType": "quantity",
       "ucum": "mmol/L",
+      "unitAliases": {
+        "mEq/L": "mmol/L"
+      },
       "plausible": {
         "min": 1,
         "max": 12
@@ -1669,6 +1690,9 @@
       "category": "kidney_liver_electrolytes",
       "valueType": "quantity",
       "ucum": "mmol/L",
+      "unitAliases": {
+        "mEq/L": "mmol/L"
+      },
       "plausible": {
         "min": 90,
         "max": 200
@@ -1783,6 +1807,14 @@
         {
           "vendor": "generic",
           "name": "High Sensitivity CRP"
+        },
+        {
+          "vendor": "generic",
+          "name": "CRP-hs"
+        },
+        {
+          "vendor": "generic",
+          "name": "C-Reactive Protein, High Sensitivity"
         }
       ]
     },
@@ -2419,6 +2451,14 @@
         {
           "vendor": "generic",
           "name": "Glucose"
+        },
+        {
+          "vendor": "generic",
+          "name": "Fasting Glucose"
+        },
+        {
+          "vendor": "generic",
+          "name": "Glucose, Fasting"
         }
       ]
     },
@@ -2456,6 +2496,14 @@
         {
           "vendor": "generic",
           "name": "Hemoglobin A1c"
+        },
+        {
+          "vendor": "generic",
+          "name": "A1C"
+        },
+        {
+          "vendor": "generic",
+          "name": "HbA1c (Hemoglobin A1c)"
         }
       ]
     },
@@ -2486,6 +2534,14 @@
         {
           "vendor": "generic",
           "name": "Insulin"
+        },
+        {
+          "vendor": "generic",
+          "name": "Fasting Insulin"
+        },
+        {
+          "vendor": "generic",
+          "name": "Insulin, Fasting"
         }
       ]
     },
@@ -2635,6 +2691,10 @@
         {
           "vendor": "generic",
           "name": "Iron Saturation"
+        },
+        {
+          "vendor": "generic",
+          "name": "Transferrin Saturation"
         }
       ]
     },
@@ -2665,6 +2725,10 @@
         {
           "vendor": "generic",
           "name": "TIBC"
+        },
+        {
+          "vendor": "generic",
+          "name": "Total Iron Binding Capacity"
         }
       ]
     },
@@ -2909,6 +2973,10 @@
         {
           "vendor": "generic",
           "name": "Free T4"
+        },
+        {
+          "vendor": "generic",
+          "name": "Free Thyroxine"
         }
       ]
     },
@@ -4037,6 +4105,174 @@
           "vendor": "labcorp",
           "name": "Calcium/Creatinine Ratio",
           "panel": "24h urine"
+        }
+      ]
+    },
+    {
+      "loinc": "2132-9",
+      "display": "Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma",
+      "text": "Vitamin B12",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "pg/mL",
+      "unitAliases": {
+        "ng/L": "pg/mL"
+      },
+      "plausible": {
+        "min": 10,
+        "max": 100000
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "VITAMIN B12"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "Vitamin B12"
+        },
+        {
+          "vendor": "generic",
+          "name": "Vitamin B12"
+        },
+        {
+          "vendor": "generic",
+          "name": "B12"
+        },
+        {
+          "vendor": "generic",
+          "name": "Cobalamin"
+        }
+      ]
+    },
+    {
+      "loinc": "2284-8",
+      "display": "Folate [Mass/volume] in Serum or Plasma",
+      "text": "Folate",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "unitAliases": {
+        "ug/L": "ng/mL"
+      },
+      "plausible": {
+        "min": 0.1,
+        "max": 200
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "FOLATE, SERUM"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "Folate (Folic Acid), Serum"
+        },
+        {
+          "vendor": "generic",
+          "name": "Folate"
+        },
+        {
+          "vendor": "generic",
+          "name": "Folate, Serum"
+        },
+        {
+          "vendor": "generic",
+          "name": "Folic Acid"
+        }
+      ]
+    },
+    {
+      "loinc": "19123-9",
+      "display": "Magnesium [Mass/volume] in Serum or Plasma",
+      "text": "Magnesium",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "plausible": {
+        "min": 0.2,
+        "max": 15
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "MAGNESIUM"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "Magnesium"
+        },
+        {
+          "vendor": "generic",
+          "name": "Magnesium"
+        },
+        {
+          "vendor": "generic",
+          "name": "Magnesium, Serum"
+        }
+      ]
+    },
+    {
+      "loinc": "1869-7",
+      "display": "Apolipoprotein A-I [Mass/volume] in Serum or Plasma",
+      "text": "Apolipoprotein A1",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "plausible": {
+        "min": 5,
+        "max": 500
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "APOLIPOPROTEIN A1"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "Apolipoprotein A-1"
+        },
+        {
+          "vendor": "generic",
+          "name": "Apolipoprotein A1"
+        },
+        {
+          "vendor": "generic",
+          "name": "Apolipoprotein A-I"
+        },
+        {
+          "vendor": "generic",
+          "name": "ApoA1"
+        },
+        {
+          "vendor": "generic",
+          "name": "Apo A-1"
+        }
+      ]
+    },
+    {
+      "loinc": "33863-2",
+      "display": "Cystatin C [Mass/volume] in Serum or Plasma",
+      "text": "Cystatin C",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mg/L",
+      "plausible": {
+        "min": 0.1,
+        "max": 20
+      },
+      "aliases": [
+        {
+          "vendor": "quest",
+          "name": "CYSTATIN C"
+        },
+        {
+          "vendor": "labcorp",
+          "name": "Cystatin C"
+        },
+        {
+          "vendor": "generic",
+          "name": "Cystatin C"
         }
       ]
     }

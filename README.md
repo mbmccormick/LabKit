@@ -33,10 +33,10 @@ Cards are signed by `https://labkit.health`, so Apple Health shows them as verif
 
 | Source | Status |
 |---|---|
-| Quest Diagnostics PDF | Supported |
-| Quest "results of record" PDF delivered via Health Gorilla | Supported; validated on real reports |
+| Quest Diagnostics PDF, including copies from resellers such as Walk-In Lab | Supported; collection times are read in the US time zone the report prints |
+| Quest "results of record" PDF delivered via Health Gorilla (Function Health) | Supported; validated on real reports |
 | Labcorp PDF | Supported; tested on synthetic reports only |
-| Other lab PDFs with a results table | Best effort (generic layout); results need review |
+| Other lab PDFs with a results table, including consumer-platform and patient-portal printouts | Best effort (generic layout); results need review. "Optimal" or target ranges are never read as reference ranges |
 | Scans and photos (JPEG, PNG, HEIC) | On-device OCR; every result needs review |
 
 Found a report LabKit can't read? Open an issue describing the lab and layout. **Please never attach a real report** or anything with real names, dates or values.

@@ -80,6 +80,15 @@
           "confidence": "high"
         },
         {
+          "issues": [],
+          "loinc": "2132-9",
+          "value": 612,
+          "ucum": "pg/mL",
+          "low": 232,
+          "high": 1245,
+          "confidence": "high"
+        },
+        {
           "loinc": "2093-3",
           "confidence": "low",
           "issues": [
@@ -91,7 +100,7 @@
     }
   ],
   "unmatched": [
-    "Vitamin B12",
+    "Vitamin B1, Whole Blood",
     "Creatinine, Urine"
   ]
 }
