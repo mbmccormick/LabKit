@@ -136,6 +136,7 @@ describe('units (SPEC §6.3)', () => {
     ['Mill/uL', '10*6/uL'],
     ['mL/min/1.73 m2', 'mL/min/{1.73_m2}'],
     ['mL/min/1.73m²', 'mL/min/{1.73_m2}'],
+    ['mL/min/1.73', 'mL/min/{1.73_m2}'],
   ])('%s → %s', (printed, ucum) => {
     expect(printedToUcum(printed)).toBe(ucum);
   });

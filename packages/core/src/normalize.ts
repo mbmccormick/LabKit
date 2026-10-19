@@ -219,6 +219,8 @@ export const GLOBAL_UNIT_ALIASES: Readonly<Record<string, string>> = {
   fL: 'fL',
   pg: 'pg',
   'mL/min/1.73m2': 'mL/min/{1.73_m2}',
+  // Labcorp prints the eGFR unit without the "m2".
+  'mL/min/1.73': 'mL/min/{1.73_m2}',
   Angstrom: 'Ao',
   'Å': 'Ao',
   ratio: '{ratio}',
