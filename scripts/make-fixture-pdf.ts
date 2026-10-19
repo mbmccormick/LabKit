@@ -22,7 +22,8 @@ type Collected = { utc: string } | { local: string };
 type Fixture = {
   name: string;
   vendor: string;
-  headerBlock: string[];
+  /** Lines above the column header: plain text at the left margin, or positioned cells. */
+  headerBlock: (string | [number, string][])[];
   sections: Section[];
   patient: Record<string, unknown>;
   draws: { collected: Collected; loincs: string[] }[];
@@ -68,7 +69,8 @@ const questSections: Section[] = [
     rows: [
       { name: 'GLUCOSE', val: '88', range: '65-99', unit: 'mg/dL', prev: '101', prevDate: '10/23/2024', expect: { loinc: '2345-7', value: 88, ucum: 'mg/dL', low: 65, high: 99, confidence: 'high' } },
       { name: 'UREA NITROGEN (BUN)', val: '14', range: '7-25', unit: 'mg/dL', expect: { loinc: '3094-0', value: 14, ucum: 'mg/dL', low: 7, high: 25, confidence: 'high' } },
-      { name: 'BUN/CREATININE RATIO', val: '12', range: '6-22', unit: '(calc)', expect: 'unmatched' },
+      { name: 'BUN/CREATININE RATIO', val: '12', range: '6-22', unit: '(calc)', expect: { loinc: '3097-3', value: 12, ucum: '{ratio}', low: 6, high: 22, confidence: 'high' } },
+      { name: 'FIBRINOGEN ACTIVITY, CLAUSS', val: '310', range: '175-425', unit: 'mg/dL', expect: 'unmatched' },
       { name: 'SODIUM', val: '14', flag: 'L', range: '135-146', unit: 'mmol/L', expect: { loinc: '2951-2', value: 14, ucum: 'mmol/L', low: 135, high: 146, confidence: 'low', issues: ['implausible'] } },
       { name: 'EGFR', val: '98', range: '> OR = 60', unit: 'mL/min/1.73m2', expect: { loinc: '98979-8', value: 98, ucum: 'mL/min/{1.73_m2}', low: 60, confidence: 'high' } },
       { name: 'HS CRP', val: '<0.2', range: '<1.0', unit: 'mg/L', expect: { loinc: '30522-7', value: 0.2, comparator: '<', ucum: 'mg/L', high: 1, confidence: 'high' } },
@@ -111,7 +113,7 @@ class PdfWriter {
     readonly font: PDFFont,
     readonly bold: PDFFont,
     readonly cols: Col[],
-    readonly top: string[],
+    readonly top: (string | [number, string][])[],
     readonly footer: (n: number) => string,
   ) {}
   newPage() {
@@ -119,7 +121,7 @@ class PdfWriter {
     this.page = this.doc.addPage([612, 792]);
     this.pageNo++;
     this.y = 750;
-    for (const t of this.top) this.line([[36, t]]);
+    for (const t of this.top) this.line(typeof t === 'string' ? [[36, t]] : t);
     this.y -= 6;
     this.line(this.cols.map((c) => [c.x, c.label] as [number, string]), true);
   }
@@ -153,7 +155,7 @@ async function makePdf(f: Fixture, cols: Col[], render: (w: PdfWriter, r: Row) =
   }
   for (const t of f.trailer ?? []) w.line([[cols[0]!.x, t]]);
   w.finish();
-  if (f.vendor === 'quest') {
+  if (f.name === 'quest-sample.pdf') {
     const font = await doc.embedFont(StandardFonts.Helvetica);
     const cardio = doc.addPage([612, 792]);
     const t = (s: string, x: number, yy: number) => cardio.drawText(s, { x, y: yy, size: 8.5, font });
@@ -252,7 +254,7 @@ const hg: Fixture = { ...quest, name: 'function-results-of-record.pdf', vendor: 
   const pad = (cells: string[]) => cells.map((c, i) => c.padEnd(widths[i]!)).join('').trimEnd();
   const pages: string[][] = [[]];
   const header = pad(['Test', 'In Range', 'Out Of Range', 'Reference Range', 'Previous Result', 'Date', 'Lab']);
-  const begin = (p: string[]) => p.push(...hg.headerBlock.map((l) => l.replace('Quest Diagnostics Incorporated', 'Quest Diagnostics')), '', header);
+  const begin = (p: string[]) => p.push(...(hg.headerBlock as string[]).map((l) => l.replace('Quest Diagnostics Incorporated', 'Quest Diagnostics')), '', header);
   begin(pages[0]!);
   for (const s of hg.sections) {
     if (s.panel === 'URINALYSIS, COMPLETE') {
@@ -286,10 +288,14 @@ const labcorpSections: Section[] = [
       { name: 'Hemoglobin A1c', val: '5.4', unit: '%', range: '4.8-5.6', prev: '5.5 04/01/2025', expect: { loinc: '4548-4', value: 5.4, ucum: '%', low: 4.8, high: 5.6, confidence: 'high' } },
       { name: 'Cholesterol, Total', val: '182', unit: 'mg/dL', range: '100-199', expect: { loinc: '2093-3', value: 182, ucum: 'mg/dL', low: 100, high: 199, confidence: 'high' } },
       { name: 'LDL Chol Calc (NIH)', val: '97', unit: 'mg/dL', range: '0-99', prev: '130 04/01/2025', expect: { loinc: '13457-7', value: 97, ucum: 'mg/dL', low: 0, high: 99, confidence: 'high' } },
+      { name: 'VLDL Cholesterol Cal', val: '18', unit: 'mg/dL', range: '5-40', expect: { loinc: '13458-5', value: 18, ucum: 'mg/dL', low: 5, high: 40, confidence: 'high' } },
+      // Labcorp prints the eGFR unit without the "m2".
+      { name: 'eGFR', val: '102', unit: 'mL/min/1.73', range: '>59', expect: { loinc: '98979-8', value: 102, ucum: 'mL/min/{1.73_m2}', low: 59, confidence: 'high' } },
       { name: 'WBC', val: '5.8', unit: 'x10E3/uL', range: '3.4-10.8', expect: { loinc: '6690-2', value: 5.8, ucum: '10*3/uL', low: 3.4, high: 10.8, confidence: 'high' } },
       { name: 'Neutrophils (Absolute)', val: '3.1', unit: 'x10E3/uL', range: '1.4-7.0', expect: { loinc: '751-8', value: 3.1, ucum: '10*3/uL', low: 1.4, high: 7, confidence: 'high' } },
       { name: 'Lymphs', val: '30', unit: '%', range: 'Not Estab.', expect: { loinc: '736-9', value: 30, ucum: '%', confidence: 'high', issues: ['no_range'] } },
-      { name: 'Vitamin B12', val: '612', unit: 'pg/mL', range: '232-1245', expect: 'unmatched' },
+      { name: 'Vitamin B12', val: '612', unit: 'pg/mL', range: '232-1245', expect: { loinc: '2132-9', value: 612, ucum: 'pg/mL', low: 232, high: 1245, confidence: 'high' } },
+      { name: 'Vitamin B1, Whole Blood', val: '120', unit: 'nmol/L', range: '66-200', expect: 'unmatched' },
       { name: 'Cholesterol, Total', val: '5.2', unit: 'mmol/L', range: '2.6-5.2', expect: null },
       // Spot urine: same printed name as the 24-hour test, which is scoped to 24-hour urine panels.
       { name: 'Creatinine, Urine', val: '85', unit: 'mg/dL', range: '20-300', expect: 'unmatched' },
@@ -404,6 +410,124 @@ await makePdf(
   (n) => `Page ${n}`,
 );
 save(genericFx);
+
+// ---------------------------------------------------------------- Quest native PDF (as resold by Walk-In Lab, Ulta Lab Tests, ...)
+// Modelled on Quest's published sample reports: a three-column header block
+// (Patient / Specimen / Client Information), one "Collected: MM/DD/YYYY / hh:mm
+// EDT" stamp in the performing site's US zone, no Previous Result column, and a
+// PERFORMING SITE legend after the results.
+const questNativeSections: Section[] = [
+  {
+    panel: 'COMPREHENSIVE METABOLIC PANEL',
+    rows: [
+      { name: 'GLUCOSE', val: '88', range: '65-99 mg/dL', expect: { loinc: '2345-7', value: 88, ucum: 'mg/dL', low: 65, high: 99, confidence: 'high' } },
+      { name: 'SODIUM', val: '140', range: '135-146 mmol/L', expect: { loinc: '2951-2', value: 140, ucum: 'mmol/L', low: 135, high: 146, confidence: 'high' } },
+      { name: 'CREATININE', val: '1.32', flag: 'H', range: '0.60-1.29 mg/dL', expect: { loinc: '2160-0', value: 1.32, ucum: 'mg/dL', low: 0.6, high: 1.29, confidence: 'high' } },
+      { name: 'EGFR', val: '68', range: '> OR = 60 mL/min/1.73m2', expect: { loinc: '98979-8', value: 68, ucum: 'mL/min/{1.73_m2}', low: 60, confidence: 'high' } },
+    ],
+  },
+  { panel: 'MAGNESIUM', rows: [{ name: 'MAGNESIUM', val: '2.1', range: '1.5-2.5 mg/dL', expect: { loinc: '19123-9', value: 2.1, ucum: 'mg/dL', low: 1.5, high: 2.5, confidence: 'high' } }] },
+  {
+    panel: 'VITAMIN B12/FOLATE, SERUM PANEL',
+    rows: [
+      { name: 'VITAMIN B12', val: '512', range: '200-1100 pg/mL', expect: { loinc: '2132-9', value: 512, ucum: 'pg/mL', low: 200, high: 1100, confidence: 'high' } },
+      { name: 'FOLATE, SERUM', val: '17.5', range: '> OR = 5.4 ng/mL', expect: { loinc: '2284-8', value: 17.5, ucum: 'ng/mL', low: 5.4, confidence: 'high' } },
+    ],
+  },
+  { panel: 'APOLIPOPROTEIN A1', rows: [{ name: 'APOLIPOPROTEIN A1', val: '150', range: '> OR = 115 mg/dL', expect: { loinc: '1869-7', value: 150, ucum: 'mg/dL', low: 115, confidence: 'high' } }] },
+  { panel: 'CYSTATIN C', rows: [{ name: 'CYSTATIN C', val: '0.82', range: '0.52-1.31 mg/L', expect: { loinc: '33863-2', value: 0.82, ucum: 'mg/L', low: 0.52, high: 1.31, confidence: 'high' } }] },
+  { panel: 'TSH', rows: [{ name: 'TSH', val: '1.62', range: '0.40-4.50 mIU/L', expect: { loinc: '3016-3', value: 1.62, ucum: 'm[IU]/L', low: 0.4, high: 4.5, confidence: 'high' } }] },
+];
+const questNative: Fixture = {
+  name: 'quest-native-sample.pdf',
+  vendor: 'quest',
+  headerBlock: [
+    [[36, 'Patient Information'], [230, 'Specimen Information'], [430, 'Client Information']],
+    [[36, 'EXAMPLE, ALEX J'], [230, 'Specimen: XX000000X'], [430, 'Client #: 00000000']],
+    [[230, 'Requisition: 0000000'], [430, 'SYNTHETIC CLIENT']],
+    [[36, 'DOB: 06/15/1984   AGE: 42'], [230, 'Lab Ref #: XX000000X']],
+    [[36, 'Gender: M'], [230, 'Collected: 07/10/2026 / 08:40 EDT']],
+    [[36, 'Fasting: Y'], [230, 'Received: 07/10/2026 / 17:47 EDT']],
+    [[36, 'Patient ID: 0000000'], [230, 'Reported: 07/11/2026 / 05:46 EDT']],
+  ],
+  sections: questNativeSections,
+  patient: { family: 'Example', given: ['Alex', 'J'], birthDate: '1984-06-15', gender: 'male' },
+  // 08:40 EDT (UTC-4).
+  draws: [{ collected: { utc: '2026-07-10T12:40:00Z' }, loincs: loincsOf(questNativeSections) }],
+  trailer: ['PERFORMING SITE:', 'Z4M   QUEST DIAGNOSTICS SYNTHETIC SITE, 1 EXAMPLE WAY, ANYTOWN, ST 00000'],
+};
+await makePdf(
+  questNative,
+  [
+    { x: 36, label: 'Test Name' },
+    { x: 250, label: 'In Range' },
+    { x: 315, label: 'Out Of Range' },
+    { x: 400, label: 'Reference Range' },
+    { x: 545, label: 'Lab' },
+  ],
+  (w, r) =>
+    w.line([
+      [36, r.name],
+      [r.flag ? 315 : 250, r.flag ? `${r.val} ${r.flag}` : r.val],
+      [400, r.range ?? ''],
+      [545, 'Z4M'],
+    ]),
+  (n) => `CLIENT SERVICES: 000-000-0000   SPECIMEN: XX000000X   REPORT STATUS: FINAL   PAGE ${n} OF 1`,
+);
+save(questNative);
+
+// ---------------------------------------------------------------- Direct-to-consumer / patient-portal style PDF
+// What consumer platforms and portals print: friendly biomarker names, an
+// "Optimal Range" column next to the lab's range (never read, SPEC §11.6),
+// mEq/L electrolytes, 10^3/uL counts, "(H)" and arrow flags, "a to b" and
+// parenthesised ranges, and a month-name collection stamp with a US zone.
+const dtcSections: Section[] = [
+  {
+    rows: [
+      { name: 'ApoB', val: '88', unit: 'mg/dL', range: '<90', prev: '<80', expect: { loinc: '1884-6', value: 88, ucum: 'mg/dL', high: 90, confidence: 'medium' } },
+      { name: 'CRP-hs', val: '0.6', unit: 'mg/L', range: '<1.0', prev: '<0.5', expect: { loinc: '30522-7', value: 0.6, ucum: 'mg/L', high: 1, confidence: 'medium' } },
+      { name: 'Fasting Insulin', val: '5.2', unit: 'uIU/mL', range: '2.6 to 24.9', prev: '2-6', expect: { loinc: '20448-7', value: 5.2, ucum: 'u[IU]/mL', low: 2.6, high: 24.9, confidence: 'medium' } },
+      { name: 'Fasting Glucose', val: '88', unit: 'mg/dL', range: '65 - 99', prev: '72-85', expect: { loinc: '2345-7', value: 88, ucum: 'mg/dL', low: 65, high: 99, confidence: 'medium' } },
+      { name: 'Sodium', val: '140', unit: 'mEq/L', range: '136 - 145', expect: { loinc: '2951-2', value: 140, ucum: 'mmol/L', low: 136, high: 145, confidence: 'medium' } },
+      { name: 'Potassium', val: '5.4 (H)', unit: 'mEq/L', range: '3.5 - 5.1', expect: { loinc: '2823-3', value: 5.4, ucum: 'mmol/L', low: 3.5, high: 5.1, confidence: 'medium' } },
+      { name: 'White Blood Cell Count', val: '5.8', unit: 'x10^3/uL', range: '(3.4 - 10.8)', expect: { loinc: '6690-2', value: 5.8, ucum: '10*3/uL', low: 3.4, high: 10.8, confidence: 'medium' } },
+      { name: 'Vitamin B12', val: '1310 High', unit: 'pg/mL', range: '232 - 1245', prev: '500-1000', expect: { loinc: '2132-9', value: 1310, ucum: 'pg/mL', low: 232, high: 1245, confidence: 'medium' } },
+      { name: 'Folate', val: '17.5', unit: 'mcg/L', range: '>3.0', expect: { loinc: '2284-8', value: 17.5, ucum: 'ng/mL', low: 3, confidence: 'medium' } },
+      { name: 'Magnesium', val: '2.1', unit: 'mg/dL', range: '1.6 - 2.3', expect: { loinc: '19123-9', value: 2.1, ucum: 'mg/dL', low: 1.6, high: 2.3, confidence: 'medium' } },
+      { name: 'Omega-3 Index', val: '6.2', unit: '%', range: '>4.0', prev: '>8.0', expect: 'unmatched' },
+    ],
+  },
+];
+const dtc: Fixture = {
+  name: 'dtc-portal-sample.pdf',
+  vendor: 'generic',
+  headerBlock: ['Your Biomarker Results (synthetic sample)', 'Patient: Jordan Sample', 'DOB: Jan 2, 1985     Sex: Female', 'Collection Date: Apr 17, 2026 at 8:05 AM CDT'],
+  sections: dtcSections,
+  patient: { family: 'Sample', given: ['Jordan'], birthDate: '1985-01-02', gender: 'female' },
+  // 08:05 CDT (UTC-5).
+  draws: [{ collected: { utc: '2026-04-17T13:05:00Z' }, loincs: loincsOf(dtcSections) }],
+};
+// The "Optimal Range" column takes Row.prev: the column a parser must never read.
+await makePdf(
+  dtc,
+  [
+    { x: 36, label: 'Biomarker' },
+    { x: 190, label: 'Your Result' },
+    { x: 270, label: 'Unit' },
+    { x: 340, label: 'Reference Range' },
+    { x: 450, label: 'Optimal Range' },
+  ],
+  (w, r) =>
+    w.line([
+      [36, r.name],
+      [190, r.val],
+      [270, r.unit ?? ''],
+      [340, r.range ?? ''],
+      [450, r.prev ?? ''],
+    ]),
+  (n) => `Page ${n}`,
+);
+save(dtc);
 
 console.log('Wrote synthetic fixtures to fixtures/synthetic/');
 

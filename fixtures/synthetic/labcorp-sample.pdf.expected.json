@@ -54,6 +54,23 @@
         },
         {
           "issues": [],
+          "loinc": "13458-5",
+          "value": 18,
+          "ucum": "mg/dL",
+          "low": 5,
+          "high": 40,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "98979-8",
+          "value": 102,
+          "ucum": "mL/min/{1.73_m2}",
+          "low": 59,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
           "loinc": "6690-2",
           "value": 5.8,
           "ucum": "10*3/uL",
@@ -80,6 +97,15 @@
           "confidence": "high"
         },
         {
+          "issues": [],
+          "loinc": "2132-9",
+          "value": 612,
+          "ucum": "pg/mL",
+          "low": 232,
+          "high": 1245,
+          "confidence": "high"
+        },
+        {
           "loinc": "2093-3",
           "confidence": "low",
           "issues": [
@@ -91,7 +117,7 @@
     }
   ],
   "unmatched": [
-    "Vitamin B12",
+    "Vitamin B1, Whole Blood",
     "Creatinine, Urine"
   ]
 }

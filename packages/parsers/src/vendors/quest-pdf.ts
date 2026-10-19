@@ -1,6 +1,9 @@
 import { COMMON_SKIP, type Template } from '../template';
 
-// Quest Diagnostics native patient report PDF.
+// Quest Diagnostics native patient report PDF, also what resellers such as
+// Walk-In Lab hand out: "Patient / Specimen / Client Information" header,
+// "Collected: 09/29/2020 / 11:00 EDT", then Test Name | In Range | Out Of Range |
+// Reference Range | Lab.
 export const questPdf: Template = {
   id: 'quest',
   aliasVendor: 'quest',
@@ -15,7 +18,8 @@ export const questPdf: Template = {
     { role: 'previousDate', re: /^(date|previous date)$/i },
     { role: 'lab', re: /^lab$/i },
   ],
-  // ASSUMPTION carried from SPEC §12.3.5 (Quest prints UTC); confirm on real reports.
+  // Quest's own reports print the site's US zone on the stamp, which always wins
+  // (stamps.ts). Unzoned times keep SPEC §12.3.5's assumption that Quest prints UTC.
   collectedTz: 'utc',
   skip: [...COMMON_SKIP, /^quest diagnostics/i, /^performing (laboratory|site)/i],
   maxConfidence: 'high',

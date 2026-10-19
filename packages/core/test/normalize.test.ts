@@ -72,12 +72,17 @@ describe('ranges', () => {
     ['>40', { low: 40 }],
     ['> OR = 40', { low: 40 }],
     ['NEGATIVE', { qualitative: 'Negative' }],
+    ['2.6 to 24.9', { low: 2.6, high: 24.9 }],
+    ['(3.4 - 10.8)', { low: 3.4, high: 10.8 }],
+    ['(<90)', { high: 90 }],
   ])('parses %s', (input, expected) => {
     expect(parseRange(input)).toEqual(expected);
   });
   it('rejects inverted ranges and junk', () => {
     expect(parseRange('5-3')).toBeUndefined();
     expect(parseRange('see note')).toBeUndefined();
+    expect(parseRange('2.6 to')).toBeUndefined();
+    expect(parseRange('(3.4 - 10.8')).toBeUndefined();
   });
 });
 
@@ -116,8 +121,31 @@ describe('units (SPEC §6.3)', () => {
     ['Å', 'Ao'],
     ['mg/dL (calc)', 'mg/dL'],
     ['MG/DL', 'mg/dL'],
+    // Portal and consumer-report spellings.
+    ['MCG/DL', 'ug/dL'],
+    ['mcIU/mL', 'u[IU]/mL'],
+    ['mcmol/L', 'umol/L'],
+    ['x10^3/uL', '10*3/uL'],
+    ['10^3/µL', '10*3/uL'],
+    ['x 10(3)/uL', '10*3/uL'],
+    ['10*3/uL', '10*3/uL'],
+    ['10E3/uL', '10*3/uL'],
+    ['K/mcL', '10*3/uL'],
+    ['Thous/mcL', '10*3/uL'],
+    ['x10^6/uL', '10*6/uL'],
+    ['Mill/uL', '10*6/uL'],
+    ['mL/min/1.73 m2', 'mL/min/{1.73_m2}'],
+    ['mL/min/1.73m²', 'mL/min/{1.73_m2}'],
+    ['mL/min/1.73', 'mL/min/{1.73_m2}'],
   ])('%s → %s', (printed, ucum) => {
     expect(printedToUcum(printed)).toBe(ucum);
+  });
+
+  it('reads mEq/L as mmol/L only for monovalent ions', () => {
+    for (const loinc of ['2951-2', '2823-3', '2075-0', '2028-9']) expect(resolveUnit('mEq/L', entry(loinc))).toEqual({ ok: true, ucum: 'mmol/L', factor: 1 });
+    // Calcium is divalent: 1 mEq/L is 0.5 mmol/L, so it is never an alias.
+    expect(resolveUnit('mEq/L', entry('17861-6'))).toEqual({ ok: false, reason: 'unit_mismatch' });
+    expect(printedToUcum('mEq/L')).toBeUndefined();
   });
 
   it('does not case-fold M/uL into milli', () => {

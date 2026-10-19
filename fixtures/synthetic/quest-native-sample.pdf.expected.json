@@ -1,0 +1,109 @@
+{
+  "vendor": "quest",
+  "patient": {
+    "family": "Example",
+    "given": [
+      "Alex",
+      "J"
+    ],
+    "birthDate": "1984-06-15",
+    "gender": "male"
+  },
+  "draws": [
+    {
+      "collected": {
+        "utc": "2026-07-10T12:40:00Z"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "2345-7",
+          "value": 88,
+          "ucum": "mg/dL",
+          "low": 65,
+          "high": 99,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2951-2",
+          "value": 140,
+          "ucum": "mmol/L",
+          "low": 135,
+          "high": 146,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2160-0",
+          "value": 1.32,
+          "ucum": "mg/dL",
+          "low": 0.6,
+          "high": 1.29,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "98979-8",
+          "value": 68,
+          "ucum": "mL/min/{1.73_m2}",
+          "low": 60,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "19123-9",
+          "value": 2.1,
+          "ucum": "mg/dL",
+          "low": 1.5,
+          "high": 2.5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2132-9",
+          "value": 512,
+          "ucum": "pg/mL",
+          "low": 200,
+          "high": 1100,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2284-8",
+          "value": 17.5,
+          "ucum": "ng/mL",
+          "low": 5.4,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "1869-7",
+          "value": 150,
+          "ucum": "mg/dL",
+          "low": 115,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "33863-2",
+          "value": 0.82,
+          "ucum": "mg/L",
+          "low": 0.52,
+          "high": 1.31,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "3016-3",
+          "value": 1.62,
+          "ucum": "m[IU]/L",
+          "low": 0.4,
+          "high": 4.5,
+          "confidence": "high"
+        }
+      ]
+    }
+  ],
+  "unmatched": []
+}

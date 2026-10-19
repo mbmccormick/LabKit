@@ -1,0 +1,110 @@
+{
+  "vendor": "generic",
+  "patient": {
+    "family": "Sample",
+    "given": [
+      "Jordan"
+    ],
+    "birthDate": "1985-01-02",
+    "gender": "female"
+  },
+  "draws": [
+    {
+      "collected": {
+        "utc": "2026-04-17T13:05:00Z"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "1884-6",
+          "value": 88,
+          "ucum": "mg/dL",
+          "high": 90,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "30522-7",
+          "value": 0.6,
+          "ucum": "mg/L",
+          "high": 1,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "20448-7",
+          "value": 5.2,
+          "ucum": "u[IU]/mL",
+          "low": 2.6,
+          "high": 24.9,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "2345-7",
+          "value": 88,
+          "ucum": "mg/dL",
+          "low": 65,
+          "high": 99,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "2951-2",
+          "value": 140,
+          "ucum": "mmol/L",
+          "low": 136,
+          "high": 145,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "2823-3",
+          "value": 5.4,
+          "ucum": "mmol/L",
+          "low": 3.5,
+          "high": 5.1,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "6690-2",
+          "value": 5.8,
+          "ucum": "10*3/uL",
+          "low": 3.4,
+          "high": 10.8,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "2132-9",
+          "value": 1310,
+          "ucum": "pg/mL",
+          "low": 232,
+          "high": 1245,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "2284-8",
+          "value": 17.5,
+          "ucum": "ng/mL",
+          "low": 3,
+          "confidence": "medium"
+        },
+        {
+          "issues": [],
+          "loinc": "19123-9",
+          "value": 2.1,
+          "ucum": "mg/dL",
+          "low": 1.6,
+          "high": 2.3,
+          "confidence": "medium"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "Omega-3 Index"
+  ]
+}

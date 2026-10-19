@@ -13,9 +13,18 @@ export interface PdfDocLike {
 
 type PdfTextItem = { str: string; transform: number[]; width: number; height: number };
 
+/** Glyphs pdf.js couldn't map to Unicode: fonts with a custom encoding and no ToUnicode table. */
+const UNMAPPED = /[\p{Cc}\uFFFD]/gu;
+
+/**
+ * Positioned text per page, and how many readable characters it holds. A text
+ * layer that is mostly unmapped glyph codes (control characters) counts as none,
+ * so the file is read like a scan.
+ */
 export async function pdfTextPages(doc: PdfDocLike): Promise<{ pages: Page[]; chars: number }> {
   const pages: Page[] = [];
   let chars = 0;
+  let unmapped = 0;
   for (let n = 1; n <= doc.numPages; n++) {
     const page = await doc.getPage(n);
     const { height } = page.getViewport({ scale: 1 });
@@ -25,13 +34,16 @@ export async function pdfTextPages(doc: PdfDocLike): Promise<{ pages: Page[]; ch
       if (typeof raw.str !== 'string' || !raw.str.trim()) continue;
       const [a = 0, b = 0, c = 0, d = 0, e = 0, f = 0] = raw.transform;
       const h = raw.height || Math.hypot(c, d) || Math.hypot(a, b);
-      chars += raw.str.replace(/\s/g, '').length;
-      // pdf.js y is the baseline from the bottom; flip to top-down.
-      items.push({ str: raw.str, x: e, y: height - f, w: raw.width, h, page: n });
+      const visible = raw.str.replace(/\s/g, '');
+      unmapped += visible.match(UNMAPPED)?.length ?? 0;
+      chars += visible.replace(UNMAPPED, '').length;
+      // pdf.js y is the baseline from the bottom; flip to top-down. Labcorp prints
+      // ranges and names with U+2212 MINUS SIGN ("0.450 − 4.500", "25−Hydroxy").
+      items.push({ str: raw.str.replace(/\u2212/g, '-'), x: e, y: height - f, w: raw.width, h, page: n });
     }
     pages.push({ page: n, items });
   }
-  return { pages, chars };
+  return { pages, chars: unmapped > 0.1 * (chars + unmapped) ? 0 : chars };
 }
 
 /** No usable text layer: fewer than ~40 characters per page means a scan. */
