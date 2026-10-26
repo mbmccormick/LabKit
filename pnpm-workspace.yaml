@@ -6,3 +6,5 @@ allowBuilds:
   workerd: true
   sharp: false
   tesseract.js: false
+overrides:
+  miniflare>undici: 7.30.1
