@@ -3,9 +3,10 @@ import { generic } from './generic';
 import { labcorpPdf } from './labcorp-pdf';
 import { questHealthGorilla } from './quest-healthgorilla';
 import { questPdf } from './quest-pdf';
+import { randox } from './randox';
 
 /** Priority order (SPEC §12.6). */
-export const TEMPLATES: readonly Template[] = [questHealthGorilla, questPdf, labcorpPdf, generic];
+export const TEMPLATES: readonly Template[] = [questHealthGorilla, questPdf, labcorpPdf, randox, generic];
 
 export function pickTemplate(text: string): Template {
   let best = generic;
@@ -20,4 +21,4 @@ export function pickTemplate(text: string): Template {
   return best;
 }
 
-export { generic, labcorpPdf, questHealthGorilla, questPdf };
+export { generic, labcorpPdf, questHealthGorilla, questPdf, randox };

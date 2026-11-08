@@ -1,5 +1,6 @@
-import type { Vendor } from '@labkit/core';
-import type { SourceVendor } from './types';
+import type { ParsedReport, Vendor } from '@labkit/core';
+import type { TableResult } from './table';
+import type { Line, SourceVendor } from './types';
 
 /**
  * Column roles. previous/previousDate/lab/ignore columns are NEVER read:
@@ -35,6 +36,19 @@ export type Template = {
    * report's own legend lists are stripped, so a name that really ends in a number is kept.
    */
   labCodes?: boolean;
+  /**
+   * Layouts the header-driven reader can't follow (Randox: names that straddle the
+   * value row, reference bands stacked above and below it) bring their own row reconstruction.
+   */
+  extractTable?(lines: Line[]): TableResult;
+  /** Patient fields, when the layout's header block isn't one extractPatient knows (e.g. UK day-first dates). */
+  patient?(lines: Line[]): ParsedReport['patient'];
+  /**
+   * The same test printed in several panels of one report (Randox repeats Triglycerides, HDL, HbA1c… under
+   * each health area). Copies with the same value collapse into one row; `preferRangeOver` names panels whose
+   * copy is used only when no other panel printed the test.
+   */
+  dedupe?: { preferRangeOver?: RegExp };
 };
 
 export const COMMON_SKIP: RegExp[] = [

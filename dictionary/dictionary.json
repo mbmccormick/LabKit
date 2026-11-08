@@ -88,6 +88,14 @@
         {
           "vendor": "generic",
           "name": "Absolute Basophils"
+        },
+        {
+          "vendor": "randox",
+          "name": "Basophil Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Basophils"
         }
       ]
     },
@@ -151,6 +159,14 @@
         {
           "vendor": "generic",
           "name": "Absolute Eosinophils"
+        },
+        {
+          "vendor": "randox",
+          "name": "Eosinophil Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Eosinophils"
         }
       ]
     },
@@ -207,6 +223,21 @@
         {
           "vendor": "generic",
           "name": "Hematocrit"
+        },
+        {
+          "vendor": "randox",
+          "name": "Haematocrit"
+        },
+        {
+          "vendor": "randox",
+          "name": "Hematocrit"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "L/L",
+          "factor": 100,
+          "note": "UK reports may print a volume fraction; 0.45 L/L = 45%"
         }
       ]
     },
@@ -237,6 +268,21 @@
         {
           "vendor": "generic",
           "name": "Hemoglobin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Haemoglobin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Hemoglobin"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 0.1,
+          "note": "UK reports print g/L; 10 g/L = 1 g/dL"
         }
       ]
     },
@@ -274,6 +320,14 @@
         {
           "vendor": "generic",
           "name": "Absolute Lymphocytes"
+        },
+        {
+          "vendor": "randox",
+          "name": "Lymphocyte Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Lymphocytes"
         }
       ]
     },
@@ -330,6 +384,14 @@
         {
           "vendor": "generic",
           "name": "MCH"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Haemoglobin (MCH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Haemoglobin"
         }
       ]
     },
@@ -360,6 +422,21 @@
         {
           "vendor": "generic",
           "name": "MCHC"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Haemoglobin Concentration (MCHC)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Haemoglobin Concentration"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 0.1,
+          "note": "10 g/L = 1 g/dL"
         }
       ]
     },
@@ -390,6 +467,22 @@
         {
           "vendor": "generic",
           "name": "MCV"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cell Mean Cell Volume (MCV)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cell Mean Cell Volume"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Volume (MCV)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Cell Volume"
         }
       ]
     },
@@ -416,6 +509,14 @@
         {
           "vendor": "generic",
           "name": "MPV"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Platelet Volume (MPV)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Mean Platelet Volume"
         }
       ]
     },
@@ -457,6 +558,14 @@
         {
           "vendor": "generic",
           "name": "Absolute Monocytes"
+        },
+        {
+          "vendor": "randox",
+          "name": "Monocyte Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Monocytes"
         }
       ]
     },
@@ -520,6 +629,14 @@
         {
           "vendor": "generic",
           "name": "Absolute Neutrophils"
+        },
+        {
+          "vendor": "randox",
+          "name": "Neutrophil Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Neutrophils"
         }
       ]
     },
@@ -576,6 +693,14 @@
         {
           "vendor": "generic",
           "name": "Platelet Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Platelet Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Platelets"
         }
       ]
     },
@@ -610,6 +735,14 @@
         {
           "vendor": "generic",
           "name": "RBC Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cell Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cells (RBC)"
         }
       ]
     },
@@ -640,6 +773,14 @@
         {
           "vendor": "generic",
           "name": "RDW"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Cell Distribution Width (RDW)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Cell Distribution Width"
         }
       ]
     },
@@ -674,6 +815,14 @@
         {
           "vendor": "generic",
           "name": "WBC Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "White Blood Cell Count"
+        },
+        {
+          "vendor": "randox",
+          "name": "White Blood Cells (WBC)"
         }
       ]
     },
@@ -708,6 +857,20 @@
         {
           "vendor": "quest",
           "name": "CORTISOL, TOTAL, LC/MS"
+        },
+        {
+          "vendor": "randox",
+          "name": "Cortisol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "nmol/L",
+          "factor": 0.0362446,
+          "note": "cortisol: molar mass 362.46 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -738,6 +901,28 @@
         {
           "vendor": "generic",
           "name": "DHEA-S"
+        },
+        {
+          "vendor": "randox",
+          "name": "DHEA Sulphate"
+        },
+        {
+          "vendor": "randox",
+          "name": "DHEA-S"
+        },
+        {
+          "vendor": "randox",
+          "name": "Dehydroepiandrosterone Sulphate"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 36.85,
+          "note": "DHEA sulfate: molar mass 368.5 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -768,6 +953,24 @@
         {
           "vendor": "generic",
           "name": "Estradiol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Oestradiol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Estradiol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "pmol/L",
+          "factor": 0.272405,
+          "note": "estradiol: 3.671 pmol/L = 1 pg/mL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -798,8 +1001,20 @@
         {
           "vendor": "generic",
           "name": "FSH"
+        },
+        {
+          "vendor": "randox",
+          "name": "Follicle Stimulating Hormone (FSH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Follicle Stimulating Hormone"
         }
-      ]
+      ],
+      "unitAliases": {
+        "U/L": "m[IU]/mL",
+        "IU/L": "m[IU]/mL"
+      }
     },
     {
       "loinc": "10501-5",
@@ -828,8 +1043,24 @@
         {
           "vendor": "generic",
           "name": "LH"
+        },
+        {
+          "vendor": "randox",
+          "name": "Luteinising Hormone (LH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Luteinising Hormone"
+        },
+        {
+          "vendor": "randox",
+          "name": "Luteinizing Hormone"
         }
-      ]
+      ],
+      "unitAliases": {
+        "U/L": "m[IU]/mL",
+        "IU/L": "m[IU]/mL"
+      }
     },
     {
       "loinc": "2842-3",
@@ -858,6 +1089,23 @@
         {
           "vendor": "generic",
           "name": "Prolactin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Prolactin"
+        }
+      ],
+      "unitAliases": {
+        "mIU/L": "m[IU]/L"
+      },
+      "unitConversions": [
+        {
+          "from": "m[IU]/L",
+          "factor": 0.0471698,
+          "note": "prolactin (WHO 84/500): 21.2 mIU/L = 1 ng/mL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -910,8 +1158,19 @@
         {
           "vendor": "generic",
           "name": "PSA, Free"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free PSA"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Prostate Specific Antigen"
         }
-      ]
+      ],
+      "unitAliases": {
+        "ug/L": "ng/mL"
+      }
     },
     {
       "loinc": "2857-1",
@@ -944,8 +1203,27 @@
         {
           "vendor": "generic",
           "name": "PSA"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total PSA"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Prostate Specific Antigen"
+        },
+        {
+          "vendor": "randox",
+          "name": "Prostate Specific Antigen"
+        },
+        {
+          "vendor": "randox",
+          "name": "PSA"
         }
-      ]
+      ],
+      "unitAliases": {
+        "ug/L": "ng/mL"
+      }
     },
     {
       "loinc": "13967-5",
@@ -974,6 +1252,14 @@
         {
           "vendor": "generic",
           "name": "SHBG"
+        },
+        {
+          "vendor": "randox",
+          "name": "Sex Hormone Binding Globulin (SHBG)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Sex Hormone Binding Globulin"
         }
       ]
     },
@@ -1004,6 +1290,28 @@
         {
           "vendor": "generic",
           "name": "Free Testosterone"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Testosterone"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "nmol/L",
+          "factor": 288.4,
+          "note": "testosterone: molar mass 288.42 g/mol",
+          "vendors": [
+            "randox"
+          ]
+        },
+        {
+          "from": "pmol/L",
+          "factor": 0.2884,
+          "note": "testosterone: molar mass 288.42 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -1038,6 +1346,24 @@
         {
           "vendor": "generic",
           "name": "Total Testosterone"
+        },
+        {
+          "vendor": "randox",
+          "name": "Testosterone"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Testosterone"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "nmol/L",
+          "factor": 28.84,
+          "note": "testosterone: molar mass 288.42 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -1168,8 +1494,19 @@
         {
           "vendor": "generic",
           "name": "Rheumatoid Factor"
+        },
+        {
+          "vendor": "randox",
+          "name": "Rheumatoid Factor (RF)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Rheumatoid Factor"
         }
-      ]
+      ],
+      "unitAliases": {
+        "kU/L": "[IU]/mL"
+      }
     },
     {
       "loinc": "1742-6",
@@ -1198,6 +1535,18 @@
         {
           "vendor": "generic",
           "name": "ALT"
+        },
+        {
+          "vendor": "randox",
+          "name": "Alanine Aminotransferase (ALT)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Alanine Aminotransferase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Alanine Transaminase"
         }
       ]
     },
@@ -1228,6 +1577,17 @@
         {
           "vendor": "generic",
           "name": "Albumin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Albumin"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 0.1,
+          "note": "10 g/L = 1 g/dL"
         }
       ]
     },
@@ -1296,6 +1656,14 @@
         {
           "vendor": "generic",
           "name": "ALP"
+        },
+        {
+          "vendor": "randox",
+          "name": "Alkaline Phosphatase (ALP)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Alkaline Phosphatase"
         }
       ]
     },
@@ -1326,6 +1694,14 @@
         {
           "vendor": "generic",
           "name": "Amylase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Amylase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Amylase"
         }
       ]
     },
@@ -1356,6 +1732,18 @@
         {
           "vendor": "generic",
           "name": "AST"
+        },
+        {
+          "vendor": "randox",
+          "name": "Aspartate Aminotransferase (AST)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Aspartate Aminotransferase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Aspartate Transaminase"
         }
       ]
     },
@@ -1424,6 +1812,24 @@
         {
           "vendor": "generic",
           "name": "Calcium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Calcium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Calcium"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 4.008,
+          "note": "calcium: molar mass 40.078 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -1494,6 +1900,10 @@
         {
           "vendor": "generic",
           "name": "Chloride"
+        },
+        {
+          "vendor": "randox",
+          "name": "Chloride"
         }
       ]
     },
@@ -1524,6 +1934,20 @@
         {
           "vendor": "generic",
           "name": "Creatinine"
+        },
+        {
+          "vendor": "randox",
+          "name": "Creatinine"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 0.0113122,
+          "note": "creatinine: 88.4 umol/L = 1 mg/dL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -1561,6 +1985,35 @@
       ]
     },
     {
+      "loinc": "69405-9",
+      "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by based on 1.73 sq M",
+      "text": "eGFR",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mL/min/{1.73_m2}",
+      "unitAliases": {
+        "mL/min/1.73m2": "mL/min/{1.73_m2}"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 250
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "eGFR"
+        },
+        {
+          "vendor": "randox",
+          "name": "Estimated Glomerular Filtration Rate"
+        },
+        {
+          "vendor": "randox",
+          "name": "Estimated GFR"
+        }
+      ]
+    },
+    {
       "loinc": "2324-2",
       "display": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
       "text": "Gamma-glutamyl Transferase",
@@ -1587,6 +2040,22 @@
         {
           "vendor": "generic",
           "name": "GGT"
+        },
+        {
+          "vendor": "randox",
+          "name": "Gamma-Glutamyltransferase (GGT)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Gamma-Glutamyltransferase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Gamma Glutamyltransferase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Gamma GT"
         }
       ]
     },
@@ -1617,6 +2086,17 @@
         {
           "vendor": "generic",
           "name": "Globulin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Globulin"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 0.1,
+          "note": "10 g/L = 1 g/dL"
         }
       ]
     },
@@ -1646,6 +2126,10 @@
         },
         {
           "vendor": "generic",
+          "name": "Lipase"
+        },
+        {
+          "vendor": "randox",
           "name": "Lipase"
         }
       ]
@@ -1680,6 +2164,10 @@
         {
           "vendor": "generic",
           "name": "Potassium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Potassium"
         }
       ]
     },
@@ -1713,6 +2201,10 @@
         {
           "vendor": "generic",
           "name": "Sodium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Sodium"
         }
       ]
     },
@@ -1743,6 +2235,24 @@
         {
           "vendor": "generic",
           "name": "Total Bilirubin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Bilirubin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Bilirubin"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 0.0584795,
+          "note": "bilirubin: 17.1 umol/L = 1 mg/dL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -1773,6 +2283,17 @@
         {
           "vendor": "generic",
           "name": "Total Protein"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Protein"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 0.1,
+          "note": "10 g/L = 1 g/dL"
         }
       ]
     },
@@ -1815,6 +2336,18 @@
         {
           "vendor": "generic",
           "name": "C-Reactive Protein, High Sensitivity"
+        },
+        {
+          "vendor": "randox",
+          "name": "High Sensitivity C-Reactive Protein (hsCRP)"
+        },
+        {
+          "vendor": "randox",
+          "name": "High Sensitivity C-Reactive Protein"
+        },
+        {
+          "vendor": "randox",
+          "name": "hsCRP"
         }
       ]
     },
@@ -1871,6 +2404,17 @@
         {
           "vendor": "generic",
           "name": "ApoB"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein B"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
         }
       ]
     },
@@ -2015,6 +2559,20 @@
         {
           "vendor": "generic",
           "name": "HDL-C"
+        },
+        {
+          "vendor": "randox",
+          "name": "HDL Cholesterol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 38.67,
+          "note": "cholesterol: molar mass 386.65 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2171,6 +2729,20 @@
         {
           "vendor": "generic",
           "name": "LDL-C"
+        },
+        {
+          "vendor": "randox",
+          "name": "LDL Cholesterol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 38.67,
+          "note": "cholesterol: molar mass 386.65 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2227,6 +2799,18 @@
         {
           "vendor": "generic",
           "name": "Lp(a)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Lipoprotein (a)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Lipoprotein(a)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Lp(a)"
         }
       ]
     },
@@ -2257,6 +2841,24 @@
         {
           "vendor": "generic",
           "name": "Non-HDL Cholesterol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Non-HDL Cholesterol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Non HDL Cholesterol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 38.67,
+          "note": "cholesterol: molar mass 386.65 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2361,6 +2963,24 @@
         {
           "vendor": "generic",
           "name": "Cholesterol, Total"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Cholesterol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Cholesterol"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 38.67,
+          "note": "cholesterol: molar mass 386.65 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2391,6 +3011,22 @@
         {
           "vendor": "generic",
           "name": "Cholesterol/HDL Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Cholesterol / HDL Cholesterol Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Cholesterol / HDL Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Cholesterol : HDL Cholesterol Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Cholesterol / HDL Ratio"
         }
       ]
     },
@@ -2421,6 +3057,24 @@
         {
           "vendor": "generic",
           "name": "Triglycerides"
+        },
+        {
+          "vendor": "randox",
+          "name": "Triglycerides"
+        },
+        {
+          "vendor": "randox",
+          "name": "Triglyceride"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 88.57,
+          "note": "triglyceride (as triolein): molar mass 885.7 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2459,6 +3113,28 @@
         {
           "vendor": "generic",
           "name": "Glucose, Fasting"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glucose"
+        },
+        {
+          "vendor": "randox",
+          "name": "Fasting Glucose"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glucose (fasting)"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 18.016,
+          "note": "glucose: molar mass 180.16 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2504,6 +3180,18 @@
         {
           "vendor": "generic",
           "name": "HbA1c (Hemoglobin A1c)"
+        },
+        {
+          "vendor": "randox",
+          "name": "HbA1c (DCCT)"
+        },
+        {
+          "vendor": "randox",
+          "name": "HbA1c (NGSP)"
+        },
+        {
+          "vendor": "randox",
+          "name": "HbA1c %"
         }
       ]
     },
@@ -2542,6 +3230,24 @@
         {
           "vendor": "generic",
           "name": "Insulin, Fasting"
+        },
+        {
+          "vendor": "randox",
+          "name": "Insulin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Fasting Insulin"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "pmol/L",
+          "factor": 0.166667,
+          "note": "insulin: 1 uIU/mL = 6 pmol/L",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2598,6 +3304,24 @@
         {
           "vendor": "generic",
           "name": "Uric Acid"
+        },
+        {
+          "vendor": "randox",
+          "name": "Uric Acid"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urate"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 0.0168124,
+          "note": "uric acid: 59.48 umol/L = 1 mg/dL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2628,8 +3352,15 @@
         {
           "vendor": "generic",
           "name": "Ferritin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Ferritin"
         }
-      ]
+      ],
+      "unitAliases": {
+        "ug/L": "ng/mL"
+      }
     },
     {
       "loinc": "2498-4",
@@ -2658,6 +3389,24 @@
         {
           "vendor": "generic",
           "name": "Iron, Total"
+        },
+        {
+          "vendor": "randox",
+          "name": "Iron"
+        },
+        {
+          "vendor": "randox",
+          "name": "Serum Iron"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 5.585,
+          "note": "iron: molar mass 55.845 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2695,6 +3444,10 @@
         {
           "vendor": "generic",
           "name": "Transferrin Saturation"
+        },
+        {
+          "vendor": "randox",
+          "name": "Transferrin Saturation"
         }
       ]
     },
@@ -2729,6 +3482,24 @@
         {
           "vendor": "generic",
           "name": "Total Iron Binding Capacity"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Iron Binding Capacity (TIBC)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Iron Binding Capacity"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "umol/L",
+          "factor": 5.585,
+          "note": "iron: molar mass 55.845 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2823,6 +3594,36 @@
         {
           "vendor": "generic",
           "name": "25-Hydroxyvitamin D"
+        },
+        {
+          "vendor": "randox",
+          "name": "Vitamin D"
+        },
+        {
+          "vendor": "randox",
+          "name": "Vitamin D (25-OH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Vitamin D 25-OH"
+        },
+        {
+          "vendor": "randox",
+          "name": "25-OH Vitamin D"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total Vitamin D"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "nmol/L",
+          "factor": 0.400641,
+          "note": "25-OH vitamin D: 2.496 nmol/L = 1 ng/mL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -2883,8 +3684,23 @@
         {
           "vendor": "generic",
           "name": "Thyroglobulin Antibodies"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-Thyroglobulin Antibody"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-Thyroglobulin Antibodies"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroglobulin Antibody"
         }
-      ]
+      ],
+      "unitAliases": {
+        "kU/L": "[IU]/mL"
+      }
     },
     {
       "loinc": "8099-4",
@@ -2913,8 +3729,27 @@
         {
           "vendor": "generic",
           "name": "TPO Antibodies"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-Thyroid Peroxidase Antibody"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-Thyroid Peroxidase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-TPO"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroid Peroxidase Antibody"
         }
-      ]
+      ],
+      "unitAliases": {
+        "kU/L": "[IU]/mL"
+      }
     },
     {
       "loinc": "3016-3",
@@ -2945,6 +3780,18 @@
         },
         {
           "vendor": "generic",
+          "name": "TSH"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroid Stimulating Hormone (TSH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroid Stimulating Hormone"
+        },
+        {
+          "vendor": "randox",
           "name": "TSH"
         }
       ]
@@ -2980,6 +3827,28 @@
         {
           "vendor": "generic",
           "name": "Free Thyroxine"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Thyroxine (FT4)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Thyroxine"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free T4"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "pmol/L",
+          "factor": 0.0777001,
+          "note": "free T4: 12.87 pmol/L = 1 ng/dL",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -3010,6 +3879,32 @@
         {
           "vendor": "generic",
           "name": "Free T3"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Tri-iodothyronine (FT3)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Tri-iodothyronine"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free Triiodothyronine"
+        },
+        {
+          "vendor": "randox",
+          "name": "Free T3"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "pmol/L",
+          "factor": 0.651,
+          "note": "T3: molar mass 650.98 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -3302,6 +4197,19 @@
           "vendor": "generic",
           "name": "Bilirubin",
           "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Bilirubin (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Bilirubin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Bilirubin",
+          "panel": "urinalysis"
         }
       ]
     },
@@ -3374,6 +4282,19 @@
           "vendor": "generic",
           "name": "Glucose",
           "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glucose (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Glucose"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glucose",
+          "panel": "urinalysis"
         }
       ]
     },
@@ -3432,6 +4353,19 @@
           "vendor": "generic",
           "name": "Ketones",
           "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Ketones (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Ketones"
+        },
+        {
+          "vendor": "randox",
+          "name": "Ketones",
+          "panel": "urinalysis"
         }
       ]
     },
@@ -3474,6 +4408,32 @@
         {
           "vendor": "generic",
           "name": "Leukocyte Esterase",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "White Blood Cells (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine White Blood Cells"
+        },
+        {
+          "vendor": "randox",
+          "name": "White Blood Cells",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Leukocytes (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Leukocytes"
+        },
+        {
+          "vendor": "randox",
+          "name": "Leukocytes",
           "panel": "urinalysis"
         }
       ]
@@ -3518,6 +4478,19 @@
           "vendor": "generic",
           "name": "Nitrite, Urine",
           "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Nitrite (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Nitrite"
+        },
+        {
+          "vendor": "randox",
+          "name": "Nitrite",
+          "panel": "urinalysis"
         }
       ]
     },
@@ -3550,6 +4523,32 @@
         {
           "vendor": "generic",
           "name": "Occult Blood",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cells (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Red Blood Cells"
+        },
+        {
+          "vendor": "randox",
+          "name": "Red Blood Cells",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Blood (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Blood"
+        },
+        {
+          "vendor": "randox",
+          "name": "Blood",
           "panel": "urinalysis"
         }
       ]
@@ -3584,6 +4583,19 @@
           "vendor": "generic",
           "name": "pH",
           "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "pH (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine pH"
+        },
+        {
+          "vendor": "randox",
+          "name": "pH",
+          "panel": "urinalysis"
         }
       ]
     },
@@ -3615,6 +4627,19 @@
         },
         {
           "vendor": "generic",
+          "name": "Protein",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "randox",
+          "name": "Protein (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Protein"
+        },
+        {
+          "vendor": "randox",
           "name": "Protein",
           "panel": "urinalysis"
         }
@@ -4145,6 +5170,10 @@
         {
           "vendor": "generic",
           "name": "Cobalamin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Vitamin B12"
         }
       ]
     },
@@ -4182,6 +5211,18 @@
         {
           "vendor": "generic",
           "name": "Folic Acid"
+        },
+        {
+          "vendor": "randox",
+          "name": "Folic Acid"
+        },
+        {
+          "vendor": "randox",
+          "name": "Folate"
+        },
+        {
+          "vendor": "randox",
+          "name": "Serum Folate"
         }
       ]
     },
@@ -4212,6 +5253,20 @@
         {
           "vendor": "generic",
           "name": "Magnesium, Serum"
+        },
+        {
+          "vendor": "randox",
+          "name": "Magnesium"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 2.431,
+          "note": "magnesium: molar mass 24.305 g/mol",
+          "vendors": [
+            "randox"
+          ]
         }
       ]
     },
@@ -4250,6 +5305,25 @@
         {
           "vendor": "generic",
           "name": "Apo A-1"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein A-I"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein A1"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein A-1"
+        }
+      ],
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
         }
       ]
     },
@@ -4275,6 +5349,10 @@
         },
         {
           "vendor": "generic",
+          "name": "Cystatin C"
+        },
+        {
+          "vendor": "randox",
           "name": "Cystatin C"
         }
       ]
@@ -4344,6 +5422,738 @@
         {
           "vendor": "generic",
           "name": "VLDL"
+        }
+      ]
+    },
+    {
+      "loinc": "3034-6",
+      "display": "Transferrin [Mass/volume] in Serum or Plasma",
+      "text": "Transferrin",
+      "category": "nutrients_minerals",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 20,
+        "max": 1000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Transferrin"
+        },
+        {
+          "vendor": "generic",
+          "name": "Transferrin"
+        }
+      ]
+    },
+    {
+      "loinc": "1874-7",
+      "display": "Apolipoprotein B/Apolipoprotein A-I [Mass Ratio] in Serum or Plasma",
+      "text": "Apolipoprotein B / A-I Ratio",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "{ratio}",
+      "plausible": {
+        "min": 0.05,
+        "max": 10
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein B / A-I Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein B / Apolipoprotein A-I Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "ApoB / ApoA-I Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein B : A-I Ratio"
+        },
+        {
+          "vendor": "generic",
+          "name": "ApoB/ApoA1 Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "1876-2",
+      "display": "Apolipoprotein C-II [Mass/volume] in Serum or Plasma",
+      "text": "Apolipoprotein C-II",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        },
+        {
+          "from": "mg/L",
+          "factor": 0.1,
+          "note": "10 mg/L = 1 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 50
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein CII"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein C-II"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein C2"
+        }
+      ]
+    },
+    {
+      "loinc": "1877-0",
+      "display": "Apolipoprotein C-III [Mass/volume] in Serum or Plasma",
+      "text": "Apolipoprotein C-III",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        },
+        {
+          "from": "mg/L",
+          "factor": 0.1,
+          "note": "10 mg/L = 1 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 100
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein CIII"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein C-III"
+        },
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein C3"
+        }
+      ]
+    },
+    {
+      "loinc": "1886-1",
+      "display": "Apolipoprotein E [Mass/volume] in Serum or Plasma",
+      "text": "Apolipoprotein E",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        },
+        {
+          "from": "mg/L",
+          "factor": 0.1,
+          "note": "10 mg/L = 1 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 50
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Apolipoprotein E"
+        }
+      ]
+    },
+    {
+      "loinc": "90364-1",
+      "display": "Cholesterol.in LDL.small dense [Mass/volume] in Serum or Plasma",
+      "text": "Small Dense LDL Cholesterol",
+      "category": "lipids",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "mmol/L",
+          "factor": 38.67,
+          "note": "cholesterol: molar mass 386.65 g/mol",
+          "vendors": [
+            "randox"
+          ]
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 500
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Small Dense LDL Cholesterol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Small LDL Cholesterol"
+        },
+        {
+          "vendor": "randox",
+          "name": "Small Dense LDL"
+        },
+        {
+          "vendor": "randox",
+          "name": "sdLDL Cholesterol"
+        }
+      ]
+    },
+    {
+      "loinc": "1988-5",
+      "display": "C reactive protein [Mass/volume] in Serum or Plasma",
+      "text": "C-Reactive Protein",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "mg/L",
+      "plausible": {
+        "min": 0,
+        "max": 1000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "C-Reactive Protein (CRP)"
+        },
+        {
+          "vendor": "randox",
+          "name": "C-Reactive Protein"
+        },
+        {
+          "vendor": "randox",
+          "name": "C Reactive Protein"
+        },
+        {
+          "vendor": "generic",
+          "name": "C-Reactive Protein"
+        }
+      ]
+    },
+    {
+      "loinc": "2157-6",
+      "display": "Creatine kinase [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Creatine Kinase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "plausible": {
+        "min": 0,
+        "max": 500000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Creatine Kinase"
+        },
+        {
+          "vendor": "randox",
+          "name": "Creatine Kinase (CK)"
+        },
+        {
+          "vendor": "generic",
+          "name": "Creatine Kinase"
+        }
+      ]
+    },
+    {
+      "loinc": "59261-8",
+      "display": "Hemoglobin A1c/Hemoglobin.total standardized per IFCC-RMP for CDT in Blood",
+      "text": "Hemoglobin A1c (IFCC)",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "mmol/mol",
+      "plausible": {
+        "min": 5,
+        "max": 200
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "HbA1c"
+        },
+        {
+          "vendor": "randox",
+          "name": "HbA1c (IFCC)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Haemoglobin A1c"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glycated Haemoglobin (HbA1c)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Glycated Haemoglobin"
+        }
+      ]
+    },
+    {
+      "loinc": "1986-9",
+      "display": "C peptide [Mass/volume] in Serum or Plasma",
+      "text": "C-Peptide",
+      "category": "metabolic",
+      "valueType": "quantity",
+      "ucum": "ng/mL",
+      "unitAliases": {
+        "ug/L": "ng/mL"
+      },
+      "unitConversions": [
+        {
+          "from": "pmol/L",
+          "factor": 0.0030203,
+          "note": "C-peptide: molar mass 3020.3 g/mol",
+          "vendors": [
+            "randox"
+          ]
+        },
+        {
+          "from": "nmol/L",
+          "factor": 3.0203,
+          "note": "C-peptide: molar mass 3020.3 g/mol",
+          "vendors": [
+            "randox"
+          ]
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 50
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "C-Peptide"
+        },
+        {
+          "vendor": "randox",
+          "name": "C Peptide"
+        },
+        {
+          "vendor": "generic",
+          "name": "C-Peptide"
+        }
+      ]
+    },
+    {
+      "loinc": "22664-7",
+      "display": "Urea [Moles/volume] in Serum or Plasma",
+      "text": "Urea",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "plausible": {
+        "min": 0.1,
+        "max": 120
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Urea"
+        },
+        {
+          "vendor": "generic",
+          "name": "Urea"
+        }
+      ]
+    },
+    {
+      "loinc": "30000-4",
+      "display": "Microalbumin/Creatinine [Ratio] in Urine",
+      "text": "Microalbumin/Creatinine Ratio",
+      "category": "urinalysis",
+      "valueType": "quantity",
+      "ucum": "mg/mmol",
+      "plausible": {
+        "min": 0,
+        "max": 2000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Microalbumin / Creatinine Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Microalbumin Creatinine Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Microalbumin : Creatinine Ratio"
+        },
+        {
+          "vendor": "randox",
+          "name": "Microalbumin / Creatinine Ratio (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Microalbumin / Creatinine Ratio"
+        }
+      ]
+    },
+    {
+      "loinc": "29265-6",
+      "display": "Calcium [Moles/volume] corrected for albumin in Serum or Plasma",
+      "text": "Calcium (albumin-corrected)",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "plausible": {
+        "min": 0.5,
+        "max": 5
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Calcium (adjusted)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Adjusted Calcium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Corrected Calcium"
+        },
+        {
+          "vendor": "randox",
+          "name": "Calcium (corrected)"
+        },
+        {
+          "vendor": "generic",
+          "name": "Adjusted Calcium"
+        }
+      ]
+    },
+    {
+      "loinc": "14879-1",
+      "display": "Phosphate [Moles/volume] in Serum or Plasma",
+      "text": "Phosphate",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "mmol/L",
+      "plausible": {
+        "min": 0.1,
+        "max": 6
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Phosphate"
+        },
+        {
+          "vendor": "randox",
+          "name": "Inorganic Phosphate"
+        }
+      ]
+    },
+    {
+      "loinc": "1805-1",
+      "display": "Amylase.pancreatic [Enzymatic activity/volume] in Serum or Plasma",
+      "text": "Pancreatic Amylase",
+      "category": "kidney_liver_electrolytes",
+      "valueType": "quantity",
+      "ucum": "U/L",
+      "plausible": {
+        "min": 0,
+        "max": 10000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Pancreatic Amylase"
+        },
+        {
+          "vendor": "generic",
+          "name": "Pancreatic Amylase"
+        }
+      ]
+    },
+    {
+      "loinc": "14866-8",
+      "display": "Parathyrin.intact [Moles/volume] in Serum or Plasma",
+      "text": "Parathyroid Hormone (intact)",
+      "category": "hormones",
+      "valueType": "quantity",
+      "ucum": "pmol/L",
+      "plausible": {
+        "min": 0,
+        "max": 500
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Parathyroid Hormone (PTH)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Parathyroid Hormone"
+        },
+        {
+          "vendor": "randox",
+          "name": "Intact PTH"
+        }
+      ]
+    },
+    {
+      "loinc": "19113-0",
+      "display": "IgE [Units/volume] in Serum or Plasma",
+      "text": "Immunoglobulin E (IgE)",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "[IU]/mL",
+      "unitAliases": {
+        "kU/L": "[IU]/mL"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 100000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin E (IgE)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin E"
+        },
+        {
+          "vendor": "randox",
+          "name": "Total IgE"
+        },
+        {
+          "vendor": "generic",
+          "name": "Immunoglobulin E"
+        }
+      ]
+    },
+    {
+      "loinc": "2458-8",
+      "display": "IgA [Mass/volume] in Serum or Plasma",
+      "text": "Immunoglobulin A (IgA)",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 2000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin A (IgA)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin A"
+        },
+        {
+          "vendor": "generic",
+          "name": "Immunoglobulin A"
+        }
+      ]
+    },
+    {
+      "loinc": "2465-3",
+      "display": "IgG [Mass/volume] in Serum or Plasma",
+      "text": "Immunoglobulin G (IgG)",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 10000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin G (IgG)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin G"
+        },
+        {
+          "vendor": "generic",
+          "name": "Immunoglobulin G"
+        }
+      ]
+    },
+    {
+      "loinc": "2472-9",
+      "display": "IgM [Mass/volume] in Serum or Plasma",
+      "text": "Immunoglobulin M (IgM)",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "mg/dL",
+      "unitConversions": [
+        {
+          "from": "g/L",
+          "factor": 100,
+          "note": "1 g/L = 100 mg/dL"
+        }
+      ],
+      "plausible": {
+        "min": 0,
+        "max": 5000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin M (IgM)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Immunoglobulin M"
+        },
+        {
+          "vendor": "generic",
+          "name": "Immunoglobulin M"
+        }
+      ]
+    },
+    {
+      "loinc": "5370-2",
+      "display": "Streptolysin O Ab [Units/volume] in Serum or Plasma",
+      "text": "Antistreptolysin O (ASO)",
+      "category": "inflammation_autoimmune",
+      "valueType": "quantity",
+      "ucum": "[IU]/mL",
+      "unitAliases": {
+        "kU/L": "[IU]/mL"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 10000
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Antistreptolysin O (ASO)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Antistreptolysin O"
+        },
+        {
+          "vendor": "randox",
+          "name": "Anti-Streptolysin O"
+        },
+        {
+          "vendor": "generic",
+          "name": "Antistreptolysin O"
+        }
+      ]
+    },
+    {
+      "loinc": "3021-3",
+      "display": "Thyroxine binding globulin [Mass/volume] in Serum or Plasma",
+      "text": "Thyroxine Binding Globulin (TBG)",
+      "category": "thyroid",
+      "valueType": "quantity",
+      "ucum": "ug/mL",
+      "unitAliases": {
+        "mg/L": "ug/mL"
+      },
+      "plausible": {
+        "min": 0,
+        "max": 200
+      },
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Thyroxine Binding Globulin (TBG)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroxine Binding Globulin"
+        },
+        {
+          "vendor": "randox",
+          "name": "Thyroxine-binding Globulin"
+        },
+        {
+          "vendor": "generic",
+          "name": "Thyroxine Binding Globulin"
+        }
+      ]
+    },
+    {
+      "loinc": "5818-0",
+      "display": "Urobilinogen [Presence] in Urine by Test strip",
+      "text": "Urine urobilinogen",
+      "category": "urinalysis",
+      "valueType": "qualitative",
+      "ucum": null,
+      "aliases": [
+        {
+          "vendor": "randox",
+          "name": "Urobilinogen (Urine)"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urine Urobilinogen"
+        },
+        {
+          "vendor": "randox",
+          "name": "Urobilinogen",
+          "panel": "urinalysis"
+        },
+        {
+          "vendor": "generic",
+          "name": "Urobilinogen",
+          "panel": "urinalysis"
         }
       ]
     }

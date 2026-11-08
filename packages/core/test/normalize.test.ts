@@ -167,8 +167,23 @@ describe('units (SPEC §6.3)', () => {
     expect(applyFactor(1234.5678, 0.001)).toBe(1.23457);
   });
 
-  it('reports unit mismatch (no molar/mass conversion)', () => {
+  it('converts SI units only where the dictionary defines the factor', () => {
+    // Molar → mass only for vendors whose whole report is SI (SPEC §6.2 rule 4): Randox, not US labs.
+    expect(resolveUnit('mmol/l', entry('2093-3'), 'randox')).toEqual({ ok: true, ucum: 'mg/dL', factor: 38.67 });
+    expect(resolveUnit('mmol/L', entry('2093-3'), 'labcorp')).toEqual({ ok: false, reason: 'unit_mismatch' });
     expect(resolveUnit('mmol/L', entry('2093-3'))).toEqual({ ok: false, reason: 'unit_mismatch' });
+    expect(resolveUnit('g/l', entry('718-7'))).toEqual({ ok: true, ucum: 'g/dL', factor: 0.1 });
+    expect(resolveUnit('10⁹/L', entry('6690-2'))).toEqual({ ok: true, ucum: '10*3/uL', factor: 1 });
+    expect(resolveUnit('10¹²/L', entry('789-8'))).toEqual({ ok: true, ucum: '10*6/uL', factor: 1 });
+    expect(resolveUnit('ng/l', entry('2132-9'))).toEqual({ ok: true, ucum: 'pg/mL', factor: 1 });
+    expect(resolveUnit('kU/l', entry('11572-5'))).toEqual({ ok: true, ucum: '[IU]/mL', factor: 1 });
+  });
+
+  it('reports unit mismatch where no exact conversion exists', () => {
+    // Lp(a) nmol/L ↔ mg/dL depends on apo(a) isoform size: never converted.
+    expect(resolveUnit('mg/dL', entry('43583-4'), 'randox')).toEqual({ ok: false, reason: 'unit_mismatch' });
+    // HbA1c IFCC mmol/mol ↔ NGSP % is an affine regression, not a scaling.
+    expect(resolveUnit('mmol/mol', entry('4548-4'), 'randox')).toEqual({ ok: false, reason: 'unit_mismatch' });
     expect(resolveUnit('furlongs', entry('2093-3'))).toEqual({ ok: false, reason: 'unit_mismatch' });
   });
 

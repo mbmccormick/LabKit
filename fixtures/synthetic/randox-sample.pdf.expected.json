@@ -1,0 +1,379 @@
+{
+  "vendor": "randox",
+  "patient": {
+    "family": "Sample",
+    "given": [
+      "Alex"
+    ],
+    "birthDate": "1985-02-07",
+    "gender": "male"
+  },
+  "draws": [
+    {
+      "collected": {
+        "utc": "2026-05-14T07:45:00Z"
+      },
+      "rows": [
+        {
+          "issues": [],
+          "loinc": "718-7",
+          "value": 14.8,
+          "ucum": "g/dL",
+          "low": 13,
+          "high": 17,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "4544-3",
+          "value": 44.1,
+          "ucum": "%",
+          "low": 40,
+          "high": 52,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "789-8",
+          "value": 4.92,
+          "ucum": "10*6/uL",
+          "low": 4.5,
+          "high": 5.5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "786-4",
+          "value": 33.5,
+          "ucum": "g/dL",
+          "low": 32.01,
+          "high": 36,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "787-2",
+          "value": 90.2,
+          "ucum": "fL",
+          "low": 80,
+          "high": 100,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "6690-2",
+          "value": 6.1,
+          "ucum": "10*3/uL",
+          "low": 4,
+          "high": 11,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "777-3",
+          "value": 251,
+          "ucum": "10*3/uL",
+          "low": 150,
+          "high": 400,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "751-8",
+          "value": 3.42,
+          "ucum": "10*3/uL",
+          "low": 2,
+          "high": 7.5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2093-3",
+          "value": 208.818,
+          "ucum": "mg/dL",
+          "high": 193.35,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2085-9",
+          "value": 56.0715,
+          "ucum": "mg/dL",
+          "low": 38.67,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "13457-7",
+          "value": 123.744,
+          "ucum": "mg/dL",
+          "high": 116.01,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2571-8",
+          "value": 106.284,
+          "ucum": "mg/dL",
+          "high": 203.711,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "9830-1",
+          "value": 3.72,
+          "ucum": "{ratio}",
+          "high": 4.5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "43583-4",
+          "value": 45,
+          "ucum": "nmol/L",
+          "high": 75,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "30522-7",
+          "value": 0.3,
+          "ucum": "mg/L",
+          "high": 1,
+          "confidence": "high",
+          "comparator": "<"
+        },
+        {
+          "issues": [],
+          "loinc": "1884-6",
+          "value": 95,
+          "ucum": "mg/dL",
+          "high": 100,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2160-0",
+          "value": 0.995474,
+          "ucum": "mg/dL",
+          "low": 0.66742,
+          "high": 1.17647,
+          "confidence": "high"
+        },
+        {
+          "issues": [
+            "formula_not_printed"
+          ],
+          "loinc": "69405-9",
+          "value": 90,
+          "ucum": "mL/min/{1.73_m2}",
+          "low": 90,
+          "confidence": "low",
+          "comparator": ">"
+        },
+        {
+          "issues": [],
+          "loinc": "22664-7",
+          "value": 5.1,
+          "ucum": "mmol/L",
+          "low": 2.5,
+          "high": 7.8,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2951-2",
+          "value": 140,
+          "ucum": "mmol/L",
+          "low": 133,
+          "high": 146,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2075-0",
+          "value": 93.4,
+          "ucum": "mmol/L",
+          "low": 95.1,
+          "high": 108,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "30000-4",
+          "confidence": "low"
+        },
+        {
+          "issues": [],
+          "loinc": "20454-5",
+          "value": "Negative",
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "5803-2",
+          "value": 6,
+          "ucum": "[pH]",
+          "low": 5,
+          "high": 8,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "59261-8",
+          "value": 36,
+          "ucum": "mmol/mol",
+          "high": 42,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2345-7",
+          "value": 93.6832,
+          "ucum": "mg/dL",
+          "low": 70.2624,
+          "high": 99.088,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "1742-6",
+          "value": 28,
+          "ucum": "U/L",
+          "high": 55,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "1751-7",
+          "value": 4.5,
+          "ucum": "g/dL",
+          "low": 3.5,
+          "high": 5,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "1975-2",
+          "value": 0.701754,
+          "ucum": "mg/dL",
+          "high": 1.22807,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "3024-7",
+          "value": 1.18104,
+          "ucum": "ng/dL",
+          "low": 0.932401,
+          "high": 1.7094,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "3016-3",
+          "value": 1.85,
+          "ucum": "m[IU]/L",
+          "low": 0.27,
+          "high": 4.2,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "62292-8",
+          "value": 24.8397,
+          "ucum": "ng/mL",
+          "low": 20.0321,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2132-9",
+          "value": 420,
+          "ucum": "pg/mL",
+          "low": 197,
+          "high": 771,
+          "confidence": "high"
+        },
+        {
+          "issues": [],
+          "loinc": "2284-8",
+          "value": 9.1,
+          "ucum": "ng/mL",
+          "low": 3.9,
+          "confidence": "high"
+        }
+      ]
+    }
+  ],
+  "unmatched": [
+    "Total Antioxidant Status (TAS)"
+  ],
+  "vitals": {
+    "collectedAt": "2026-05-14T08:45:00+01:00",
+    "programme": "Discovery (male)",
+    "fastingMinutes": 615,
+    "rows": [
+      {
+        "metric": "height",
+        "value": 1.725,
+        "unit": "m",
+        "issues": []
+      },
+      {
+        "metric": "bodyMass",
+        "value": 80.4,
+        "unit": "kg",
+        "issues": []
+      },
+      {
+        "metric": "bodyMassIndex",
+        "value": 27,
+        "unit": "count",
+        "issues": []
+      },
+      {
+        "metric": "waistCircumference",
+        "value": 92,
+        "unit": "cm",
+        "issues": []
+      },
+      {
+        "metric": "hipCircumference",
+        "value": 101,
+        "unit": "cm",
+        "issues": []
+      },
+      {
+        "metric": "waistHipRatio",
+        "value": 0.91,
+        "unit": "ratio",
+        "issues": []
+      },
+      {
+        "metric": "heartRate",
+        "value": 64,
+        "unit": "count/min",
+        "issues": []
+      },
+      {
+        "metric": "oxygenSaturation",
+        "value": 98,
+        "unit": "%",
+        "issues": []
+      },
+      {
+        "metric": "bloodPressureSystolic",
+        "value": 128,
+        "unit": "mmHg",
+        "issues": []
+      },
+      {
+        "metric": "bloodPressureDiastolic",
+        "value": 80,
+        "unit": "mmHg",
+        "issues": []
+      }
+    ]
+  }
+}

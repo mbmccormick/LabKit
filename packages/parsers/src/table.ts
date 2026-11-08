@@ -3,7 +3,7 @@ import { printedToUcum } from '@labkit/core';
 import { parseStampText, valueBelow, type Stamp } from './stamps';
 import type { Role, Template } from './template';
 import { VALUE_ROLES } from './template';
-import type { Line, TextItem } from './types';
+import type { Line, ReportVitals, TextItem } from './types';
 
 export type Column = { role: Role; x0: number; x1: number };
 
@@ -39,7 +39,7 @@ export type RawRow = {
   notes?: string[];
 };
 
-export type TableResult = { rows: RawRow[]; headerFound: boolean; stamps: Stamp[] };
+export type TableResult = { rows: RawRow[]; headerFound: boolean; stamps: Stamp[]; warnings?: string[]; vitals?: ReportVitals };
 
 /** Returns the header's columns if this line is a column header for the template. */
 export function detectHeader(line: Line, t: Template): Column[] | undefined {

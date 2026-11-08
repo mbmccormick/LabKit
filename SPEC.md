@@ -167,10 +167,10 @@ type DictionaryEntry = {
   valueType: 'quantity'|'qualitative'|'titer';
   ucum: string|null;             // canonical unit written to the card (quantity only)
   unitAliases?: Record<string,string>;           // printed unit → UCUM, entry-specific overrides
-  unitConversions?: {from:string; factor:number}[]; // exact scalings only, e.g. /uL → 10*3/uL ×0.001
+  unitConversions?: {from:string; factor:number; vendors?:Vendor[]}[]; // exact scalings only, e.g. /uL → 10*3/uL ×0.001
   answers?: string[];            // allowed qualitative values (normalized casing)
   plausible?: {min:number; max:number};          // physiological bounds in canonical unit; outside → parse error
-  aliases: {vendor:'quest'|'labcorp'|'function'|'generic'; name:string; panel?:string}[];
+  aliases: {vendor:'quest'|'labcorp'|'function'|'randox'|'generic'; name:string; panel?:string}[];
   excludeFromSigning?: boolean;  // e.g. SARS-CoV-2 codes if ever added for recognition
 };
 ```
@@ -180,7 +180,7 @@ type DictionaryEntry = {
 1. **Freeze rule.** Apple Health's trend key includes `coding.display` and `code.text`. Once an entry ships to production, its `loinc`, `display` and `text` never change. CI computes a hash per released entry and fails if `FROZEN.json` disagrees. A label cannot be corrected later without splitting every user's existing trend for that test, so review all labels before the first production release.
 2. Match on `(vendor, panel, name)` first, then `(vendor, name)`, then `(generic, name)`. Never match serum and urine analytes by name alone ("GLUCOSE", "ALBUMIN", "PROTEIN" exist in both).
 3. A match is only valid if the printed unit resolves to the entry's `ucum` directly, via `unitAliases`, or via `unitConversions`. Otherwise the row goes to review as "unit mismatch".
-4. Only exact scalar conversions (cells/µL → 10³/µL). No molar/mass conversions in v1.
+4. Only exact scalar conversions (cells/µL → 10³/µL). No molar/mass conversions in v1, except for vendors whose whole report is in SI units (Randox), via conversions scoped to that vendor (`unitConversions[].vendors`), so their trends merge with US-unit ones. *(Amended 2026-11-07.)*
 5. Every quantity entry must have `plausible` bounds before release (CI check).
 6. Seed: `reference/dictionary-seed.json` (119 entries, codes verified against LOINC, imported successfully into Health). It has Function Health aliases only; Quest and Labcorp aliases, unit aliases and plausibility bounds must be added from fixtures (M2).
 7. LOINC is used under the LOINC license (free; requires attribution). Add the attribution notice to the Terms page (moved from About, 2026-09-24).
@@ -338,7 +338,7 @@ Output type:
 
 ```ts
 type ParsedReport = {
-  source: {vendor: 'quest-healthgorilla'|'quest'|'labcorp'|'function'|'generic'; fileName: string; method: 'text'|'ocr'};
+  source: {vendor: 'quest-healthgorilla'|'quest'|'labcorp'|'function'|'randox'|'generic'; fileName: string; method: 'text'|'ocr'};
   patient: {family?: string; given?: string[]; birthDate?: string; gender?: 'male'|'female'};
   draws: {collectedAt: string /* ISO UTC */; rows: ParsedRow[]}[];
   unmatched: {text: string; page: number}[];
@@ -401,6 +401,7 @@ range      := number "-" number | comparator number | qual
 2. **quest-pdf** (M3): Quest's native PDF layout.
 3. **labcorp-pdf** (M3): needs real fixtures before work starts.
 4. **generic** (M3): header-token column detection with no vendor assumptions; everything medium or lower.
+4a. **randox** (added 2026-11-07): Randox Health "Discovery" PDFs (UK, SI units). Reads only the "Results for your Doctor" section; coordinate-based row rebuild (see `docs/design-notes.md`).
 5. **LLM fallback** (post-v1, opt-in): send extracted text only, never page images, to an LLM under zero-data-retention terms with a strict JSON schema; results go through the identical normalization/validation path and are capped at `medium` confidence. Disabled by default; requires explicit per-upload consent explaining that report text leaves the device.
 
 ## 13. Configuration and environments

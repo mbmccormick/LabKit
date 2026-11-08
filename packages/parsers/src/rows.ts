@@ -26,6 +26,11 @@ const FLAG_RE = /^(?:\(?(?:H|L|HH|LL|A|AA)\)?|High|Low|Abnormal|Abn|Critical|Cri
 const BLOCKING: readonly RowIssue[] = ['implausible', 'unit_mismatch', 'ambiguous_match'];
 /** Informational only: a missing reference range says nothing about whether the value was read correctly. */
 const INFO: readonly RowIssue[] = ['no_range'];
+/**
+ * Codes that name no calculation method (eGFR 69405-9): the lab didn't print which equation it used.
+ * Not blocking, but the row stays pending until the user opts in.
+ */
+const FORMULA_NOT_PRINTED: ReadonlySet<string> = new Set(['69405-9']);
 
 const NOTE_RANGE = /^\s*reference\s+range(?:\s*:\s+|\s+)(\S(?:.*\S)?)\s*$/i;
 
@@ -92,6 +97,8 @@ const cleanName = (s: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+const ABBREV_SUFFIX = /\s*\((?=[^()]*[A-Z][^()]*[A-Z])[A-Za-z0-9\-/ ]{2,12}\)\s*$/;
+
 const fuzzyKey = (s: string) => s.toLowerCase().replace(/[^a-z0-9%]/g, '');
 
 export type MatchResult = { entry?: DictionaryEntry; fuzzy: boolean; ambiguous: boolean; name: string };
@@ -117,6 +124,9 @@ export function makeMatcher(dictionary: Dictionary) {
     if (raw.nameBelowShort) candidates.push(`${raw.name} ${raw.nameBelowShort}`);
     if (raw.nameAbove) candidates.push(`${raw.nameAbove} ${raw.name}`);
     candidates.push(raw.name);
+    // Randox appends the abbreviation in parentheses: "Alanine Aminotransferase (ALT)". Try without it after
+    // the full name. Only abbreviations (2+ capitals) go: "(Urine)" and "(adjusted)" change the test.
+    if (vendor === 'randox') for (const c of [...candidates]) if (ABBREV_SUFFIX.test(c)) candidates.push(c.replace(ABBREV_SUFFIX, ''));
     for (const c of candidates.map(cleanName)) {
       const m = dictionary.match(vendor, c, panel);
       if (m.kind === 'exact') return { entry: m.entry, fuzzy: false, ambiguous: false, name: c };
@@ -183,7 +193,7 @@ export function evaluateRow(raw: RawRow, ctx: EvaluateContext): ParsedRow | unde
   if (e.valueType === 'quantity') {
     if (split.cell?.kind === 'quantity') {
       const printed = raw.unit ?? split.unit ?? rangeSplit.unit;
-      const unit = resolveUnit(printed, e);
+      const unit = resolveUnit(printed, e, ctx.vendor);
       if (!unit.ok) {
         issues.add('unit_mismatch');
       } else {
@@ -218,6 +228,7 @@ export function evaluateRow(raw: RawRow, ctx: EvaluateContext): ParsedRow | unde
   }
 
   if (ctx.method === 'ocr') issues.add('ocr');
+  if (FORMULA_NOT_PRINTED.has(e.loinc)) issues.add('formula_not_printed');
   out.issues = [...issues];
   const hard = out.issues.some((i) => !INFO.includes(i));
   out.confidence = hard || !out.value ? 'low' : soft > 0 || ctx.maxConfidence === 'medium' ? 'medium' : 'high';

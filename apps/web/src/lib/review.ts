@@ -8,6 +8,9 @@
 //                     mismatch, unreadable value, ambiguous test)
 import {
   buildPayload,
+  buildVitalsFile,
+  type VitalMetric,
+  type VitalsFile,
   nbfFor,
   validateCardPayload,
   type CardInput,
@@ -17,7 +20,7 @@ import {
   type ParsedRow,
   type PatientInput,
 } from '@labkit/core';
-import { isBlocking, type ExtractedReport } from '@labkit/parsers';
+import { isBlocking, type ExtractedReport, type ParsedVital, type ReportVitals } from '@labkit/parsers';
 
 export type Decision = 'included' | 'pending' | 'excluded';
 export type ReviewRow = { id: string; row: ParsedRow; decision: Decision; locked: boolean; reason?: string };
@@ -29,7 +32,65 @@ export type ReviewModel = {
   unmatched: { text: string; page: number; file: string }[];
   warnings: string[];
   files: { name: string; vendor: string; method: string }[];
+  /** Body measurements and vitals (Randox): never in a card; exported for HealthKit from this device only. */
+  vitals: ReviewVitals[];
 };
+
+export type VitalRow = { id: string; vital: ParsedVital; decision: Decision | 'display'; locked: boolean; reason?: string };
+export type ReviewVitals = { id: string; file: string; info: Omit<ReportVitals, 'rows'>; rows: VitalRow[] };
+
+/** Why a vital can't be exported, if it can't. */
+export function vitalBlockReason(v: ParsedVital): string | undefined {
+  if (v.issues.includes('unreadable') || v.value === undefined) return "We couldn't read this value.";
+  if (v.issues.includes('unit')) return v.raw.unit ? `The unit ${v.raw.unit} can't be used for this measurement.` : 'This measurement has no unit.';
+  if (v.issues.includes('implausible')) return 'This value is outside the possible range, so it was probably misread.';
+  if (v.issues.includes('order')) return 'Systolic must be higher than diastolic, so these were probably misread.';
+  return undefined;
+}
+
+function reviewVitals(r: ExtractedReport, next: () => string): ReviewVitals | undefined {
+  if (!r.vitals?.rows.length) return undefined;
+  const { rows, ...info } = r.vitals;
+  return {
+    id: next(),
+    file: r.source.fileName,
+    info,
+    rows: rows.map((vital) => {
+      const reason = vitalBlockReason(vital);
+      if (vital.metric === 'waistHipRatio') return { id: next(), vital, decision: 'display' as const, locked: true };
+      if (reason) return { id: next(), vital, decision: 'excluded' as const, locked: true, reason };
+      return { id: next(), vital, decision: vital.issues.length ? ('pending' as const) : ('included' as const), locked: false };
+    }),
+  };
+}
+
+export function setVitalDecision(model: ReviewModel, rowId: string, decision: 'included' | 'excluded'): ReviewModel {
+  return {
+    ...model,
+    vitals: model.vitals.map((v) => ({ ...v, rows: v.rows.map((r) => (r.id === rowId && !r.locked ? { ...r, decision } : r)) })),
+  };
+}
+
+/**
+ * The labkit-vitals file for one report: included rows only (Waist/Hip ratio is display-only, and blood
+ * pressure goes out only as a pair). undefined when there's nothing to export or no collection time.
+ */
+export async function vitalsExport(v: ReviewVitals): Promise<VitalsFile | undefined> {
+  if (!v.info.collectedAt) return undefined;
+  const values: Partial<Record<VitalMetric, number>> = {};
+  for (const r of v.rows) if (r.decision === 'included' && r.vital.metric !== 'waistHipRatio' && r.vital.value !== undefined) values[r.vital.metric] = r.vital.value;
+  if (!Object.keys(values).length) return undefined;
+  const file = await buildVitalsFile({
+    lab: v.info.lab,
+    ...(v.info.programme ? { programme: v.info.programme } : {}),
+    ...(v.info.sampleId ? { sampleId: v.info.sampleId } : {}),
+    collectedAtUtc: v.info.collectedAt,
+    zone: v.info.zone,
+    ...(v.info.fastingMinutes !== undefined ? { fastingMinutes: v.info.fastingMinutes } : {}),
+    values,
+  });
+  return file.vitals.length ? file : undefined;
+}
 
 export function blockReason(row: ParsedRow): string | undefined {
   if (!row.entry) return "We couldn't identify this test.";
@@ -50,7 +111,7 @@ function samePerson(a: ExtractedReport['patient'], b: ExtractedReport['patient']
 
 export function buildReview(reports: ExtractedReport[]): ReviewModel {
   let id = 0;
-  const model: ReviewModel = { draws: [], unmatched: [], warnings: [], files: [] };
+  const model: ReviewModel = { draws: [], unmatched: [], warnings: [], files: [], vitals: [] };
 
   // Patient: must be the same person across files; fields fill in from any file.
   const p: ExtractedReport['patient'] = {};
@@ -75,6 +136,8 @@ export function buildReview(reports: ExtractedReport[]): ReviewModel {
     model.files.push({ name: r.source.fileName, vendor: r.source.vendor, method: r.source.method });
     model.warnings.push(...r.warnings.map((w) => `${r.source.fileName}: ${w}`));
     model.unmatched.push(...r.unmatched.map((u) => ({ ...u, file: r.source.fileName })));
+    const vitals = reviewVitals(r, () => `v${++id}`);
+    if (vitals) model.vitals.push(vitals);
     for (const d of r.draws) {
       const draw = draws.get(d.collectedAt) ?? { id: `d${++id}`, collectedAt: d.collectedAt, timeFound: d.timeFound, included: true, rows: [] };
       for (const row of d.rows) draw.rows.push({ id: `r${++id}`, row, decision: 'included', locked: false });

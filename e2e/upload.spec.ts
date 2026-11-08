@@ -103,6 +103,37 @@ test("Function Health 'results of record' (a ZIP with a .pdf name)", async ({ pa
   await expect(page.getByRole('heading', { name: /^Collected / })).toHaveCount(2);
 });
 
+test('Randox Health report (UK, SI units): lab card plus vitals export', async ({ page }) => {
+  await choose(page, [FX + 'randox-sample.pdf']);
+  await expect(page.getByText('Alex Sample · Born Feb 7, 1985 · Male')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Collected / })).toHaveCount(1);
+  const labs = page.locator('li.result:not(.vital)');
+  await expect(labs).toHaveCount(34);
+  // SI values arrive in the dictionary's unit; vitals and risk scores are never card rows.
+  await expect(labs.filter({ hasText: 'Hemoglobin' }).first()).toContainText('14.8 g/dL');
+  for (const name of ['Height', 'Body Mass Index', 'Pulse', 'Cardiovascular Risk', 'FIB-4']) await expect(labs.filter({ hasText: name })).toHaveCount(0);
+  // eGFR: no equation printed, so it waits for the user with an explanation.
+  await expect(labs.filter({ hasText: 'eGFR' })).toContainText("doesn't say which formula");
+  // "not detected" for a numeric test can't be signed.
+  await expect(labs.filter({ hasText: 'Microalbumin' }).getByText('Left Out')).toBeVisible();
+  await expect(page.getByText("Lines We Couldn't Match (1)")).toBeVisible();
+
+  // Vitals: their own section, saved as files made on the device.
+  const vitals = page.getByRole('region', { name: 'Vitals (not in card)' });
+  await expect(vitals.locator('li.result')).toHaveCount(10);
+  await expect(vitals.locator('li.result', { hasText: 'Height' })).toContainText('1.725 m');
+  await expect(vitals.locator('li.result', { hasText: 'Waist/Hip Ratio' })).toContainText('Shown Only');
+  await expect(vitals.locator('li.result', { hasText: 'Glucose' })).toHaveCount(0);
+  const [csv] = await Promise.all([page.waitForEvent('download'), vitals.getByRole('button', { name: 'Download Vitals CSV' }).click()]);
+  expect(csv.suggestedFilename()).toBe('labkit-vitals-2026-05-14.csv');
+  expect(readFileSync(await csv.path(), 'utf8')).toContain('systolic (mmHg),diastolic (mmHg)');
+  const [json] = await Promise.all([page.waitForEvent('download'), vitals.getByRole('button', { name: 'Download Vitals File' }).click()]);
+  expect(json.suggestedFilename()).toBe('labkit-vitals-2026-05-14.labkit-vitals');
+  const file = JSON.parse(readFileSync(await json.path(), 'utf8')) as { format: string; vitals: { metric: string }[] };
+  expect(file.format).toBe('labkit-vitals');
+  expect(file.vitals.map((v) => v.metric)).toContain('bloodPressure');
+});
+
 test('photo of a printed report is read with on-device OCR', async ({ page, browser }, info) => {
   test.slow();
   // Render a report-like table to a PNG, as a stand-in for a phone photo.

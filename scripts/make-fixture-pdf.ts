@@ -1,7 +1,8 @@
 // pnpm fixtures — writes synthetic lab reports (fake patients) + expected JSON
 // into fixtures/synthetic/. Expected values come from the row definitions
 // below, never from parser output.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import fontkit from '@pdf-lib/fontkit';
 import { strToU8, zipSync } from 'fflate';
 import { PDFDocument, StandardFonts, type PDFFont, type PDFPage } from 'pdf-lib';
 import { ROOT } from './lib';
@@ -749,6 +750,328 @@ console.log('Wrote synthetic fixtures to fixtures/synthetic/');
           },
         ],
         unmatched: [],
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+}
+
+// ---------------------------------------------------------------- Randox Health (UK, SI units)
+//
+// Mimics the "Discovery" layout: cover, header block, contents and marketing pages with bar-graph
+// figures (never read), then "Results for your Doctor" (Test | Result | Units | Reference Range) and a
+// "Nutrition Guide". Covers names that straddle their value row, stacked reference bands, a value
+// outside its band, a censored value, the same test in two panels, a page break mid-panel, wrapped
+// qualitative values and units, and rows that aren't lab results (vitals, scores, eGFR).
+{
+  type RRow = {
+    name: string | string[];
+    val: string | string[];
+    unit?: string | string[];
+    bands: string[];
+    /** Index of the band printed on the value line (default: the middle one). */
+    at?: number;
+    expect: (Omit<Expect, 'value'> & { value?: number | string }) | 'unmatched' | null;
+    breakBefore?: boolean;
+    vital?: { metric: string; value: number; unit: string };
+  };
+  type RSection = { panel: string; rows: RRow[] };
+  const sig = (x: number) => Number(x.toPrecision(6));
+  /** Expected value in the dictionary's canonical unit: printed × the dictionary factor. */
+  const q = (loinc: string, v: number, ucum: string, factor: number, range: { low?: number; high?: number }, extra: Partial<Expect> = {}): Expect => ({
+    loinc,
+    value: factor === 1 ? v : sig(v * factor),
+    ucum,
+    ...(range.low !== undefined ? { low: factor === 1 ? range.low : sig(range.low * factor) } : {}),
+    ...(range.high !== undefined ? { high: factor === 1 ? range.high : sig(range.high * factor) } : {}),
+    confidence: 'high',
+    ...extra,
+  });
+  const CHOL = 38.67;
+  const sections: RSection[] = [
+    {
+      // Vitals: never in the card; exported for HealthKit instead (expected under "vitals").
+      panel: 'Personal Health Measurements',
+      rows: [
+        { name: 'Height', val: '172.5', unit: 'cm', bands: ['N/A'], expect: null, vital: { metric: 'height', value: 1.725, unit: 'm' } },
+        { name: 'Weight', val: '80.4', unit: 'kg', bands: ['N/A'], expect: null, vital: { metric: 'bodyMass', value: 80.4, unit: 'kg' } },
+        { name: 'Body Mass Index (BMI)', val: '27.0', unit: 'kg/m²', bands: ['<18.5 Low', '18.5 - 24.9 Optimal', '≥25.0 High'], expect: null, vital: { metric: 'bodyMassIndex', value: 27, unit: 'count' } },
+        { name: 'Waist Circumference', val: '92', unit: 'cm', bands: ['≤94 Optimal', '>94 High'], at: 0, expect: null, vital: { metric: 'waistCircumference', value: 92, unit: 'cm' } },
+        { name: 'Hip Circumference', val: '101', unit: 'cm', bands: ['N/A'], expect: null, vital: { metric: 'hipCircumference', value: 101, unit: 'cm' } },
+        { name: 'Waist/Hip Ratio', val: '0.91', unit: 'Ratio', bands: ['≤0.95 Optimal'], expect: null, vital: { metric: 'waistHipRatio', value: 0.91, unit: 'ratio' } },
+        { name: 'Pulse', val: '64', unit: 'BPM', bands: ['60 - 100 Optimal'], expect: null, vital: { metric: 'heartRate', value: 64, unit: 'count/min' } },
+        { name: 'Oxygen Saturation', val: '98', unit: '%', bands: ['≥95 Optimal'], expect: null, vital: { metric: 'oxygenSaturation', value: 98, unit: '%' } },
+        {
+          name: 'Systolic Blood pressure',
+          val: '128',
+          unit: 'mmHg',
+          bands: ['<90 Low', '90 - 129 Optimal', '130 - 139 Raised', '≥140 High'],
+          at: 1,
+          expect: null,
+          vital: { metric: 'bloodPressureSystolic', value: 128, unit: 'mmHg' },
+        },
+        { name: 'Diastolic Blood pressure', val: '80', unit: 'mmHg', bands: ['<60 Low', '60 - 84 Optimal', '≥85 High'], expect: null, vital: { metric: 'bloodPressureDiastolic', value: 80, unit: 'mmHg' } },
+      ],
+    },
+    {
+      panel: 'Full Blood Count',
+      rows: [
+        { name: 'Haemoglobin', val: '148', unit: 'g/l', bands: ['130 - 170 Optimal'], expect: q('718-7', 148, 'g/dL', 0.1, { low: 130, high: 170 }) },
+        { name: 'Haematocrit', val: '44.1', unit: '%', bands: ['40.0 - 52.0 Optimal'], expect: q('4544-3', 44.1, '%', 1, { low: 40, high: 52 }) },
+        { name: 'Red Blood Cell Count', val: '4.92', unit: '10¹²/L', bands: ['4.50 - 5.50 Optimal'], expect: q('789-8', 4.92, '10*6/uL', 1, { low: 4.5, high: 5.5 }) },
+        {
+          name: ['Mean Cell Haemoglobin', 'Concentration (MCHC)'],
+          val: '335',
+          unit: 'g/l',
+          bands: ['≤320.0 Low', '320.1 - 360.0 Optimal', '>360.0 High'],
+          expect: q('786-4', 335, 'g/dL', 0.1, { low: 320.1, high: 360 }),
+        },
+        { name: ['Red Blood Cell Mean Cell', 'Volume (MCV)'], val: '90.2', unit: 'fl', bands: ['80.0 - 100.0 Optimal'], expect: q('787-2', 90.2, 'fL', 1, { low: 80, high: 100 }) },
+        // Page break mid-panel: the column header and the panel heading repeat on the next page.
+        { name: 'White Blood Cell Count', val: '6.10', unit: '10^9/L', bands: ['4.00 - 11.00 Optimal'], expect: q('6690-2', 6.1, '10*3/uL', 1, { low: 4, high: 11 }), breakBefore: true },
+        { name: 'Platelet Count', val: '251', unit: '10^9/L', bands: ['150 - 400 Optimal'], expect: q('777-3', 251, '10*3/uL', 1, { low: 150, high: 400 }) },
+        { name: 'Neutrophil Count', val: '3.42', unit: '10^9/L', bands: ['2.00 - 7.50 Optimal'], expect: q('751-8', 3.42, '10*3/uL', 1, { low: 2, high: 7.5 }) },
+      ],
+    },
+    {
+      // Prints HDL and triglycerides again with its own cut-offs: the Heart Health range is used.
+      panel: 'Metabolic Syndrome',
+      rows: [
+        // Vitals repeated here: one copy each in the export.
+        { name: 'Body Mass Index (BMI)', val: '27.0', unit: 'kg/m²', bands: ['<30.0 Optimal'], expect: null },
+        { name: 'Waist Circumference', val: '92', unit: 'cm', bands: ['<102 Optimal'], expect: null },
+        { name: 'Systolic Blood pressure', val: '128', unit: 'mmHg', bands: ['<130 Optimal'], expect: null },
+        { name: 'Diastolic Blood pressure', val: '80', unit: 'mmHg', bands: ['<85 Optimal'], expect: null },
+        { name: 'HDL Cholesterol', val: '1.45', unit: 'mmol/l', bands: ['≤1.03 Low', '>1.03 Optimal'], at: 1, expect: null },
+        { name: 'Triglycerides', val: '1.20', unit: 'mmol/l', bands: ['≤1.70 Optimal', '>1.70 High'], at: 0, expect: null },
+      ],
+    },
+    {
+      panel: 'Heart Health',
+      rows: [
+        { name: 'Total Cholesterol', val: '5.40', unit: 'mmol/l', bands: ['≤5.00 Optimal', '>5.00 High'], at: 0, expect: q('2093-3', 5.4, 'mg/dL', CHOL, { high: 5 }) },
+        { name: 'HDL Cholesterol', val: '1.45', unit: 'mmol/l', bands: ['≤1.00 Low', '>1.00 Optimal'], at: 1, expect: q('2085-9', 1.45, 'mg/dL', CHOL, { low: 1 }) },
+        { name: 'LDL Cholesterol', val: '3.20', unit: 'mmol/l', bands: ['≤3.00 Optimal', '>3.00 High'], at: 0, expect: q('13457-7', 3.2, 'mg/dL', CHOL, { high: 3 }) },
+        { name: 'Triglycerides', val: '1.20', unit: 'mmol/l', bands: ['≤2.30 Optimal', '>2.30 High'], at: 0, expect: q('2571-8', 1.2, 'mg/dL', 88.57, { high: 2.3 }) },
+        { name: ['Total Cholesterol / HDL', 'Cholesterol Ratio'], val: '3.72', unit: 'Ratio', bands: ['≤4.50 Optimal'], expect: q('9830-1', 3.72, '{ratio}', 1, { high: 4.5 }) },
+        { name: 'Lipoprotein (a)', val: '45.0', unit: 'nmol/l', bands: ['<75.0 Optimal'], expect: q('43583-4', 45, 'nmol/L', 1, { high: 75 }) },
+        {
+          name: ['High Sensitivity C-Reactive', 'Protein (hsCRP)'],
+          val: '<0.30',
+          unit: 'mg/l',
+          bands: ['<1.00 Optimal', '1.00 - 3.00 Moderate', '>3.00 High'],
+          at: 0,
+          expect: q('30522-7', 0.3, 'mg/L', 1, { high: 1 }, { comparator: '<' }),
+        },
+        { name: 'Apolipoprotein B', val: '0.95', unit: 'g/l', bands: ['≤1.00 Optimal', '>1.00 High'], at: 0, expect: q('1884-6', 0.95, 'mg/dL', 100, { high: 1 }) },
+        { name: 'Cardiovascular Risk Score', val: '4.2', unit: '%', bands: ['<10 Low Risk'], expect: null },
+      ],
+    },
+    {
+      panel: 'Kidney Health',
+      rows: [
+        { name: 'Creatinine', val: '88', unit: 'µmol/l', bands: ['59 - 104 Optimal'], expect: q('2160-0', 88, 'mg/dL', 0.0113122, { low: 59, high: 104 }) },
+        // No equation printed: the code that names none, waiting for the user to opt in.
+        {
+          name: 'eGFR',
+          val: '>90',
+          unit: 'ml/min/1.73m²',
+          bands: ['≥90 Optimal'],
+          expect: q('69405-9', 90, 'mL/min/{1.73_m2}', 1, { low: 90 }, { comparator: '>', confidence: 'low', issues: ['formula_not_printed'] }),
+        },
+        { name: 'Urea', val: '5.1', unit: 'mmol/l', bands: ['2.5 - 7.8 Optimal'], expect: q('22664-7', 5.1, 'mmol/L', 1, { low: 2.5, high: 7.8 }) },
+        { name: 'Sodium', val: '140', unit: 'mmol/l', bands: ['133 - 146 Optimal'], expect: q('2951-2', 140, 'mmol/L', 1, { low: 133, high: 146 }) },
+        // Below its band: the printed value-line band says Optimal; only colour would show it's low.
+        { name: 'Chloride', val: '93.4', unit: 'mmol/l', bands: ['≤95.0 Low', '95.1 - 108.0 Optimal', '>108.0 High'], expect: q('2075-0', 93.4, 'mmol/L', 1, { low: 95.1, high: 108 }) },
+        {
+          name: ['Microalbumin / Creatinine', 'Ratio'],
+          val: ['not', 'detected'],
+          unit: ['mg/mmol', 'creatinine'],
+          bands: ['<3.0 Optimal'],
+          // Qualitative text for a quantity test: left for review, never guessed.
+          expect: { loinc: '30000-4', ucum: undefined, confidence: 'low' },
+        },
+      ],
+    },
+    {
+      panel: 'Urinalysis',
+      rows: [
+        { name: 'Protein (Urine)', val: 'Negative', unit: '-', bands: ['Negative'], expect: { loinc: '20454-5', value: 'Negative', confidence: 'high' } },
+        { name: 'pH (Urine)', val: '6.0', unit: '-', bands: ['5.0 - 8.0 Optimal'], expect: q('5803-2', 6, '[pH]', 1, { low: 5, high: 8 }) },
+      ],
+    },
+    {
+      panel: 'Diabetes',
+      rows: [
+        { name: 'HbA1c', val: '36', unit: 'mmol/mol', bands: ['<42 Optimal', '42 - 47 Raised', '≥48 High'], at: 0, expect: q('59261-8', 36, 'mmol/mol', 1, { high: 42 }) },
+        { name: 'Glucose', val: '5.2', unit: 'mmol/l', bands: ['3.9 - 5.5 Optimal'], expect: q('2345-7', 5.2, 'mg/dL', 18.016, { low: 3.9, high: 5.5 }) },
+      ],
+    },
+    {
+      panel: 'Liver Health',
+      rows: [
+        { name: 'Alanine Aminotransferase (ALT)', val: '28', unit: 'U/l', bands: ['<55 Optimal'], expect: q('1742-6', 28, 'U/L', 1, { high: 55 }) },
+        { name: 'Albumin (ALB)', val: '45', unit: 'g/l', bands: ['35 - 50 Optimal'], expect: q('1751-7', 45, 'g/dL', 0.1, { low: 35, high: 50 }) },
+        { name: 'Total Bilirubin', val: '12', unit: 'µmol/l', bands: ['≤21 Optimal'], expect: q('1975-2', 12, 'mg/dL', 0.0584795, { high: 21 }) },
+        { name: 'FIB-4', val: '0.85', unit: '-', bands: ['<1.30 Low Risk'], expect: null },
+      ],
+    },
+    {
+      panel: 'Thyroid Health',
+      rows: [
+        { name: 'Free Thyroxine (FT4)', val: '15.2', unit: 'pmol/l', bands: ['12.0 - 22.0 Optimal'], expect: q('3024-7', 15.2, 'ng/dL', 0.0777001, { low: 12, high: 22 }) },
+        { name: ['Thyroid Stimulating Hormone', '(TSH)'], val: '1.85', unit: 'mIU/l', bands: ['0.27 - 4.20 Optimal'], expect: q('3016-3', 1.85, 'm[IU]/L', 1, { low: 0.27, high: 4.2 }) },
+      ],
+    },
+    {
+      panel: 'Vitamins',
+      rows: [
+        { name: 'Vitamin D', val: '62', unit: 'nmol/l', bands: ['<25 Deficient', '25 - 50 Insufficient', '>50 Optimal'], at: 2, expect: q('62292-8', 62, 'ng/mL', 0.400641, { low: 50 }) },
+        { name: 'Vitamin B12', val: '420', unit: 'ng/l', bands: ['197 - 771 Optimal'], expect: q('2132-9', 420, 'pg/mL', 1, { low: 197, high: 771 }) },
+        { name: 'Folic Acid', val: '9.1', unit: 'µg/l', bands: ['>3.9 Optimal'], expect: q('2284-8', 9.1, 'ng/mL', 1, { low: 3.9 }) },
+      ],
+    },
+    {
+      panel: 'Oxidative Stress',
+      rows: [{ name: 'Total Antioxidant Status (TAS)', val: '1.45', unit: 'mmol/l', bands: ['1.30 - 1.77 Optimal'], expect: 'unmatched' }],
+    },
+  ];
+  // Unlike Expect, the "not detected" row has no value: it can't be read as a number.
+  for (const s of sections) for (const r of s.rows) if (r.expect && r.expect !== 'unmatched' && r.expect.ucum === undefined) delete r.expect.ucum;
+
+  const doc = await PDFDocument.create();
+  doc.setTitle('Synthetic Randox Health report');
+  doc.registerFontkit(fontkit);
+  const fontDir = `${ROOT}node_modules/pdfjs-dist/standard_fonts/`;
+  const font = await doc.embedFont(readFileSync(`${fontDir}LiberationSans-Regular.ttf`), { subset: true });
+  const bold = await doc.embedFont(readFileSync(`${fontDir}LiberationSans-Bold.ttf`), { subset: true });
+  let page!: PDFPage;
+  let n = 0;
+  const at = (s: string, x: number, topY: number, o: { b?: boolean; size?: number } = {}) =>
+    page.drawText(s, { x, y: 792 - topY, size: o.size ?? 9, font: o.b ? bold : font });
+  const newPage = () => {
+    page = doc.addPage([612, 792]);
+    n++;
+    at('RANDOX HEALTH', 40, 40, { b: true, size: 12 });
+    at('randoxhealth.com', 40, 770);
+    at(String(n), 560, 770);
+  };
+  const L = 11;
+  const COLS = { name: 40, result: 270, units: 330, range: 410 };
+
+  // 1: cover. 2: header block. 3: contents. 4: marketing page with bar-graph figures.
+  newPage();
+  at('Discovery', 40, 200, { b: true, size: 20 });
+  at('Your personal health report', 40, 230);
+  newPage();
+  const fields: [string, string][] = [
+    ['Name', 'Alex Sample'],
+    ['DOB', '07-Feb-1985'],
+    ['Gender', 'Male'],
+    ['CID', 'C0000000'],
+    ['Sample ID', 'S0000000'],
+    ['Programme', 'Discovery (male)'],
+    ['Sample Collection Date', '14-May-2026 08:45'],
+    ['Date of Report', '19-May-2026'],
+    ['Fasted for', '10 hours and 15 minutes'],
+  ];
+  fields.forEach(([k, v], i) => {
+    at(k, 40, 120 + i * 16, { b: true });
+    at(v, 200, 120 + i * 16);
+  });
+  newPage();
+  at('Contents', 40, 100, { b: true, size: 14 });
+  [['Your Heart Health', '4'], ['Results for your Doctor', '5'], ['Nutrition Guide', '8']].forEach(([k, v], i) => {
+    at(k!, 40, 130 + i * 16);
+    at(v!, 500, 130 + i * 16);
+  });
+  newPage();
+  at('Your Heart Health', 40, 100, { b: true, size: 14 });
+  at('Cholesterol is a fatty substance carried in your blood. Your result is shown below.', 40, 130);
+  at('Total Cholesterol', 40, 170, { b: true });
+  at('6.1', 300, 170);
+  at('mmol/l', 340, 170);
+  for (const [i, s] of ['Low', 'Optimal', 'High'].entries()) at(s, 100 + i * 120, 190);
+
+  // 5–7: results.
+  let y = 0;
+  const tableHeader = () => {
+    for (const [k, s] of [['name', 'Test'], ['result', 'Result'], ['units', 'Units'], ['range', 'Reference Range']] as const) at(s, COLS[k], y, { b: true });
+    y += 20;
+  };
+  const arr = (v: string | string[] | undefined) => (v === undefined ? [] : Array.isArray(v) ? v : [v]);
+  const offs = (count: number, center: number) => Array.from({ length: count }, (_, i) => (i - center) * L);
+  newPage();
+  y = 80;
+  at('Results for your Doctor', 40, y, { b: true, size: 14 });
+  y += 26;
+  tableHeader();
+  for (const s of sections) {
+    const heading = () => {
+      at(s.panel, COLS.name, y, { b: true, size: 11 });
+      y += 18;
+    };
+    if (y > 700) {
+      newPage();
+      y = 80;
+      tableHeader();
+    }
+    heading();
+    for (const r of s.rows) {
+      const names = arr(r.name);
+      const vals = arr(r.val);
+      const units = arr(r.unit);
+      const bandAt = r.at ?? Math.floor((r.bands.length - 1) / 2);
+      const placed: [number, number, string][] = [
+        ...offs(names.length, (names.length - 1) / 2).map((o, i) => [COLS.name, o, names[i]!] as [number, number, string]),
+        ...offs(vals.length, (vals.length - 1) / 2).map((o, i) => [COLS.result, o, vals[i]!] as [number, number, string]),
+        ...offs(units.length, (units.length - 1) / 2).map((o, i) => [COLS.units, o, units[i]!] as [number, number, string]),
+        ...offs(r.bands.length, bandAt).map((o, i) => [COLS.range, o, r.bands[i]!] as [number, number, string]),
+      ];
+      const min = Math.min(...placed.map((p) => p[1]));
+      const max = Math.max(...placed.map((p) => p[1]));
+      if (r.breakBefore || y - min + max > 730) {
+        newPage();
+        y = 80;
+        tableHeader();
+        heading();
+      }
+      const y0 = y - min;
+      for (const [x, o, str] of placed) at(str, x, y0 + o);
+      y = y0 + max + L + 6;
+    }
+    y += 6;
+  }
+
+  // 8: Nutrition Guide. Looks like a table; never read.
+  newPage();
+  at('Nutrition Guide', 40, 80, { b: true, size: 14 });
+  y = 120;
+  tableHeader();
+  at('Iron', COLS.name, y);
+  at('12.0', COLS.result, y);
+  at('mg', COLS.units, y);
+  at('8.7 - 14.8 Optimal', COLS.range, y);
+
+  const name = 'randox-sample.pdf';
+  writeFileSync(`${OUT}/${name}`, await doc.save({ useObjectStreams: false }));
+  const rows = sections.flatMap((s) => s.rows);
+  writeFileSync(
+    `${OUT}/${name}.expected.json`,
+    JSON.stringify(
+      {
+        vendor: 'randox',
+        patient: { family: 'Sample', given: ['Alex'], birthDate: '1985-02-07', gender: 'male' },
+        // 08:45 British Summer Time.
+        draws: [{ collected: { utc: '2026-05-14T07:45:00Z' }, rows: rows.flatMap((r) => (r.expect && r.expect !== 'unmatched' ? [{ issues: [], ...r.expect }] : [])) }],
+        unmatched: rows.filter((r) => r.expect === 'unmatched').map((r) => arr(r.name).join(' ')),
+        vitals: {
+          collectedAt: '2026-05-14T08:45:00+01:00',
+          programme: 'Discovery (male)',
+          fastingMinutes: 615,
+          rows: rows.flatMap((r) => (r.vital ? [{ ...r.vital, issues: [] }] : [])),
+        },
       },
       null,
       2,
