@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { dictionaryFileSchema } from '../src/dictionary-schema';
-import { loadDictionary } from '../src/dictionary';
+import { loadDictionary, normalizeName } from '../src/dictionary';
 import { printedToUcum } from '../src/normalize';
 import { dictionary, dictionaryFile, readJson } from './helpers';
 
@@ -93,5 +93,21 @@ describe('dictionary (SPEC §6, §15)', () => {
     });
     expect(d.match('quest', 'X').kind).toBe('ambiguous');
     expect(d.match('labcorp', 'X').kind).toBe('none');
+  });
+});
+
+describe('normalizeName', () => {
+  it('collapses whitespace and tightens separators', () => {
+    expect(normalizeName('  Cholesterol ,  Total ')).toBe('cholesterol,total');
+    expect(normalizeName('BUN\u00a0/\tCreatinine Ratio')).toBe('bun/creatinine ratio');
+    expect(normalizeName('Ｈｂ A1c')).toBe('hb a1c');
+    expect(normalizeName(' , / ')).toBe(',/');
+  });
+
+  it('runs in linear time on long whitespace runs', () => {
+    const s = 'a' + ' \t'.repeat(50_000) + 'b' + ' '.repeat(50_000) + ',';
+    const t0 = performance.now();
+    expect(normalizeName(s)).toBe('a b,');
+    expect(performance.now() - t0).toBeLessThan(500);
   });
 });
