@@ -1,4 +1,4 @@
-import type { Comparator, DictionaryEntry } from './types';
+import type { Comparator, DictionaryEntry, Vendor } from './types';
 
 // ---------- numbers ----------
 
@@ -190,6 +190,14 @@ export const GLOBAL_UNIT_ALIASES: Readonly<Record<string, string>> = {
   'mcg/L': 'ug/L',
   'ug/L': 'ug/L',
   'mg/L': 'mg/L',
+  'g/L': 'g/L',
+  'L/L': 'L/L',
+  'ng/L': 'ng/L',
+  'ug/mL': 'ug/mL',
+  'pmol/L': 'pmol/L',
+  'mmol/mol': 'mmol/mol',
+  'mg/mmol': 'mg/mmol',
+  'kU/L': 'kU/L',
   'nmol/L': 'nmol/L',
   'umol/L': 'umol/L',
   'mmol/L': 'mmol/L',
@@ -214,6 +222,9 @@ export const GLOBAL_UNIT_ALIASES: Readonly<Record<string, string>> = {
   'M/uL': '10*6/uL',
   'x10E6/uL': '10*6/uL',
   '10*6/uL': '10*6/uL',
+  // SI cell counts (UK reports): 10⁹/L = 10³/µL and 10¹²/L = 10⁶/µL exactly.
+  '10*9/L': '10*3/uL',
+  '10*12/L': '10*6/uL',
   'cells/uL': '/uL',
   '/uL': '/uL',
   fL: 'fL',
@@ -232,12 +243,14 @@ export const GLOBAL_UNIT_ALIASES: Readonly<Record<string, string>> = {
 /** Strip trailing annotations such as "(calc)", unify micro signs and whitespace. */
 export function cleanUnit(printed: string): string {
   return printed
+    // Superscript exponents ("10⁹/L", "10¹²/L") before NFKC folds them into plain digits ("109/L").
+    .replace(/10\s*([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, (_, sup: string) => `10*${[...sup].map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c)).join('')}`)
     .normalize('NFKC')
     .replace(/[µμ]/g, 'u')
     // "mcg", "mcL", "mcIU", "mcmol": the US "mc" spelling of micro.
     .replace(/\bmc(?=(?:g|l|iu|mol)\b)/gi, 'u')
     // "x10^3/uL", "10E3/uL", "x 10(3)/uL", "10*3/uL" → "10*3/uL".
-    .replace(/^(?:x\s*)?10\s*(?:(?:\^|\*|E)\s*\(?([36])\)?|\(([36])\))\s*\//i, (_, a?: string, b?: string) => `10*${a ?? b}/`)
+    .replace(/^(?:x\s*)?10\s*(?:(?:\^|\*|E)\s*\(?(3|6|9|12)\)?|\((3|6|9|12)\))\s*\//i, (_, a?: string, b?: string) => `10*${a ?? b}/`)
     .replace(/1\.73\s+m2\b/, '1.73m2')
     .replace(/\s*\(?\b(?:calc|calculated|est|estimated)\b\)?\s*$/i, '')
     .replace(/\s+/g, ' ')
@@ -252,6 +265,10 @@ export function printedToUcum(printed: string, entry?: DictionaryEntry): string 
   const c = cleanUnit(printed);
   if (entry?.unitAliases) {
     for (const [k, v] of Object.entries(entry.unitAliases)) if (cleanUnit(k) === c) return v;
+    // UK reports print units in lower case ("ng/l", "kU/l"); fold only where that can't confuse M (mega) and m (milli).
+    if (!CASE_SENSITIVE.has(c.toLowerCase()) && !/M/.test(c)) {
+      for (const [k, v] of Object.entries(entry.unitAliases)) if (!/M/.test(k) && cleanUnit(k).toLowerCase() === c.toLowerCase()) return v;
+    }
   }
   for (const [k, v] of Object.entries(GLOBAL_UNIT_ALIASES)) if (cleanUnit(k) === c) return v;
   const folded = c.toLowerCase();
@@ -272,7 +289,7 @@ const UNITLESS = new Set(['{ratio}', '1', '[pH]']);
  * SPEC §6.2 rule 3: a match is valid only if the printed unit resolves to the
  * entry's ucum directly, via unitAliases, or via unitConversions.
  */
-export function resolveUnit(printed: string | undefined, entry: DictionaryEntry): UnitResolution {
+export function resolveUnit(printed: string | undefined, entry: DictionaryEntry, vendor?: Vendor): UnitResolution {
   if (entry.valueType !== 'quantity' || !entry.ucum) return { ok: false, reason: 'not_quantity' };
   const canonical = entry.ucum;
   if (printed === undefined || cleanUnit(printed) === '') {
@@ -282,7 +299,7 @@ export function resolveUnit(printed: string | undefined, entry: DictionaryEntry)
   const ucum = c === canonical ? canonical : printedToUcum(c, entry);
   if (ucum === undefined) return { ok: false, reason: 'unit_mismatch' };
   if (ucum === canonical) return { ok: true, ucum: canonical, factor: 1 };
-  const conv = entry.unitConversions?.find((u) => u.from === ucum);
+  const conv = entry.unitConversions?.find((u) => u.from === ucum && (!u.vendors || (vendor !== undefined && u.vendors.includes(vendor))));
   if (conv) return { ok: true, ucum: canonical, factor: conv.factor };
   return { ok: false, reason: 'unit_mismatch' };
 }

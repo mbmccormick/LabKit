@@ -21,7 +21,7 @@ const ZONE_OFFSETS: Record<string, number> = { EST: -5, EDT: -4, CST: -6, CDT: -
 const ZONE_IANA: Record<string, string> = { ET: 'America/New_York', CT: 'America/Chicago', MT: 'America/Denver', PT: 'America/Los_Angeles' };
 
 /** Wall-clock time in an IANA zone → epoch ms. */
-function zonedToUtc(y: number, mo: number, d: number, h: number, mi: number, zone: string): number {
+export function zonedToUtc(y: number, mo: number, d: number, h: number, mi: number, zone: string): number {
   const fmt = new Intl.DateTimeFormat('en-US', { timeZone: zone, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
   const wall = Date.UTC(y, mo, d, h, mi);
   const offsetAt = (t: number) => {

@@ -5,3 +5,4 @@ export * from './dictionary';
 export * from './dictionary-schema';
 export * from './normalize';
 export * from './validate';
+export * from './vitals';

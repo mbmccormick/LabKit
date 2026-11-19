@@ -12,7 +12,7 @@ export const dictionaryEntrySchema = z.strictObject({
   ucum: z.string().min(1).nullable(),
   unitAliases: z.record(z.string(), z.string()).optional(),
   unitConversions: z
-    .array(z.strictObject({ from: z.string().min(1), factor: z.number().positive(), note: z.string().optional() }))
+    .array(z.strictObject({ from: z.string().min(1), factor: z.number().positive(), note: z.string().optional(), vendors: z.array(z.enum(VENDORS)).min(1).optional() }))
     .optional(),
   answers: z.array(z.string().min(1)).min(1).optional(),
   plausible: z.strictObject({ min: z.number(), max: z.number() }).optional(),

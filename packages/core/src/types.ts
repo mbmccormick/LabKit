@@ -14,7 +14,7 @@ export const CATEGORIES = [
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-export const VENDORS = ['quest', 'labcorp', 'function', 'generic'] as const;
+export const VENDORS = ['quest', 'labcorp', 'function', 'randox', 'generic'] as const;
 export type Vendor = (typeof VENDORS)[number];
 
 export type ValueType = 'quantity' | 'qualitative' | 'titer';
@@ -30,7 +30,11 @@ export type DictionaryEntry = {
   /** Canonical UCUM unit written to the card (quantity only). */
   ucum: string | null;
   unitAliases?: Record<string, string>;
-  unitConversions?: { from: string; factor: number; note?: string }[];
+  /**
+   * Exact scalings to the canonical unit. `vendors` limits one to reports from those vendors: molar → mass
+   * conversions are applied only where a whole report is printed in SI units (SPEC §6.2 rule 4).
+   */
+  unitConversions?: { from: string; factor: number; note?: string; vendors?: Vendor[] }[];
   answers?: string[];
   plausible?: { min: number; max: number };
   aliases: { vendor: Vendor; name: string; panel?: string }[];
@@ -85,7 +89,7 @@ export type ParsedValue =
   | { kind: 'quantity'; value: number; comparator?: Comparator; ucum: string }
   | { kind: 'qualitative' | 'titer'; text: string };
 
-export type RowIssue = 'ocr' | 'unit_mismatch' | 'implausible' | 'ambiguous_match' | 'duplicate' | 'no_range';
+export type RowIssue = 'ocr' | 'unit_mismatch' | 'implausible' | 'ambiguous_match' | 'duplicate' | 'no_range' | 'formula_not_printed';
 
 export type ParsedRow = {
   raw: { name: string; value: string; flag?: string; range?: string; unit?: string; panel?: string; page: number; line: string };
@@ -99,7 +103,7 @@ export type ParsedRow = {
 };
 
 export type ParsedReport = {
-  source: { vendor: 'quest-healthgorilla' | 'quest' | 'labcorp' | 'function' | 'generic'; fileName: string; method: 'text' | 'ocr' };
+  source: { vendor: 'quest-healthgorilla' | 'quest' | 'labcorp' | 'function' | 'randox' | 'generic'; fileName: string; method: 'text' | 'ocr' };
   patient: { family?: string; given?: string[]; birthDate?: string; gender?: 'male' | 'female' };
   draws: { collectedAt: string; rows: ParsedRow[] }[];
   unmatched: { text: string; page: number }[];

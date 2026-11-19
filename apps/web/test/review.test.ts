@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parse, root, dictionary } from '../../../packages/parsers/test/harness';
-import { buildCards, buildReview, readiness, setDecision, setDrawIncluded } from '../src/lib/review';
+import { sha256Hex, validateVitalsFile, vitalsCsv } from '@labkit/core';
+import { buildCards, buildReview, readiness, setDecision, setDrawIncluded, setVitalDecision, vitalsExport } from '../src/lib/review';
 import { isIosSafari } from '../src/lib/platform';
 
 const fx = (f: string) => parse(`${root}fixtures/synthetic/${f}`);
@@ -85,5 +86,53 @@ describe('platform', () => {
     expect(isIosSafari(chrome, 'iPhone', 5)).toBe(false);
     expect(isIosSafari(mac, 'MacIntel', 0)).toBe(false);
     expect(isIosSafari(mac, 'MacIntel', 5)).toBe(true);
+  });
+});
+
+describe('Randox vitals (not in card)', () => {
+  it('exports the synthetic report\'s vitals once each, and none of them is in the card', async () => {
+    const m = buildReview([await fx('randox-sample.pdf')]);
+    expect(m.vitals).toHaveLength(1);
+    const v = m.vitals[0]!;
+    expect(v.rows.map((r) => [r.vital.metric, r.decision])).toEqual([
+      ['height', 'included'],
+      ['bodyMass', 'included'],
+      ['bodyMassIndex', 'included'],
+      ['waistCircumference', 'included'],
+      ['hipCircumference', 'included'],
+      ['waistHipRatio', 'display'],
+      ['heartRate', 'included'],
+      ['oxygenSaturation', 'included'],
+      ['bloodPressureSystolic', 'included'],
+      ['bloodPressureDiastolic', 'included'],
+    ]);
+    const file = (await vitalsExport(v))!;
+    expect(validateVitalsFile(file)).toEqual([]);
+    expect(file.source).toEqual({ lab: 'Randox Health', programme: 'Discovery (male)', reportId: await sha256Hex('S0000000') });
+    expect(file.collectedAt).toBe('2026-05-14T08:45:00+01:00');
+    expect(file.fastingMinutes).toBe(615);
+    // No patient identity, no raw sample ID, no glucose.
+    const json = JSON.stringify(file);
+    for (const s of ['Alex', 'Sample"', '1985', 'S0000000', 'lucose']) expect(json).not.toContain(s);
+
+    expect(vitalsCsv(file)).toBe(
+      'Start Date,End Date,height (m),weight (kg),body mass index (count),waist circumference (cm),heart rate (count/min),oxygen (%),systolic (mmHg),diastolic (mmHg)\r\n' +
+        '2026-05-14T08:45:00+01:00,2026-05-14T08:45:00+01:00,1.725,80.4,27,92,64,98,128,80\r\n',
+    );
+
+    // Cards carry lab results only; glucose stays there.
+    const cards = buildCards(m, dictionary, ISSUER, NOW);
+    const codes = cards.flatMap((c) => c.card.results.map((r) => r.loinc));
+    expect(codes).toContain('2345-7');
+    expect(codes.some((c) => ['8302-2', '29463-7', '39156-5', '8867-4', '8480-6', '8462-4'].includes(c))).toBe(false);
+  });
+
+  it('leaves blood pressure out of the export when one half is left out', async () => {
+    let m = buildReview([await fx('randox-sample.pdf')]);
+    const dia = m.vitals[0]!.rows.find((r) => r.vital.metric === 'bloodPressureDiastolic')!;
+    m = setVitalDecision(m, dia.id, 'excluded');
+    const file = (await vitalsExport(m.vitals[0]!))!;
+    expect(file.vitals.some((e) => e.metric === 'bloodPressure')).toBe(false);
+    expect(vitalsCsv(file)).not.toContain('systolic');
   });
 });

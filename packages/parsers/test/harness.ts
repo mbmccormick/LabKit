@@ -2,11 +2,12 @@
 // ones locally. Reports field-level diffs as paths only, never values, so real
 // patient data can't leak into logs.
 import { readFileSync } from 'node:fs';
-import { loadDictionary, type DictionaryFile } from '@labkit/core';
+import { fileURLToPath } from 'node:url';
+import { loadDictionary, toZonedIso, type DictionaryFile } from '@labkit/core';
 import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 import { parseFile, type ExtractedReport, type PdfDocLike } from '../src';
 
-export const root = new URL('../../../', import.meta.url).pathname;
+export const root = fileURLToPath(new URL('../../../', import.meta.url)).replaceAll('\\', '/');
 export const dictionary = loadDictionary(JSON.parse(readFileSync(`${root}dictionary/dictionary.json`, 'utf8')) as DictionaryFile);
 
 // Same options as the browser (apps/web/src/lib/parse.ts): font data changes how
@@ -33,6 +34,8 @@ export type Expected = {
   patient: Record<string, unknown>;
   draws: { collected: { utc: string } | { local: string }; rows: ExpRow[] }[];
   unmatched: string[];
+  /** Randox: body measurements and vitals, kept out of the card. */
+  vitals?: { collectedAt: string; programme?: string; fastingMinutes?: number; rows: { metric: string; value?: number; unit?: string; issues: string[] }[] };
 };
 
 const localIso = (s: string) => {
@@ -64,6 +67,12 @@ export function compact(r: ExtractedReport) {
       }),
     })),
     unmatched: r.unmatched.map((u) => u.text),
+    vitals: r.vitals && {
+      collectedAt: r.vitals.collectedAt && toZonedIso(r.vitals.collectedAt, r.vitals.zone),
+      programme: r.vitals.programme,
+      fastingMinutes: r.vitals.fastingMinutes,
+      rows: r.vitals.rows.map((v) => ({ metric: v.metric, value: v.value, unit: v.unit, issues: v.issues })),
+    },
   };
 }
 
@@ -109,5 +118,18 @@ export function score(actual: ReturnType<typeof compact>, exp: Expected): Score 
   });
   const un = actual.unmatched.map((t) => exp.unmatched.find((n) => t.includes(n)) ?? '?');
   if (un.includes('?') || un.length !== exp.unmatched.length) diffs.push(`unmatched (${actual.unmatched.length} vs ${exp.unmatched.length})`);
+  // Vitals: field-level, by metric. Paths only.
+  const av = actual.vitals;
+  const ev = exp.vitals;
+  if (!!av !== !!ev) diffs.push('vitals');
+  if (av && ev) {
+    for (const k of ['collectedAt', 'programme', 'fastingMinutes'] as const) if (av[k] !== ev[k]) diffs.push(`vitals.${k}`);
+    if (av.rows.length !== ev.rows.length) diffs.push(`vitals.rows.length (${av.rows.length} vs ${ev.rows.length})`);
+    for (const e of ev.rows) {
+      const a = av.rows.find((x) => x.metric === e.metric);
+      if (!a) diffs.push(`vitals ${e.metric} missing`);
+      else for (const f of ['value', 'unit', 'issues'] as const) if (JSON.stringify(a[f]) !== JSON.stringify(e[f])) diffs.push(`vitals ${e.metric}.${f}`);
+    }
+  }
   return { diffs, expectedRows, mappedRows, correctRows };
 }
