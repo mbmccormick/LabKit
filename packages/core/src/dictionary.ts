@@ -18,7 +18,9 @@ export function normalizeName(s: string): string {
     .normalize('NFKC')
     .toLowerCase()
     .replace(/\s+/g, ' ')
-    .replace(/\s*([,/])\s*/g, '$1')
+    // After the collapse above every whitespace run is a single ' ', so ` ?` is
+    // equivalent to `\s*` here and keeps the match linear (CodeQL js/polynomial-redos).
+    .replace(/ ?([,/]) ?/g, '$1')
     .trim();
 }
 
